@@ -1,0 +1,39 @@
+# Here you can add multiple services tVo access with a load-balancer (k3d)
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: social-network-ingress
+  labels:
+    death-star-project: social-network
+    app: social-network-ingress
+  namespace: social-network
+  annotations:  
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  # - host: my.deathstarbench.org
+  #   http:
+  -  http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-thrift
+            port: 
+              number: 8080
+      - path: /jaeger
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-out
+            port: 
+              number: 16686
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: media-frontend
+            port: 
+              number: 8080
