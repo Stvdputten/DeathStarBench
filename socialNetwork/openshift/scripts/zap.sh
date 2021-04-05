@@ -25,13 +25,13 @@ work="compose-post-redis compose-post-service home-timeline-redis home-timeline-
 
 echo deleting services and deployments
 
-oc project ${NS}
+# kubectl project ${NS}
 
 for d in ${work}
 do
-	oc delete service/$d -n ${NS} &
- 	oc delete deployment/$d -n ${NS} &
-#	oc delete pod/$d -n ${NS} &
+	kubectl delete service/$d -n ${NS} &
+ 	kubectl delete deployment/$d -n ${NS} &
+#	kubectl delete pod/$d -n ${NS} &
 done
 
 wait
@@ -40,10 +40,10 @@ echo deleting cm
 for c in jaeger-config-yaml media-frontend-lua media-frontend-nginx nginx-thrift-jaeger nginx-thrift-genlua nginx-thrift-pages nginx-thrift-luascripts nginx-thrift-luascripts-api-home-timeline nginx-thrift-luascripts-api-post nginx-thrift-luascripts-api-user nginx-thrift-luascripts-api-user-timeline nginx-thrift-luascripts-wrk2-api-home-timeline nginx-thrift-luascripts-wrk2-api-post nginx-thrift-luascripts-wrk2-api-user nginx-thrift-luascripts-wrk2-api-user-timeline nginx-thrift
 
 do
-	oc delete cm/${c} -n ${NS}
+	kubectl delete cm/${c} -n ${NS}
 done
 
 echo finally deleting namespace ${NS}
-oc delete namespace/${NS}
+kubectl delete namespace ${NS}
 
 echo run deploy-all-services-and-configurations.sh to deploy again.

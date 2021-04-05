@@ -56,7 +56,7 @@ echo this may take a while ... use control-c when status screen shows all servic
 echo reduce replicas to 0
 for d in compose-post-redis compose-post-service home-timeline-redis home-timeline-service media-frontend media-memcached media-mongodb media-service nginx-thrift post-storage-memcached post-storage-mongodb post-storage-service social-graph-mongodb social-graph-redis social-graph-service text-service unique-id-service url-shorten-memcached url-shorten-mongodb url-shorten-service user-memcached user-mention-service user-mongodb user-service user-timeline-mongodb user-timeline-redis user-timeline-service write-home-timeline-rabbitmq write-home-timeline-service
 do
-	oc scale --replicas=0 deployment/$d -n ${NS} &
+	kubectl scale --replicas=0 deployment/$d -n ${NS} &
 done
 
 wait
@@ -64,19 +64,19 @@ wait
 echo increase replicas back to 1
 for d in compose-post-redis compose-post-service home-timeline-redis home-timeline-service media-frontend media-memcached media-mongodb media-service nginx-thrift post-storage-memcached post-storage-mongodb post-storage-service social-graph-mongodb social-graph-redis social-graph-service text-service unique-id-service url-shorten-memcached url-shorten-mongodb url-shorten-service user-memcached user-mention-service user-mongodb user-service user-timeline-mongodb user-timeline-redis user-timeline-service write-home-timeline-rabbitmq write-home-timeline-service
 do
-	oc scale --replicas=1 deployment/$d -n ${NS} &
+	kubectl scale --replicas=1 deployment/$d -n ${NS} &
 done
 
 wait
 
 if [[ -z $SHOW_UPDATE ]] || [[ $(echo $SHOW_UPDATE | egrep "1|true" |wc -l) -gt 0 ]]; then
   echo now wait for everything to come back up
-  watch oc get pods -n ${NS}
+  watch kubectl get pods -n ${NS}
 else
-  running=$(oc get pods -n ${NS} --no-headers | grep Running |wc -l)
+  running=$(kubectl get pods -n ${NS} --no-headers | grep Running |wc -l)
   while [[ $running -lt 30 ]]; do
     echo "Waiting $(echo 30-$running|bc) pods to start"
     sleep 1
-    running=$(oc get pods -n ${NS} --no-headers | grep Running |wc -l)
+    running=$(kubectl get pods -n ${NS} --no-headers | grep Running |wc -l)
   done
 fi

@@ -3,38 +3,38 @@
 cd $(dirname $0)/..
 NS="media-microsvc"
 
-oc create namespace ${NS}
-oc project ${NS}
+kubectl create namespace ${NS}
+kubectl project ${NS}
 
-oc adm policy add-scc-to-user anyuid -z default -n ${NS}
-oc adm policy add-scc-to-user privileged -z default -n ${NS}
+# kubectl adm policy add-scc-to-user anyuid -z default -n ${NS}
+# kubectl adm policy add-scc-to-user privileged -z default -n ${NS}
 
 ./scripts/create-all-configmap.sh 
 ./scripts/create-destination-rule-all.sh
 
 for service in *.yaml
 do
-  oc apply -f $service -n ${NS}
+  kubectl apply -f $service -n ${NS}
 done
 
 echo "Finishing in 30 seconds"
 sleep 30
 
-mmsclient=$(oc get pod | grep mms-client- | cut -f 1 -d " ")
+mmsclient=$(kubectl get pod | grep mms-client- | cut -f 1 -d " ")
 
 echo "After all pods have been created:"
 echo
 echo "Verify that files under DeathStarBench/mediaMicroservices/scripts have the latest web server url -- or use the local cluster addressing scheme: nginx-web-server.media-microsvc.svc.cluster.local"
-echo "oc get ep | grep nginx-web-server"
-oc get ep | grep nginx-web-server
+echo "kubectl get ep | grep nginx-web-server"
+kubectl get ep | grep nginx-web-server
 echo "Files containing known http endpoints:"
 grep "http:" ../scripts/* 
 echo
 echo "Make mms-client useful with the following command:"
-echo "oc cp /root/DeathStarBench media-microsvc/"${mmsclient}":/root"
+echo "kubectl cp /root/DeathStarBench media-microsvc/"${mmsclient}":/root"
 echo
 echo "You can log into the mms-client with this command:"
-echo "oc rsh deployment/mms-client"
+echo "kubectl rsh deployment/mms-client"
 echo
 echo "Run the following on a working mms client node to load the dataset:"
 echo

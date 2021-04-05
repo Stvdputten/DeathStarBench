@@ -4,7 +4,7 @@ work="cast-info-memcached cast-info-mongodb cast-info-service compose-review-mem
 
 for d in ${work}
 do
-	oc logs deployment/${d} --all-containers -n media-microsvc > ${d}.log
+	kubectl logs deployment/${d} --all-containers -n media-microsvc > ${d}.log
 done
 
 

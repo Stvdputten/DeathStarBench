@@ -4,11 +4,11 @@ cd $(dirname $0)/..
 
 NS="media-microsvc"
 
-oc create namespace ${NS}
+kubectl create namespace ${NS}
 
 for service in *service.yaml
 do
-  oc apply -f $service --namespace ${NS}
+  kubectl apply -f $service --namespace ${NS}
 done
 
 cd -
