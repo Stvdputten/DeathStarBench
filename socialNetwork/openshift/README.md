@@ -3,14 +3,14 @@
 ## Pre-requirements
 
 - A running OpenShift cluster is needed.
-- The user should be authenticated to this cluster e.g., `kubectl login`
+- The user should be authenticated to this cluster e.g., `oc login`
 - Pre-requirements mentioned [here](https://github.com/delimitrou/DeathStarBench/blob/master/socialNetwork/README.md) should be met.
 
 ## Running the social network application on OpenShift
 
 ### Before you start
 
-Get the IP address for the DNS resolver: `kubectl describe dns.operator/default`. Then set it in files such as:
+Get the IP address for the DNS resolver: `oc describe dns.operator/default`. Then set it in files such as:
 - `<path-of-repo>/socialNetwork/openshift/nginx-web-server-config/nginx.conf`
 - `<path-of-repo>/socialNetwork/openshift/media-frontend-config/nginx.conf`
 
@@ -21,16 +21,16 @@ Run the script `<path-of-repo>/socialNetwork/openshift/scripts/deploy-all-servic
 ### Using `ubuntu-client` as an "on-cluster" client
 
 After customization, If you are running "on-cluster" copy necessary files to `ubuntu-client`, and then log into `ubuntu-client` to continue:
-  - `ubuntuclient=$(kubectl -n social-network get pod | grep ubuntu-client- | cut -f 1 -d " ")`
-  - `kubectl cp <path-of-repo> social-network/"${ubuntuclient}":/root`
-    - e.g., `kubectl cp /root/DeathStarBench social-network/"${ubuntuclient}":/root`
-  - `kubectl rsh deployment/ubuntu-client`
+  - `ubuntuclient=$(oc -n social-network get pod | grep ubuntu-client- | cut -f 1 -d " ")`
+  - `oc cp <path-of-repo> social-network/"${ubuntuclient}":/root`
+    - e.g., `oc cp /root/DeathStarBench social-network/"${ubuntuclient}":/root`
+  - `oc rsh deployment/ubuntu-client`
 
 
 ### Register users and construct social graphs
 
 - If using an off-cluster client:
-  - Use `kubectl -n social-network get svc nginx-thrift` to get the cluster-ip.
+  - Use `oc -n social-network get svc nginx-thrift` to get the cluster-ip.
   - Paste the cluster ip at `<path-of-repo>/socialNetwork/scripts/init_social_graph.py:72`
 - If using an on-cluster client:
   - Use `nginx-thrift.social-network.svc.cluster.local` as cluster-ip and paste it at `<path-of-repo>/socialNetwork/scripts/init_social_graph.py:72`
@@ -75,7 +75,7 @@ cd <path-of-repo>/socialNetwork/wrk2
 
 #### View Jaeger traces
 
-Use `kubectl -n social-network get svc jaeger-out` to get the NodePort of jaeger service.
+Use `oc -n social-network get svc jaeger-out` to get the NodePort of jaeger service.
 
  View Jaeger traces by accessing `http://<node-ip>:<NodePort>` 
 
@@ -86,8 +86,8 @@ Original containers are expected to run as root, but OpenShift does not permit i
 As a workaround for simplicity, we can relax security policy by adding several SCCs to each project.
 
 ```
-$ kubectl adm policy add-scc-to-user anyuid -z default
-$ kubectl adm policy add-scc-to-user privileged -z default
+$ oc adm policy add-scc-to-user anyuid -z default
+$ oc adm policy add-scc-to-user privileged -z default
 ```
 
 

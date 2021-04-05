@@ -28,27 +28,27 @@ cd ..
 
 for s in consul frontend geo jaeger memcached-profile memcached-rate memcached-reserve mongodb-geo mongodb-profile mongodb-rate mongodb-recommendation mongodb-reservation mongodb-user profile rate recommendation reservation search user
 do
- 	kubectl delete service/$s -n ${NS} &
- 	kubectl delete deployment/$s -n ${NS} &
+ 	oc delete service/$s -n ${NS} &
+ 	oc delete deployment/$s -n ${NS} &
 done
-kubectl delete deployment/hr-client -n ${NS} &
+oc delete deployment/hr-client -n ${NS} &
 wait
 
-#	kubectl delete pod/$d -n ${NS} &
+#	oc delete pod/$d -n ${NS} &
 
 for i in geo profile rate recommendation reservation user
 do
-	kubectl delete pvc $i -n ${NS} &
+	oc delete pv/$i -n ${NS} &
 done
 wait
 
 for c in configmap-config-json
 do
-        kubectl delete cm ${c} -n ${NS}
+        oc delete cm/${c} -n ${NS}
 done
 
 # echo finally deleting namespace ${NS}
-# kubectl delete namespace/${NS}
+# oc delete namespace/${NS}
 
 
 cd - >/dev/null

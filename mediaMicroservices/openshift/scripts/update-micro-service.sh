@@ -44,6 +44,6 @@ if [[ -z $MICROSERVICE ]]; then
   exit
 fi
 
-kubectl create -f $MICROSERVICE --namespace ${NAMESPACE} --dry-run --save-config -o yaml | kubectl apply -f - --namespace ${NAMESPACE}
+oc create -f $MICROSERVICE --namespace ${NAMESPACE} --dry-run --save-config -o yaml | oc apply -f - --namespace ${NAMESPACE}
 
 cd -

@@ -28,9 +28,7 @@ spec:
         env:
         - name: DLOG
           value: DEBUG
-        # image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_user_single_node
-        # image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_user_single_node
-        image: khv129/hotel_reserv_user_single_node
+        image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_user_single_node
         name: hotel-reserv-user
         ports:
         - containerPort: 8086

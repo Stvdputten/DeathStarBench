@@ -11,7 +11,7 @@ if [[ ! -f ${FOLDER}/${FILE} ]]; then
   echo "You can use the script scripts/helper/generate-destination-rule-all-services.sh to create it"
 fi
 
-kubectl create -f ${FOLDER}/${FILE} --dry-run --save-config -o yaml --namespace ${NS} | kubectl apply -f - --namespace ${NS}
+oc create -f ${FOLDER}/${FILE} --dry-run --save-config -o yaml --namespace ${NS} | oc apply -f - --namespace ${NS}
 
 cd -
 

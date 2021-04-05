@@ -12,6 +12,6 @@ if [[ ! -f ${FOLDER}/${FILE} ]]; then
   echo "You can use the script scripts/helper/generate-destination-rule-all-services.sh to create it"
 fi
 
-kubectl apply -f ${FOLDER}/${FILE} -n ${NS}
+oc apply -f ${FOLDER}/${FILE} -n ${NS}
 
 cd -
