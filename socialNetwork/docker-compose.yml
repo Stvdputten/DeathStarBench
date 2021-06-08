@@ -1,7 +1,7 @@
 version: "3"
 services:
   config:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: config
     environment:
       - TLS
@@ -11,10 +11,10 @@ services:
       - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
 
   social-graph-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: social-graph-service
-    #    ports:
-    #      - 10000:9090
+    # ports:
+    #   - 10000:9090
     depends_on:
       config:
         condition: service_completed_successfully
@@ -31,8 +31,8 @@ services:
   social-graph-mongodb:
     image: mongo
     hostname: social-graph-mongodb
-    # ports:
-    #   - 27018:27017
+    ports:
+      - 27018:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -45,8 +45,8 @@ services:
   social-graph-redis:
     image: redis
     hostname: social-graph-redis
-    # ports:
-    #   - 6380:6379
+    ports:
+      - 6380:6379
     depends_on:
       config:
         condition: service_completed_successfully
@@ -59,8 +59,8 @@ services:
   home-timeline-redis:
     image: redis
     hostname: home-timeline-redis
-    # ports:
-    #   - 6381:6379
+    ports:
+      - 6381:6379
     depends_on:
       config:
         condition: service_completed_successfully
@@ -71,7 +71,7 @@ services:
       - ./keys:/keys
 
   compose-post-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: compose-post-service
     #    ports:
     #      - 10001:9090
@@ -87,7 +87,7 @@ services:
       - ./keys:/keys
 
   post-storage-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: post-storage-service
     ports:
       - 10002:9090
@@ -107,8 +107,8 @@ services:
   post-storage-memcached:
     image: memcached
     hostname: post-storage-memcached
-    #    ports:
-    #      - 11212:11211
+    ports:
+      - 11212:11211
     depends_on:
       config:
         condition: service_completed_successfully
@@ -117,8 +117,8 @@ services:
   post-storage-mongodb:
     image: mongo
     hostname: post-storage-mongodb
-    #    ports:
-    #      - 27019:27017
+    ports:
+         - 27019:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -129,7 +129,7 @@ services:
       - ./keys:/keys
 
   user-timeline-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: user-timeline-service
     #    ports:
     #      - 10003:9090
@@ -149,8 +149,8 @@ services:
   user-timeline-redis:
     image: redis
     hostname: user-timeline-redis
-    #    ports:
-    #      - 6383:6379
+    ports:
+      - 6383:6379
     depends_on:
       config:
         condition: service_completed_successfully
@@ -163,8 +163,8 @@ services:
   user-timeline-mongodb:
     image: mongo
     hostname: user-timeline-mongodb
-    #    ports:
-    #      - 27020:27017
+    ports:
+         - 27020:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -175,7 +175,7 @@ services:
       - ./keys:/keys
 
   url-shorten-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: url-shorten-service
     #    ports:
     #      - 10004:9090
@@ -195,8 +195,8 @@ services:
   url-shorten-memcached:
     image: memcached
     hostname: url-shorten-memcached
-    #    ports:
-    #      - 11213:11211
+    ports:
+      - 11213:11211
     depends_on:
       config:
         condition: service_completed_successfully
@@ -205,8 +205,8 @@ services:
   url-shorten-mongodb:
     image: mongo
     hostname: url-shorten-mongodb
-    #    ports:
-    #      - 27021:27017
+    ports:
+         - 27021:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -217,7 +217,7 @@ services:
       - ./keys:/keys
 
   user-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: user-service
     #    ports:
     #      - 10005:9090
@@ -237,8 +237,8 @@ services:
   user-memcached:
     image: memcached
     hostname: user-memcached
-    #    ports:
-    #      - 11214:11211
+    ports:
+      - 11214:11211
     depends_on:
       config:
         condition: service_completed_successfully
@@ -247,8 +247,8 @@ services:
   user-mongodb:
     image: mongo
     hostname: user-mongodb
-    #    ports:
-    #      - 27023:27017
+    ports:
+         - 27023:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -259,7 +259,7 @@ services:
       - ./keys:/keys
 
   media-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: media-service
     #    ports:
     #      - 10006:9090
@@ -279,8 +279,8 @@ services:
   media-memcached:
     image: memcached
     hostname: media-memcached
-    #    ports:
-    #      - 11215:11211
+    ports:
+      - 11215:11211
     depends_on:
       config:
         condition: service_completed_successfully
@@ -289,8 +289,8 @@ services:
   media-mongodb:
     image: mongo
     hostname: media-mongodb
-    #    ports:
-    #      - 27024:27017
+    ports:
+         - 27024:27017
     depends_on:
       config:
         condition: service_completed_successfully
@@ -301,7 +301,7 @@ services:
       - ./keys:/keys
 
   text-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: text-service
     #    ports:
     #      - 10007:9090
@@ -317,7 +317,7 @@ services:
       - ./keys:/keys
 
   unique-id-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: unique-id-service
     #    ports:
     #      - 10008:9090
@@ -333,7 +333,7 @@ services:
       - ./keys:/keys
 
   user-mention-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: user-mention-service
     #    ports:
     #      - 10009:9090
@@ -349,7 +349,7 @@ services:
       - ./keys:/keys
 
   home-timeline-service:
-    image: yg397/social-network-microservices:latest
+    image: stvdputten/social-network-microservices:latest
     hostname: home-timeline-service
     #    ports:
     #      - 10010:9090
@@ -365,7 +365,7 @@ services:
       - ./keys:/keys
 
   nginx-thrift:
-    image: yg397/openresty-thrift:xenial
+    image: stvdputten/openresty-thrift:latest
     hostname: nginx-thrift
     ports:
       - 8080:8080
@@ -385,7 +385,7 @@ services:
       - ./keys:/keys
 
   media-frontend:
-    image: yg397/media-frontend:xenial
+    image: stvdputten/media-frontend:latest
     hostname: media-frontend
     ports:
       - 8081:8080

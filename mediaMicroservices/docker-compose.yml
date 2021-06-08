@@ -9,26 +9,26 @@ services:
       - /etc/resolv.conf:/etc/resolv.conf
 
   unique-id-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: unique-id-service
-#    ports:
-#      - 10001:9090
+    # ports:
+    #   - 10001:9090
     restart: always
     entrypoint: UniqueIdService
 
   movie-id-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: movie-id-service
-#    ports:
-#      - 10002:9090
+    # ports:
+    #   - 10002:9090
     restart: always
     entrypoint: MovieIdService
 
   movie-id-mongodb:
     image: mongo
     hostname: movie-id-mongodb
-#    ports:
-#      - 27018:27017
+    ports:
+      - 27018:27017
     restart: always
 
   movie-id-memcached:
@@ -39,7 +39,7 @@ services:
     restart: always
 
   text-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: text-service
 #    ports:
 #      - 10003:9090
@@ -47,7 +47,7 @@ services:
     entrypoint: TextService
 
   rating-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: rating-service
 #    ports:
 #      - 10004:9090
@@ -62,7 +62,7 @@ services:
     restart: always
 
   user-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: user-service
 #    ports:
 #      - 10005:9090
@@ -72,8 +72,8 @@ services:
   user-mongodb:
     image: mongo
     hostname: user-mongodb
-#    ports:
-#      - 27019:27017
+    ports:
+      - 27019:27017
     restart: always
 
   user-memcached:
@@ -84,7 +84,7 @@ services:
     restart: always
 
   compose-review-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: compose-review-service
 #    ports:
 #      - 10006:9090
@@ -99,7 +99,7 @@ services:
     restart: always
 
   review-storage-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: review-storage-service
 #    ports:
 #      - 10007:9090
@@ -109,8 +109,8 @@ services:
   review-storage-mongodb:
     image: mongo
     hostname: review-storage-mongodb
-#    ports:
-#      - 27020:27017
+    ports:
+      - 27020:27017
     restart: always
 
   review-storage-memcached:
@@ -121,7 +121,7 @@ services:
     restart: always
 
   user-review-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: user-review-service
 #    ports:
 #      - 10008:9090
@@ -131,8 +131,8 @@ services:
   user-review-mongodb:
     image: mongo
     hostname: user-review-mongodb
-#    ports:
-#      - 27021:27017
+    ports:
+      - 27021:27017
     restart: always
 
   user-review-redis:
@@ -143,7 +143,7 @@ services:
     restart: always
 
   movie-review-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: movie-review-service
 #    ports:
 #      - 10009:9090
@@ -177,7 +177,7 @@ services:
       - ./gen-lua:/gen-lua
 
   cast-info-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: cast-info-service
 #    ports:
 #      - 10010:9090
@@ -187,8 +187,8 @@ services:
   cast-info-mongodb:
     image: mongo
     hostname: cast-info-mongodb
-#    ports:
-#      - 27024:27017
+    ports:
+      - 27024:27017
     restart: always
 
   cast-info-memcached:
@@ -199,7 +199,7 @@ services:
     restart: always
 
   plot-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: plot-service
 #    ports:
 #      - 10011:9090
@@ -209,8 +209,8 @@ services:
   plot-mongodb:
     image: mongo
     hostname: plot-mongodb
-#    ports:
-#      - 27025:27017
+    ports:
+      - 27025:27017
     restart: always
 
   plot-memcached:
@@ -221,7 +221,7 @@ services:
     restart: always
 
   movie-info-service:
-    image: yg397/media-microservices
+    image: stvdputten/media-microservices
     hostname: movie-info-service
 #    ports:
 #      - 10012:9090
@@ -231,8 +231,8 @@ services:
   movie-info-mongodb:
     image: mongo
     hostname: movie-info-mongodb
-#    ports:
-#      - 27026:27017
+    ports:
+      - 27026:27017
     restart: always
 
   movie-info-memcached:

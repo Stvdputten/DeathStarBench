@@ -2,12 +2,17 @@ version: "2"
 services:
   consul:
     image: consul:latest
+    networks:
+      - consul
     ports:
       - "8300:8300"
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
     restart: always
+    # command: "consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 172.18.0.2"
+    # environment: 
+    #   - CONSUL_BIND_INTERFACE=eth0
 
   frontend:
     environment:
@@ -15,6 +20,8 @@ services:
     build: .
     image: hotel_reserv_frontend_single_node
     entrypoint: frontend
+    networks:
+      - consul
     container_name: 'hotel_reserv_frontend'
     ports:
       - "5000:5000"
@@ -30,6 +37,8 @@ services:
     image: hotel_reserv_profile_single_node
     entrypoint: profile
     container_name: 'hotel_reserv_profile'
+    networks:
+      - consul
     ports:
       - "8081:8081"
     depends_on:
@@ -37,19 +46,21 @@ services:
       - memcached-profile
       - consul
     restart: always
-    cpuset: "1"
+    cpuset: "0"
 
   search:
     build: .
     image: hotel_reserv_search_single_node
     entrypoint: search
+    networks:
+      - consul
     container_name: 'hotel_reserv_search'
     ports:
       - "8082:8082"
     depends_on:
       - consul
     restart: always
-    cpuset: "2"
+    cpuset: "0"
     environment:
       - TLS
       # - GRPC_GO_LOG_VERBOSITY_LEVEL=2
@@ -60,6 +71,8 @@ services:
       - TLS
     build: .
     image: hotel_reserv_geo_single_node
+    networks:
+      - consul
     entrypoint: geo
     container_name: 'hotel_reserv_geo'
     ports:
@@ -68,7 +81,7 @@ services:
       - mongodb-geo
       - consul
     restart: always
-    cpuset: "3"
+    cpuset: "0"
 
   rate:
     environment:
@@ -77,6 +90,8 @@ services:
     image: hotel_reserv_rate_single_node
     entrypoint: rate
     container_name: 'hotel_reserv_rate'
+    networks:
+      - consul
     ports:
       - "8084:8084"
     depends_on:
@@ -84,13 +99,15 @@ services:
       - memcached-rate
       - consul
     restart: always
-    cpuset: "4"
+    cpuset: "0"
 
   recommendation:
     environment:
       - TLS
     build: .
     image: hotel_reserv_recommend_single_node
+    networks:
+      - consul
     entrypoint: recommendation
     container_name: 'hotel_reserv_recommendation'
     ports:
@@ -99,7 +116,7 @@ services:
       - mongodb-recommendation
       - consul
     restart: always
-    cpuset: "5"
+    cpuset: "0"
 
   user:
     environment:
@@ -107,6 +124,8 @@ services:
     build: .
     image: hotel_reserv_user_single_node
     entrypoint: user
+    networks:
+      - consul
     container_name: 'hotel_reserv_user'
     ports:
       - "8086:8086"
@@ -114,7 +133,7 @@ services:
       - mongodb-user
       - consul
     restart: always
-    cpuset: "6"
+    cpuset: "0"
 
   reservation:
     environment:
@@ -123,6 +142,8 @@ services:
     image: hotel_reserv_rsv_single_node
     entrypoint: reservation
     container_name: 'hotel_reserv_reservation'
+    networks:
+      - consul
     ports:
       - "8087:8087"
     depends_on:
@@ -130,11 +151,13 @@ services:
       - memcached-reserve
       - consul
     restart: always
-    cpuset: "7"
+    cpuset: "0"
 
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: 'hotel_reserv_jaeger'
+    networks:
+      - consul
     ports:
       - "14269"
       - "5778:5778"
@@ -145,12 +168,14 @@ services:
       - "6831:6831/udp"
       - "6832:6832/udp"
     restart: always
-    cpuset: "17"
+    cpuset: "0"
 
   memcached-rate:
     image: memcached
     # hostname: user-memcached
     container_name: 'hotel_reserv_rate_mmc'
+    networks:
+      - consul
     ports:
      - 11212:11211
     restart: always
@@ -160,12 +185,14 @@ services:
     logging:
       options:
         max-size: 50m
-    cpuset: "8"
+    cpuset: "0"
 
   memcached-profile:
     image: memcached
     # hostname: user-memcached
     container_name: 'hotel_reserv_profile_mmc'
+    networks:
+      - consul
     ports:
      - 11213:11211
     restart: always
@@ -175,12 +202,14 @@ services:
     logging:
       options:
         max-size: 50m
-    cpuset: "9"
+    cpuset: "0"
 
   memcached-reserve:
     image: memcached
     # hostname: user-memcached
     container_name: 'hotel_reserv_reservation_mmc'
+    networks:
+      - consul
     ports:
      - 11214:11211
     restart: always
@@ -190,16 +219,18 @@ services:
     logging:
       options:
         max-size: 50m
-    cpuset: "10"
+    cpuset: "0"
 
   mongodb-geo:
     image: mongo
     container_name: 'hotel_reserv_geo_mongo'
+    networks:
+      - consul
     # hostname: geo-db
     ports:
       - "27018:27017"
     restart: always
-    cpuset: "11"
+    cpuset: "0"
     volumes:
       - geo:/data/db  
 
@@ -207,10 +238,12 @@ services:
     image: mongo
     container_name: 'hotel_reserv_profile_mongo'
     hostname: profile-db
+    networks:
+      - consul
     ports:
       - "27019:27017"
     restart: always
-    cpuset: "12"
+    cpuset: "0"
     volumes:
       - profile:/data/db    
 
@@ -218,10 +251,12 @@ services:
     image: mongo
     container_name: 'hotel_reserv_rate_mongo'
     hostname: rate-db
+    networks:
+      - consul
     ports:
       - "27020:27017"
     restart: always
-    cpuset: "13"
+    cpuset: "0"
     volumes:
       - rate:/data/db   
 
@@ -229,10 +264,12 @@ services:
     image: mongo
     hostname: recommendation-db
     container_name: 'hotel_reserv_recommendation_mongo'
+    networks:
+      - consul
     ports:
       - "27021:27017"
     restart: always
-    cpuset: "14"
+    cpuset: "0"
     volumes:
       - recommendation:/data/db
     
@@ -240,10 +277,12 @@ services:
     image: mongo
     container_name: 'hotel_reserv_reservation_mongo'
     hostname: reservation-db
+    networks:
+      - consul
     ports:
       - "27022:27017"
     restart: always
-    cpuset: "15"
+    cpuset: "0"
     volumes:
       - reservation:/data/db 
 
@@ -251,10 +290,12 @@ services:
     image: mongo
     container_name: 'hotel_reserv_user_mongo'
     hostname: user-db
+    networks:
+      - consul
     ports:
       - "27023:27017"
     restart: always
-    cpuset: "16"
+    cpuset: "0"
     volumes:
       - user:/data/db
     
@@ -265,3 +306,8 @@ volumes:
   recommendation:
   reservation:
   user:
+
+
+networks:
+  consul:
+    driver: bridge
