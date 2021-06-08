@@ -1,19 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
   labels:
-    io.kompose.service: reservation
+    death-star-project: hotel-res
+    app-name: reservation
+  namespace: hotel-res
   name: reservation
 spec:
   ports:
-    - name: "8087"
-      port: 8087
-      targetPort: 8087
+  - name: "8087"
+    port: 8087
+    targetPort: 8087
   selector:
-    io.kompose.service: reservation
+    death-star-project: hotel-res
+    app-name: reservation
 status:
   loadBalancer: {}

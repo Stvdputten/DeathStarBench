@@ -1,19 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
   labels:
-    io.kompose.service: mongodb-reserve
-  name: mongodb-reserve
+    death-star-project: hotel-res
+    app-name: mongodb-reservation
+  namespace: hotel-res
+  name: mongodb-reservation
 spec:
   ports:
-    - name: "27022"
-      port: 27022
-      targetPort: 27017
+  - name: "27022"
+    port: 27022
+    targetPort: 27017
   selector:
-    io.kompose.service: mongodb-reservation
+    death-star-project: hotel-res
+    app-name: mongodb-reservation
 status:
   loadBalancer: {}

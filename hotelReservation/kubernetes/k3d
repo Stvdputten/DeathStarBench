@@ -1,0 +1,9 @@
+
+
+
+k3d image import -c k3d-DeathStarBench consul:latest khv129/hotel_reserv_user_single_node:latest khv129/hotel_reserv_rsv_single_node:latest \
+    khv129/hotel_reserv_geo_single_node:latest khv129/hotel_reserv_recommend_single_node:latest khv129/hotel_reserv_rate_single_node:latest \
+    khv129/hotel_reserv_profile_single_node:latest khv129/hotel_reserv_search_single_node:latest khv129/hotel_reserv_frontend_single_node:latest \
+    jaegertracing/all-in-one:latest memcached:latest mongo:latest
+
+    
