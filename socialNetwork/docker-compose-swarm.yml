@@ -19,6 +19,10 @@ services:
     #     protocol: tcp
     #     mode: host
     deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: any
     depends_on:
@@ -29,7 +33,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -44,6 +52,11 @@ services:
       - ./keys:/keys
 
   home-timeline-redis:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -59,7 +72,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      # replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: any
       resources:
@@ -78,7 +95,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -86,7 +107,7 @@ services:
           cpus: "1"
           memory: 1G
     hostname: media-frontend
-    image: stvdputten/media-frontend:xenial
+    image: yg397/media-frontend:xenial
     ports:
       - 8081:8080
     volumes:
@@ -94,6 +115,11 @@ services:
       - ./media-frontend/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
 
   media-memcached:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -106,6 +132,11 @@ services:
       - "-c 4096"
 
   media-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -123,7 +154,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -141,8 +176,12 @@ services:
     depends_on:
       - jaeger-agent
       - jaeger-query
+      # replicas: 5
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: any
       resources:
@@ -150,7 +189,7 @@ services:
           cpus: "4"
           memory: 4G
     hostname: nginx-web-server
-    image: stvdputten/openresty-thrift:xenial
+    image: stvdputten/openresty-thrift:latest
     ports:
       - 8080:8080
     volumes:
@@ -163,6 +202,11 @@ services:
       - ./keys:/keys
 
   post-storage-memcached:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -175,6 +219,11 @@ services:
       - "-c 4096"
 
   post-storage-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -192,7 +241,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -207,6 +260,11 @@ services:
       - ./keys:/keys
 
   social-graph-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -219,6 +277,11 @@ services:
       - ./keys:/keys
 
   social-graph-redis:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -235,7 +298,11 @@ services:
       - jaeger-query
       - social-graph-mongodb
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -254,7 +321,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -273,7 +344,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -288,6 +363,11 @@ services:
       - ./keys:/keys
 
   url-shorten-memcached:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -300,6 +380,11 @@ services:
       - "-c 4096"
 
   url-shorten-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -317,7 +402,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -332,6 +421,11 @@ services:
       - ./keys:/keys
 
   user-memcached:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -348,7 +442,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -363,6 +461,11 @@ services:
       - ./keys:/keys
 
   user-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -380,7 +483,11 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -395,6 +502,11 @@ services:
       - ./keys:/keys
 
   user-timeline-mongodb:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -407,6 +519,11 @@ services:
       - ./keys:/keys
 
   user-timeline-redis:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
     depends_on:
       - jaeger-agent
       - jaeger-query
@@ -422,7 +539,11 @@ services:
       - user-timeline-mongodb
       - jaeger-agent
     deploy:
-      replicas: 1
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
+      # replicas: 1
       restart_policy:
         condition: any
       resources:
@@ -448,6 +569,10 @@ services:
     ports:
       - "14269:14269"
     deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: any
     depends_on:
@@ -460,6 +585,10 @@ services:
     ports:
       - "16686:16686"
     deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: any
     depends_on:
@@ -468,6 +597,10 @@ services:
   cassandra-schema:
     image: jaegertracing/jaeger-cassandra-schema
     deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
       restart_policy:
         condition: on-failure
     depends_on:
@@ -476,6 +609,10 @@ services:
   cassandra:
     image: cassandra:3.9
     deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role==workers
 
 networks:
   default:
@@ -483,4 +620,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.11.0.0/16
+        - subnet: 10.12.0.0/24
