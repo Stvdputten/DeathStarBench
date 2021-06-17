@@ -385,7 +385,7 @@ services:
       - ./keys:/keys
 
   media-frontend:
-    image: yg397/media-frontend:xenial
+    image: stvdputten/media-frontend:latest
     hostname: media-frontend
     ports:
       - 8081:8080

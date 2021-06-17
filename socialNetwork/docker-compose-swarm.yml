@@ -86,7 +86,7 @@ services:
           cpus: "1"
           memory: 1G
     hostname: media-frontend
-    image: yg397/media-frontend:xenial
+    image: stvdputten/media-frontend:xenial
     ports:
       - 8081:8080
     volumes:
@@ -150,7 +150,7 @@ services:
           cpus: "4"
           memory: 4G
     hostname: nginx-web-server
-    image: stvdputten/openresty-thrift:latest
+    image: stvdputten/openresty-thrift:xenial
     ports:
       - 8080:8080
     volumes:
