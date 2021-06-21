@@ -19,7 +19,7 @@ services:
     #     protocol: tcp
     #     mode: host
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -33,7 +33,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -53,7 +53,7 @@ services:
 
   home-timeline-redis:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -73,7 +73,7 @@ services:
       - jaeger-query
     deploy:
       # replicas: 1
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -95,7 +95,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -116,7 +116,7 @@ services:
 
   media-memcached:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -133,7 +133,7 @@ services:
 
   media-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -154,7 +154,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -178,7 +178,7 @@ services:
       - jaeger-query
       # replicas: 5
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -203,7 +203,7 @@ services:
 
   post-storage-memcached:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -220,7 +220,7 @@ services:
 
   post-storage-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -241,7 +241,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -261,7 +261,7 @@ services:
 
   social-graph-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -278,7 +278,7 @@ services:
 
   social-graph-redis:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -298,7 +298,7 @@ services:
       - jaeger-query
       - social-graph-mongodb
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -321,7 +321,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -344,7 +344,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -364,7 +364,7 @@ services:
 
   url-shorten-memcached:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -381,7 +381,7 @@ services:
 
   url-shorten-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -402,7 +402,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -422,7 +422,7 @@ services:
 
   user-memcached:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -442,7 +442,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -462,7 +462,7 @@ services:
 
   user-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -483,7 +483,7 @@ services:
       - jaeger-agent
       - jaeger-query
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -503,7 +503,7 @@ services:
 
   user-timeline-mongodb:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -520,7 +520,7 @@ services:
 
   user-timeline-redis:
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -539,7 +539,7 @@ services:
       - user-timeline-mongodb
       - jaeger-agent
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -569,7 +569,7 @@ services:
     ports:
       - "14269:14269"
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -585,7 +585,7 @@ services:
     ports:
       - "16686:16686"
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -597,7 +597,7 @@ services:
   cassandra-schema:
     image: jaegertracing/jaeger-cassandra-schema
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -609,7 +609,7 @@ services:
   cassandra:
     image: cassandra:3.9
     deploy:
-      mode: global
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -617,7 +617,7 @@ services:
 networks:
   default:
     driver: overlay
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.12.0.0/24
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 10.12.0.0/24
