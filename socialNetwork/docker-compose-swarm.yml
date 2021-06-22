@@ -1,8 +1,16 @@
 version: "3.8"
 
+networks:
+  default:
+    driver: overlay
+    # ipam:
+    #   driver: default
+    #   config:
+    #     - subnet: 10.12.0.0/24
+
 services:
   jaeger-agent:
-    image: jaegertracing/jaeger-agent:latest
+    image: jaegertracing/jaeger-agent:1.23.0
     hostname: jaeger-agent
     command: ["--reporter.grpc.host-port=jaeger-collector:14250"]
     # ports:
@@ -20,6 +28,7 @@ services:
     #     mode: host
     deploy:
       replicas: 1
+      # mode: global
       placement:
         constraints:
           - node.role==worker
@@ -61,7 +70,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: home-timeline-redis
-    image: redis
+    image: redis:alpine3.13
     command: "redis-server /social-network-microservices/config/redis.conf"
     volumes:
       - ./config:/social-network-microservices/config
@@ -124,7 +133,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: media-memcached
-    image: memcached
+    image: memcached:1.6.9
     command: 
       - "-m 16384"
       - "-t 8"
@@ -141,7 +150,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: media-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 2"
     volumes:
@@ -211,7 +220,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: post-storage-memcached
-    image: memcached
+    image: memcached:1.6.9
     command: 
       - "-m 16384"
       - "-t 8"
@@ -228,7 +237,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: post-storage-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 75"
     volumes:
@@ -269,7 +278,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: social-graph-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 16"
     volumes:
@@ -286,7 +295,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: social-graph-redis
-    image: redis
+    image: redis:alpine3.13
     command: "redis-server /social-network-microservices/config/redis.conf"
     volumes:
       - ./config:/social-network-microservices/config
@@ -372,7 +381,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: url-shorten-memcached
-    image: memcached
+    image: memcached:1.6.9
     command: 
       - "-m 16384"
       - "-t 8"
@@ -389,7 +398,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: url-shorten-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 36"
     volumes:
@@ -430,7 +439,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: user-memcached
-    image: memcached
+    image: memcached:1.6.9
     command: 
       - "-m 16384"
       - "-t 8"
@@ -470,7 +479,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: user-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 8"
     volumes:
@@ -511,7 +520,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: user-timeline-mongodb
-    image: mongo
+    image: mongo:4.4.6
     command: "mongod --nojournal --quiet --config /social-network-microservices/config/mongod.conf"
     # command: "mongod --serviceExecutor adaptive --listenBacklog 1024 --syncdelay 3600 --wiredTigerCacheSizeGB 75"
     volumes:
@@ -528,7 +537,7 @@ services:
       - jaeger-agent
       - jaeger-query
     hostname: user-timeline-redis
-    image: redis
+    image: redis:alpine3.13
     command: "redis-server /social-network-microservices/config/redis.conf"
     volumes:
       - ./config:/social-network-microservices/config
@@ -579,13 +588,14 @@ services:
       - cassandra-schema
 
   jaeger-query:
-    image: jaegertracing/jaeger-query
+    image: jaegertracing/jaeger-query:1.23.0
     command:
       ["--cassandra.keyspace=jaeger_v1_dc1", "--cassandra.servers=cassandra"]
     ports:
       - "16686:16686"
     deploy:
       replicas: 1
+      # mode: global
       placement:
         constraints:
           - node.role==worker
@@ -595,9 +605,10 @@ services:
       - cassandra-schema
 
   cassandra-schema:
-    image: jaegertracing/jaeger-cassandra-schema
+    image: jaegertracing/jaeger-cassandra-schema:1.23.0
     deploy:
       replicas: 1
+      # mode: global
       placement:
         constraints:
           - node.role==worker
@@ -614,10 +625,3 @@ services:
         constraints:
           - node.role==worker
 
-networks:
-  default:
-    driver: overlay
-    # ipam:
-    #   driver: default
-    #   config:
-    #     - subnet: 10.12.0.0/24
