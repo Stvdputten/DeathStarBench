@@ -13,9 +13,9 @@ services:
     image: consul:1.9.6
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     # networks:
@@ -26,7 +26,7 @@ services:
       - "8500:8500"
       - "8600:53/udp"
     # restart: always
-    # entrypoint: [ "consul", "agent", "-data-dir=/consul/data", "-config-dir=/consul/config",  "-dev", "-client", "172.18.0.1"]
+    # entrypoint: [ "consul", "agent", "-data-dir=/consul/data", "-config-dir=/consul/configg",  "-dev", "-client", "172.18.0.1"]
     # command: consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 172.18.0.1
     # command: "consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 0.0.0.0"
     # environment: 
@@ -35,9 +35,9 @@ services:
   frontend:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -58,9 +58,9 @@ services:
   profile:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -83,9 +83,9 @@ services:
   search:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     # build: .
@@ -108,9 +108,9 @@ services:
   geo:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -132,9 +132,9 @@ services:
   rate:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -157,9 +157,9 @@ services:
   recommendation:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -181,9 +181,9 @@ services:
   user:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -205,9 +205,9 @@ services:
   reservation:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     environment:
@@ -230,9 +230,9 @@ services:
   jaeger:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: jaegertracing/all-in-one:1.23.0
@@ -254,9 +254,9 @@ services:
   memcached-rate:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: memcached:1.6.9
@@ -278,9 +278,9 @@ services:
   memcached-profile:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: memcached:1.6.9
@@ -302,9 +302,9 @@ services:
   memcached-reserve:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: memcached:1.6.9
@@ -326,9 +326,9 @@ services:
   mongodb-geo:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
@@ -346,9 +346,9 @@ services:
   mongodb-profile:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
@@ -366,9 +366,9 @@ services:
   mongodb-rate:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
@@ -386,9 +386,9 @@ services:
   mongodb-recommendation:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
@@ -406,9 +406,9 @@ services:
   mongodb-reservation:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
@@ -426,9 +426,9 @@ services:
   mongodb-user:
     deploy:
       replicas: 1
-      # placement:
-      #   constraints:
-      #     - node.role==worker
+      placement:
+        constraints:
+          - node.role==worker
       restart_policy:
         condition: any
     image: mongo:4.4.6
