@@ -362,7 +362,7 @@ services:
       - ./media-frontend/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
 
   jaeger:
-    image: jaegertracing/all-in-one:latest
+    image: jaegertracing/all-in-one:1.23.0
     hostname: jaeger-agent
     ports:
       #      - 5775:5775/udp
