@@ -18,6 +18,14 @@ services:
   #     - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
 
   social-graph-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: social-graph-service
     # ports:
@@ -26,57 +34,89 @@ services:
       # - config
       - jaeger
       - social-graph-mongodb
-    restart: always
+    # restart: always
     entrypoint: SocialGraphService
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   social-graph-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: social-graph-mongodb
     # ports:
     #   - 27018:27017
     # depends_on:
       # - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   social-graph-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: redis:alpine3.13 
     hostname: social-graph-redis
     # ports:
     #   - 6380:6379
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: /social-network-microservices/config/redis.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   home-timeline-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: redis:alpine3.13 
     hostname: home-timeline-redis
     # ports:
     #   - 6381:6379
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: /social-network-microservices/config/redis.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   compose-post-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: compose-post-service
     #    ports:
     #      - 10001:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -86,11 +126,19 @@ services:
       - ./keys:/keys
 
   post-storage-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: post-storage-service
     # ports:
     #   - 10002:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config 
       - jaeger
@@ -101,33 +149,57 @@ services:
       - ./keys:/keys
 
   post-storage-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: memcached:1.6.9
     hostname: post-storage-memcached
     # ports:
     #   - 11212:11211
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
 
   post-storage-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: post-storage-mongodb
     # ports:
     #      - 27019:27017
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-timeline-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: user-timeline-service
     #    ports:
     #      - 10003:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -138,37 +210,61 @@ services:
       - ./keys:/keys
 
   user-timeline-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: redis:alpine3.13
     hostname: user-timeline-redis
     # ports:
     #   - 6383:6379
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: /social-network-microservices/config/redis.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-timeline-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: user-timeline-mongodb
     # ports:
     #      - 27020:27017
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   url-shorten-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: url-shorten-service
     #    ports:
     #      - 10004:9090
-    restart: always
+    # restart: always
     entrypoint: UrlShortenService
     depends_on:
       # - config
@@ -179,33 +275,57 @@ services:
       - ./keys:/keys
 
   url-shorten-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: memcached:1.6.9
     hostname: url-shorten-memcached
     # ports:
     #   - 11213:11211
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
 
   url-shorten-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: url-shorten-mongodb
     # ports:
     #      - 27021:27017
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: user-service
     #    ports:
     #      - 10005:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -216,28 +336,52 @@ services:
       - ./keys:/keys
 
   user-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: memcached:1.6.9
     hostname: user-memcached
     # ports:
     #   - 11214:11211
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
 
   user-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: user-mongodb
     # ports:
     #      - 27023:27017
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   media-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: media-service
     #    ports:
@@ -246,40 +390,64 @@ services:
       # - config
       - jaeger
       - media-mongodb
-    restart: always
+    # restart: always
     entrypoint: MediaService
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   media-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: memcached:1.6.9
     hostname: media-memcached
     # ports:
     #   - 11215:11211
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
 
   media-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: mongo:4.4.6
     hostname: media-mongodb
     # ports:
     #      - 27024:27017
     # depends_on:
     #   - config
-    restart: always
+    # restart: always
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   text-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: text-service
     #    ports:
     #      - 10007:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -289,11 +457,19 @@ services:
       - ./keys:/keys
 
   unique-id-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: unique-id-service
     #    ports:
     #      - 10008:9090
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -303,6 +479,14 @@ services:
       - ./keys:/keys
 
   user-mention-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: user-mention-service
     #    ports:
@@ -310,13 +494,21 @@ services:
     depends_on:
       # - config
       - jaeger
-    restart: always
+    # restart: always
     entrypoint: UserMentionService
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   home-timeline-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: home-timeline-service
     #    ports:
@@ -324,13 +516,21 @@ services:
     depends_on:
       # - config
       - jaeger
-    restart: always
+    # restart: always
     entrypoint: HomeTimelineService
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   nginx-thrift:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: stvdputten/openresty-thrift:latest
     hostname: nginx-thrift
     ports:
@@ -338,7 +538,7 @@ services:
     depends_on:
       # - config
       - jaeger
-    restart: always
+    # restart: always
     volumes:
       - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
       - ./nginx-web-server/pages:/usr/local/openresty/nginx/pages
@@ -349,11 +549,19 @@ services:
       - ./keys:/keys
 
   media-frontend:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: yg397/media-frontend:xenial
     hostname: media-frontend
     ports:
       - 8081:8080
-    restart: always
+    # restart: always
     depends_on:
       # - config
       - jaeger
@@ -362,6 +570,13 @@ services:
       - ./media-frontend/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
 
   jaeger:
+    deploy:
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
     image: jaegertracing/all-in-one:1.23.0
     hostname: jaeger-agent
     ports:
@@ -372,6 +587,6 @@ services:
       - 16686:16686
     #      - 14268:14268
     #      - 9411:9411
-    restart: always
+    # restart: always
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
