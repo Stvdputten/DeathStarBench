@@ -25,9 +25,10 @@ services:
       - "8400:8400"
       - "8500:8500"
       - "8600:53/udp"
-    restart: always
-    # command: "consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 172.18.0.2"
-    # consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 0.0.0.0
+    # restart: always
+    # entrypoint: [ "consul", "agent", "-data-dir=/consul/data", "-config-dir=/consul/config",  "-dev", "-client", "172.18.0.1"]
+    # command: consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 172.18.0.1
+    # command: "consul agent -data-dir=/consul/data -config-dir=/consul/config -dev -client 0.0.0.0"
     # environment: 
     #   - CONSUL_BIND_INTERFACE=eth0
 
@@ -125,7 +126,7 @@ services:
     depends_on:
       - mongodb-geo
       - consul
-    restart: always
+    # restart: always
     # cpuset: "0"
 
   rate:
@@ -150,7 +151,7 @@ services:
       - mongodb-rate
       - memcached-rate
       - consul
-    restart: always
+    # restart: always
     # cpuset: "0"
 
   recommendation:
@@ -174,7 +175,7 @@ services:
     depends_on:
       - mongodb-recommendation
       - consul
-    restart: always
+    # restart: always
     # cpuset: "0"
 
   user:
@@ -198,7 +199,7 @@ services:
     depends_on:
       - mongodb-user
       - consul
-    restart: always
+    # restart: always
     # cpuset: "0"
 
   reservation:
@@ -247,7 +248,7 @@ services:
       - "5775:5775/udp"
       - "6831:6831/udp"
       - "6832:6832/udp"
-    restart: always
+    # restart: always
     # cpuset: "0"
 
   memcached-rate:
@@ -265,7 +266,7 @@ services:
     #   - consul
     ports:
      - 11212:11211
-    restart: always
+    # restart: always
     environment:
       - MEMCACHED_CACHE_SIZE=128
       - MEMCACHED_THREADS=2
@@ -289,7 +290,7 @@ services:
     #   - consul
     ports:
      - 11213:11211
-    restart: always
+    # restart: always
     environment:
       - MEMCACHED_CACHE_SIZE=128
       - MEMCACHED_THREADS=2
@@ -313,7 +314,7 @@ services:
     #   - consul
     ports:
      - 11214:11211
-    restart: always
+    # restart: always
     environment:
       - MEMCACHED_CACHE_SIZE=128
       - MEMCACHED_THREADS=2
@@ -337,7 +338,7 @@ services:
     # hostname: geo-db
     ports:
       - "27018:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - geo:/data/db  
@@ -357,7 +358,7 @@ services:
     #   - consul
     ports:
       - "27019:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - profile:/data/db    
@@ -377,7 +378,7 @@ services:
     #   - consul
     ports:
       - "27020:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - rate:/data/db   
@@ -397,7 +398,7 @@ services:
     #   - consul
     ports:
       - "27021:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - recommendation:/data/db
@@ -417,7 +418,7 @@ services:
     #   - consul
     ports:
       - "27022:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - reservation:/data/db 
@@ -437,7 +438,7 @@ services:
     #   - consul
     ports:
       - "27023:27017"
-    restart: always
+    # restart: always
     # cpuset: "0"
     volumes:
       - user:/data/db
