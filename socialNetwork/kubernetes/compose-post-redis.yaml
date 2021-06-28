@@ -37,5 +37,5 @@ spec:
     spec:
       containers:
       - name: compose-post-redis
-        image: redis:latest
+        image: redis:alpine3.13
       restartPolicy: Always
