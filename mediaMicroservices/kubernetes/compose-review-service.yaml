@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: compose-review-service
-        image: stvdpu/media-microservices
+        image: stvdputten/media-microservices
         command: ["ComposeReviewService"]
       restartPolicy: Always

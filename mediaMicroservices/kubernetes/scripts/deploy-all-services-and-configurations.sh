@@ -4,7 +4,7 @@ cd $(dirname $0)/..
 NS="media-microsvc"
 
 kubectl create namespace ${NS}
-kubectl project ${NS}
+# kubectl project ${NS}
 
 # kubectl adm policy add-scc-to-user anyuid -z default -n ${NS}
 # kubectl adm policy add-scc-to-user privileged -z default -n ${NS}

@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: stvdpu/media-microservices
+        image: stvdputten/media-microservices
         command: ["UserService"]
       restartPolicy: Always
