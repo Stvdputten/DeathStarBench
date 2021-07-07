@@ -42,6 +42,10 @@ job "social-network" {
 		network {
 			mode = "bridge"
 
+			port "db_m" {
+				to = 27017
+			}
+
 			port "jaeger_ui" {
 				static = 16686
 				to = 16686
