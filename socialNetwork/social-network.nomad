@@ -40,7 +40,7 @@ job "social-network" {
 
 		// resources {
 		network {
-			// mode = "bridge"
+			mode = "bridge"
 
 			port "jaeger_ui" {
 				static = 16686
@@ -50,44 +50,50 @@ job "social-network" {
 		// }
 
 
-		// task "social-graph-service" {
-		// 	driver = "docker"
-		// 	config {
-		// 		image = "stvdputten/social-network-microservices:latest"
-		// 		// entrypoint = "SocialGraphService"
-		// 		command = "SocialGraphService"
-		// 		volumes = [
-		// 				"./config:/social-network-microservices/config",
-		// 				"./keys:/keys"
-		// 		]
-		// 	}
-
-		// }
-
-		// task "social-graph-mongodb" {
-		// 	driver = "docker"
-		// 	config {
-		// 		image = "mongo:4.4.6"
+		task "social-graph-service" {
+			driver = "docker"
+			config {
+				image = "stvdputten/social-network-microservices:latest"
 				// entrypoint = "SocialGraphService"
-				// command = "--config /social-network-microservices/config/mongod.conf"
-				// volumes = [
-				// 		"/home/stvdputten/Documents/Orchestration/Hashi/NomadConsul/local/DeathStarBench/socialNetwork/config:/social-network-microservices/config",
-				// 		"/home/stvdputten/Documents/Orchestration/Hashi/NomadConsul/local/DeathStarBench/socialNetwork/keys:/keys"
-				// ]
-			// }
-			// service {
-			// 	name = "mongodb"
-            //      tags = ["db_m"]
-            //      port = "db_m"
-            //      check {
-            //           type = "tcp"
-            //           interval = "10s"
-            //           timeout = "4s"
-            //  }
-			// }
-			
+				command = "SocialGraphService"
+				volumes = [
+						"./config:/social-network-microservices/config",
+						"./keys:/keys"
+				]
+			}
 
-		// }
+		}
+
+		task "social-graph-mongodb" {
+			driver = "docker"
+			config {
+				image = "mongo:4.4.6"
+				entrypoint = "SocialGraphService"
+				command = "--config /social-network-microservices/config/mongod.conf"
+				volumes = [
+					"./config:/social-network-microservices/config",
+					"./keys:/keys"
+				]
+				// mount {
+				// 	type = "bind"
+				// 	target = "ĸ
+				// 		"./config:/social-network-microservices/config",
+				// 		"./keys:/keys"
+
+				// }
+			}
+
+			service {
+				name = "mongodb"
+				tags = ["db_m"]
+				port = "db_m"
+				check {
+					type = "tcp"
+					interval = "10s"
+					timeout = "4s"
+				}
+			}
+		}
 
 		task "jaeger" {
 			driver = "docker"
