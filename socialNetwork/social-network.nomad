@@ -42,11 +42,13 @@ job "social-network" {
 			mode = "bridge"
 
 			port "db_r" {
-				to = 6037
+				to = 6379
 			}
 
 			port "db_m" {
 				to = 27017
+			}
+			port "http" {
 			}
 
 			port "jaeger_ui" {
@@ -72,6 +74,7 @@ job "social-network" {
 					source = "/users/stvdp/DeathStarBench/socialNetwork/config"
 				}
 			}
+			// https://www.nomadproject.io/docs/integrations/consul-connect
 
 		}
 
@@ -101,6 +104,12 @@ job "social-network" {
 				name = "mongodb"
 				tags = ["db_m"]
 				port = "db_m"
+				// port = "27017"
+				// connect {        
+				// 	 sidecar_service {}      
+				// }
+				// port = "http"
+
 				check {
 					type = "tcp"
 					interval = "10s"
@@ -133,6 +142,11 @@ job "social-network" {
 				name = "social-graph-redis"
 				tags = ["db_r"]
 				port = "db_r"
+				// port = "6379"
+				// port = "http"
+				// connect {        
+				// 	 sidecar_service {}      
+				// }
 				check {
 					type = "tcp"
 					interval = "10s"
@@ -147,8 +161,9 @@ job "social-network" {
 				image = "jaegertracing/all-in-one:1.23.0"
 			}
 			service {
-				name = "jaeger-tracing"
+				name = "jaeger-agent"
 				port = "jaeger_ui"
+				// port = "http"
 			}
 
 		}
