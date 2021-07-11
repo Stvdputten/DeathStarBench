@@ -1,15 +1,15 @@
 {
   "secret": "secret",
   "social-graph-service": {
-    "addr": "social-graph-service",
+    "addr": "127.0.0.1",
     "port": 9090
   },
   "social-graph-mongodb": {
-    "addr": "social-graph-mongodb",
+    "addr": "127.0.0.1",
     "port": 27017
   },
   "social-graph-redis": {
-    "addr": "social-graph-redis",
+    "addr": "127.0.0.1",
     "port": 6379
   },
   "write-home-timeline-service": {
