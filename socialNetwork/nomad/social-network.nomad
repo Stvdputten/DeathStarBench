@@ -66,12 +66,12 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
 				}
 				mount {
 					type = "bind"
 					target = "/social-network-microservices/config"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
 				}
 			}
 			// https://www.nomadproject.io/docs/integrations/consul-connect
@@ -91,12 +91,12 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
 				}
 				mount {
 					type = "bind"
 					target = "/social-network-microservices/config"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
 				}
 			}
 
@@ -125,12 +125,12 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
 				}
 				mount {
 					type = "bind"
 					target = "/social-network-microservices/config"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
 				}
 				command = "redis-server"
 				args = [
