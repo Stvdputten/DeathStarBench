@@ -165,6 +165,9 @@ job "social-network" {
 				port = "jaeger_ui"
 				// port = "http"
 			}
+			env {
+				COLLECTOR_ZIPKIN_HTTP_PORT="9411"
+			}
 
 		}
 
