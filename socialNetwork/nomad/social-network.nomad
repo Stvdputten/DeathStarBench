@@ -41,20 +41,9 @@ job "social-network" {
 		network {
 			mode = "bridge"
 
-			port "db_r" {
-				to = 6379
-			}
-
-			port "db_m" {
-				to = 27017
-			}
 			port "http" {
-			}
-
-			port "jaeger_ui" {
 				static = 16686
-				to = 16686
-			}
+			 }
 		}
 
 		task "social-graph-service" {
@@ -103,18 +92,13 @@ job "social-network" {
 			service {
 				name = "mongodb"
 				tags = ["db_m"]
-				port = "db_m"
-				// port = "27017"
-				// connect {        
-				// 	 sidecar_service {}      
-				// }
-				// port = "http"
+				port = "http"
 
-				// check {
-				// 	type = "tcp"
-				// 	interval = "10s"
-				// 	timeout = "4s"
-				// }
+				check {
+					type = "tcp"
+					interval = "10s"
+					timeout = "4s"
+				}
 			}
 		}
 
@@ -141,17 +125,13 @@ job "social-network" {
 			service {
 				name = "social-graph-redis"
 				tags = ["db_r"]
-				port = "db_r"
-				// port = "6379"
-				// port = "http"
-				// connect {        
-				// 	 sidecar_service {}      
-				// }
-				// check {
-				// 	type = "tcp"
-				// 	interval = "10s"
-				// 	timeout = "4s"
-				// }
+				port = "http"
+
+				check {
+					type = "tcp"
+					interval = "10s"
+					timeout = "4s"
+				}
 			}
 		}
 
@@ -162,8 +142,7 @@ job "social-network" {
 			}
 			service {
 				name = "jaeger-agent"
-				port = "jaeger_ui"
-				// port = "http"
+				port = "http"
 			}
 			env {
 				COLLECTOR_ZIPKIN_HTTP_PORT="9411"
