@@ -85,7 +85,8 @@ job "social-network" {
 				// entrypoint = "mongod"
 				command = "mongod"
 				args = [
-				 	"--config /social-network-microservices/config/mongod.conf"
+				 	"--config",
+					" /social-network-microservices/config/mongod.conf"
 				 ]
 				mount {
 					type = "bind"
@@ -109,11 +110,11 @@ job "social-network" {
 				// }
 				// port = "http"
 
-				check {
-					type = "tcp"
-					interval = "10s"
-					timeout = "4s"
-				}
+				// check {
+				// 	type = "tcp"
+				// 	interval = "10s"
+				// 	timeout = "4s"
+				// }
 			}
 		}
 
@@ -146,11 +147,11 @@ job "social-network" {
 				// connect {        
 				// 	 sidecar_service {}      
 				// }
-				check {
-					type = "tcp"
-					interval = "10s"
-					timeout = "4s"
-				}
+				// check {
+				// 	type = "tcp"
+				// 	interval = "10s"
+				// 	timeout = "4s"
+				// }
 			}
 		}
 
