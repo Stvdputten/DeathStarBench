@@ -66,7 +66,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
 				}
 				mount {
 					type = "bind"
@@ -91,7 +91,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
 				}
 				mount {
 					type = "bind"
@@ -125,7 +125,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/keys"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
 				}
 				mount {
 					type = "bind"
