@@ -86,7 +86,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 				 	"--config",
-					" /social-network-microservices/config/mongod.conf"
+					"/social-network-microservices/config/mongod.conf"
 				 ]
 				mount {
 					type = "bind"
