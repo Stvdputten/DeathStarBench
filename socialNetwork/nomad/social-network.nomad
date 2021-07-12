@@ -32,18 +32,10 @@ job "social-network" {
 
 	group "social-network" {
 
-		// restart {
-		// 	attempts = 2
-		// 	delay = "15s"
-		// 	mode = "fail"
-		// }
-
 		network {
 			mode = "bridge"
 
-			port "http" {
-				static = 16686
-			 }
+			port "http" { }
 		}
 
 		task "social-graph-service" {
@@ -63,15 +55,24 @@ job "social-network" {
 					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
 				}
 			}
-			// https://www.nomadproject.io/docs/integrations/consul-connect
 
+			service {
+				name = "social-graph-service"
+				tags = ["sg_service"]
+				port = "http"
+				check {
+					type = "tcp"
+					interval = "10s"
+					timeout = "4s"
+				}
+			// https://www.nomadproject.io/docs/integrations/consul-connect
+			}
 		}
 
 		task "social-graph-mongodb" {
 			driver = "docker"
 			config {
 				image = "mongo:4.4.6"
-				// entrypoint = "mongod"
 				command = "mongod"
 				args = [
 				 	"--config",
@@ -90,10 +91,9 @@ job "social-network" {
 			}
 
 			service {
-				name = "mongodb"
+				name = "social-graph-mongodb"
 				tags = ["db_m"]
 				port = "http"
-
 				check {
 					type = "tcp"
 					interval = "10s"
@@ -135,6 +135,17 @@ job "social-network" {
 			}
 		}
 
+	} 
+
+	group "jaeger"{
+		network {
+			mode = "bridge"
+
+			port "http" {
+				static = 16686
+			 }
+		}
+
 		task "jaeger" {
 			driver = "docker"
 			config {
@@ -147,10 +158,6 @@ job "social-network" {
 			env {
 				COLLECTOR_ZIPKIN_HTTP_PORT="9411"
 			}
-
 		}
-
-
-	} 
-
+	}
 }
