@@ -14,20 +14,20 @@ job "social-network" {
 			 driver = "docker"
 
 			 config {
-				 image = "yg397/media-frontend:xenial"
-			 }
-			mount {
-				type = "bind"
-				target = "/usr/local/openresty/nginx/lua-scripts"
-				source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts"
+				image = "yg397/media-frontend:xenial"
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/lua-scripts"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts"
+				}
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/conf/nginx.conf"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+				}
 			}
-			mount {
-				type = "bind"
-				target = "/usr/local/openresty/nginx/conf/nginx.conf"
-				source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
-			}
-		 }
-	 }
+		}
+	}
 
 	group "user-mention" {
 		count = 1
