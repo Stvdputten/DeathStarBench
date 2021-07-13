@@ -23,7 +23,7 @@
     "timeout_ms": 10000
   },
   "home-timeline-redis": {
-    "addr": "home-timeline-redis",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 6379,
@@ -44,7 +44,7 @@
     "timeout_ms": 10000
   },
   "social-graph-redis": {
-    "addr": "social-graph-redis",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 6379,
@@ -65,14 +65,14 @@
     "timeout_ms": 10000
   },
   "user-memcached": {
-    "addr": "user-memcached",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 11211,
     "timeout_ms": 10000
   },
   "url-shorten-memcached": {
-    "addr": "url-shorten-memcached",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 11211,
@@ -86,7 +86,7 @@
     "timeout_ms": 10000
   },
   "user-mongodb": {
-    "addr": "user-mongodb",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 27017,
@@ -101,7 +101,7 @@
     "serverKeyPath": "/keys/server.key"
   },
   "user-timeline-mongodb": {
-    "addr": "user-timeline-mongodb",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 27017,
@@ -115,14 +115,14 @@
     "timeout_ms": 10000
   },
   "social-graph-mongodb": {
-    "addr": "social-graph-mongodb",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 27017,
     "timeout_ms": 10000
   },
   "user-timeline-redis": {
-    "addr": "user-timeline-redis",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 6379,
@@ -136,14 +136,14 @@
     "timeout_ms": 10000
   },
   "post-storage-mongodb": {
-    "addr": "post-storage-mongodb",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 27017,
     "timeout_ms": 10000
   },
   "url-shorten-mongodb": {
-    "addr": "url-shorten-mongodb",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 27017,
@@ -164,14 +164,14 @@
     "timeout_ms": 10000
   },
   "post-storage-memcached": {
-    "addr": "post-storage-memcached",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 11211,
     "timeout_ms": 10000
   },
   "compose-post-redis": {
-    "addr": "compose-post-redis",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 6379,

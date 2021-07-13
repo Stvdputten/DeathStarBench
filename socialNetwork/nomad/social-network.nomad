@@ -1,6 +1,60 @@
 job "social-network" {
  	datacenters = ["dc1"]
 
+	group "nginx-thrift" {
+		 count = 1
+		 network {
+			 mode = "bridge"
+			 port "http" {
+				static = 8080
+				to = 8080
+			 }	
+		 }
+		 task "nginx-thrift" {
+			 driver = "docker"
+
+			 config {
+				image = "stvdputten/openresty-thrift:latest"
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/lua-scripts"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts"
+				}
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/pages"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/pages"
+				}
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/conf/nginx.conf"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/conf/nginx.conf"
+				}
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/nginx/jaeger-config.json"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/jaeger-config.json"
+				}
+				mount {
+					type = "bind"
+					target = "/gen-lua"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/gen-lua"
+				}
+				mount {
+					type = "bind"
+					target = "/usr/local/openresty/lualib/thrift"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/docker/openresty-thrift/lua-thrift"
+				}
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+
+			}
+		}
+	}
+
 	group "media-frontend" {
 		 count = 1
 		 network {
