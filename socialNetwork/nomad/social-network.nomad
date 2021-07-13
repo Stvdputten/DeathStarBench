@@ -174,6 +174,16 @@ job "social-network" {
 					"--config",
 					"/social-network-microservices/config/mongodb.conf"
 				]
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+				mount {
+					type = "bind"
+					target = "/social-network-microservices/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+				}
 			}
 			service {
 				name = "media-mongodb"
@@ -232,6 +242,16 @@ job "social-network" {
 					"--config",
 					"/social-network-microservices/config/mongodb.conf"
 				]
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+				mount {
+					type = "bind"
+					target = "/social-network-microservices/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+				}
 			}
 			service {
 				name = "user-mongodb"
@@ -278,6 +298,16 @@ job "social-network" {
 					"--config",
 					"/social-network-microservices/config/mongodb.conf"
 				]
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+				mount {
+					type = "bind"
+					target = "/social-network-microservices/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+				}
 			}
 			service {
 				name = "url-shorten-mongodb"
@@ -338,6 +368,16 @@ job "social-network" {
 					"--config",
 					"/social-network-microservices/config/mongodb.conf"
 				]
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+				mount {
+					type = "bind"
+					target = "/social-network-microservices/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+				}
 			}
 			service {
 				name = "user-timeline-mongodb"
@@ -357,7 +397,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/social-network-microservices/config"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config/"
 				}
 				command = "redis-server"
 				args = [
@@ -424,6 +464,16 @@ job "social-network" {
 					"--config",
 					"/social-network-microservices/config/mongodb.conf"
 				]
+				mount {
+					type = "bind"
+					target = "/keys"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+				}
+				mount {
+					type = "bind"
+					target = "/social-network-microservices/config"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+				}
 			}
 			service {
 				name = "post-storage-mongodb"
@@ -573,7 +623,7 @@ job "social-network" {
 	} 
 
 
-	group "social-network" {
+	group "social-graph" {
 
 		network {
 			mode = "bridge"
