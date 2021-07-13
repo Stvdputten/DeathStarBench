@@ -172,7 +172,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 					"--config",
-					"/social-network-microservices/config/mongodb.conf"
+					"/social-network-microservices/config/mongod.conf"
 				]
 				mount {
 					type = "bind"
@@ -240,7 +240,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 					"--config",
-					"/social-network-microservices/config/mongodb.conf"
+					"/social-network-microservices/config/mongod.conf"
 				]
 				mount {
 					type = "bind"
@@ -296,7 +296,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 					"--config",
-					"/social-network-microservices/config/mongodb.conf"
+					"/social-network-microservices/config/mongod.conf"
 				]
 				mount {
 					type = "bind"
@@ -366,7 +366,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 					"--config",
-					"/social-network-microservices/config/mongodb.conf"
+					"/social-network-microservices/config/mongod.conf"
 				]
 				mount {
 					type = "bind"
@@ -397,7 +397,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/social-network-microservices/config"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config/"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
 				}
 				command = "redis-server"
 				args = [
@@ -462,7 +462,7 @@ job "social-network" {
 				command = "mongod"
 				args = [
 					"--config",
-					"/social-network-microservices/config/mongodb.conf"
+					"/social-network-microservices/config/mongod.conf"
 				]
 				mount {
 					type = "bind"
