@@ -90,7 +90,7 @@ job "social-network" {
 			 config {
 				image = "stvdputten/openresty-thrift:latest"
 
-				privileged = true
+				// privileged = true
 				// mount {
 				// 	type = "bind"
 				// 	target = "local/resolv.conf"
