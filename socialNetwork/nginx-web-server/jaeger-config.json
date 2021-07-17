@@ -3,7 +3,7 @@
   "diabled": false,
   "reporter": {
     "logSpans": false,
-    "localAgentHostPort": "172.26.64 :6831",
+    "localAgentHostPort": "172.26.64.1:6831",
     "queueSize": 1000000,
     "bufferFlushInterval": 10
   },

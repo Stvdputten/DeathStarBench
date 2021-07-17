@@ -690,12 +690,19 @@ job "social-network" {
 		}
 
                 service {
-                        name = "social-graph-service"
+                        name = "sg-jaeger-agent"
                         //  port the api service listens on
-                        port = "9090"
+                        port = "6831"
 
                         connect {
-                                sidecar_service {}
+                                sidecar_service {
+                                        proxy {
+                                                upstreams {
+                                                        destination_name = "jaeger-agent"
+                                                        local_bind_port =  6831
+                                                }
+                                        }
+                                }
                         }
                 }
 
@@ -814,20 +821,23 @@ job "social-network" {
 
                 service {
                         name = "jaeger-agent"
-                        port = "6371"
+                        port = "6831"
+			connect {
+				sidecar_service { }
+			}
+                        // connect {
+                        //         sidecar_service {
+                        //                 proxy {
+                        //                         upstreams {
+                        //                                 destination_name = "jaeger-agent-service"
+                        //                                 local_bind_port = 6371
+			// 				datacenter = "dc1"
+			// 				local_bind_address = "127.0.0.1"
+                        //                         }
+                        //                 }
+                        //         }
+                        // }
 
-                        connect {
-                                sidecar_service {
-                                        proxy {
-                                                upstreams {
-                                                        destination_name = "jaeger-agent-service"
-                                                        local_bind_port = 6371
-							datacenter = "dc1"
-							local_bind_address = "127.0.0.1"
-                                                }
-                                        }
-                                }
-                        }
                 }
 		task "jaeger" {
 			driver = "docker"
