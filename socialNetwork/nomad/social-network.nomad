@@ -73,19 +73,34 @@ job "social-network" {
 		 task "nginx-thrift" {
 			 driver = "docker"
 
-			 env {
-				CONSUL_HTTP_ADDR="${}"
-			 }
+			//  env {
+			// 	CONSUL_HTTP_ADDR="${}"
+			//  }
+
+			template {
+				destination = "local/resolv.conf"
+				data = <<EOF
+				nameserver {{ env "attr.unique.network.ip-address" }}
+				nameserver 8.8.8.8
+				nameserver 8.8.4.4
+				EOF
+			}
+
 
 			 config {
 				image = "stvdputten/openresty-thrift:latest"
 
 				privileged = true
+				mount {
+					type = "bind"
+					target = "local/resolv.conf"
+					source = "/etc/resolv.conf"
+				}
 
 				mount {
 					type = "bind"
 					target = "/usr/local/openresty/nginx/lua-scripts"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad"
 				}
 				mount {
 					type = "bind"
@@ -155,7 +170,7 @@ job "social-network" {
 				mount {
 					type = "bind"
 					target = "/usr/local/openresty/nginx/lua-scripts"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts"
+					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
 				}
 				mount {
 					type = "bind"
