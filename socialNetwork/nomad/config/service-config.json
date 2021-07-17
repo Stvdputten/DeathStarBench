@@ -1,15 +1,15 @@
 {
   "url-shorten-service": {
-    "addr": "url-shorten-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9100,
     "timeout_ms": 10000
   },
   "unique-id-service": {
-    "addr": "unique-id-service",
-    "port": 9090,
-    "netif": "eth0",
+    "addr": "127.0.0.1",
+    "port": 9099,
+    "netif": "en0",
     "keepalive_ms": 10000,
     "connections": 512,
     "timeout_ms": 10000
@@ -30,17 +30,17 @@
     "timeout_ms": 10000
   },
   "text-service": {
-    "addr": "text-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9098,
     "timeout_ms": 10000
   },
   "post-storage-service": {
-    "addr": "post-storage-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9097,
     "timeout_ms": 10000
   },
   "social-graph-redis": {
@@ -51,17 +51,17 @@
     "timeout_ms": 10000
   },
   "user-mention-service": {
-    "addr": "user-mention-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9096,
     "timeout_ms": 10000
   },
   "home-timeline-service": {
-    "addr": "home-timeline-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9095,
     "timeout_ms": 10000
   },
   "user-memcached": {
@@ -79,10 +79,10 @@
     "timeout_ms": 10000
   },
   "compose-post-service": {
-    "addr": "compose-post-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9094,
     "timeout_ms": 10000
   },
   "user-mongodb": {
@@ -129,10 +129,10 @@
     "timeout_ms": 10000
   },
   "user-timeline-service": {
-    "addr": "user-timeline-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9093,
     "timeout_ms": 10000
   },
   "post-storage-mongodb": {
@@ -150,17 +150,17 @@
     "timeout_ms": 10000
   },
   "media-service": {
-    "addr": "media-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9092,
     "timeout_ms": 10000
   },
   "social-graph-service": {
-    "addr": "social-graph-service",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
-    "port": 9090,
+    "port": 9091,
     "timeout_ms": 10000
   },
   "post-storage-memcached": {
@@ -178,9 +178,9 @@
     "timeout_ms": 10000
   },
   "user-service": {
-    "addr": "user-service",
+    "addr": "127.0.0.1",
     "port": 9090,
-    "netif": "eth0",
+    "netif": "eno1",
     "keepalive_ms": 10000,
     "connections": 512,
     "timeout_ms": 10000
