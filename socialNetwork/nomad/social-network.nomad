@@ -9,9 +9,6 @@ job "social-network" {
 				to = 8080
 			}	
 
-                        // connect { 
-			// 	sidecar_service { } 
-			// }
 		 }
 
                 service {
@@ -76,8 +73,15 @@ job "social-network" {
 		 task "nginx-thrift" {
 			 driver = "docker"
 
+			 env {
+				CONSUL_HTTP_ADDR="${}"
+			 }
+
 			 config {
 				image = "stvdputten/openresty-thrift:latest"
+
+				privileged = true
+
 				mount {
 					type = "bind"
 					target = "/usr/local/openresty/nginx/lua-scripts"
