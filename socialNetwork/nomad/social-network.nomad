@@ -91,11 +91,14 @@ job "social-network" {
 				image = "stvdputten/openresty-thrift:latest"
 
 				privileged = true
-				mount {
-					type = "bind"
-					target = "local/resolv.conf"
-					source = "/etc/resolv.conf"
-				}
+				// mount {
+				// 	type = "bind"
+				// 	target = "local/resolv.conf"
+				// 	source = "/etc/resolv.conf"
+				// }
+				volumes = [
+					"local/resolv.conf:/etc/resolv.conf"
+				]
 
 				mount {
 					type = "bind"
