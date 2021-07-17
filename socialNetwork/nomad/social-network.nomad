@@ -702,6 +702,9 @@ job "social-network" {
 		task "social-graph-service" {
 			driver = "docker"
 
+			env {
+				JAEGER_SERVICE_NAME = "http://${NOMAD_UPSTREAM_ADDR_jaeger_agent}"
+			}
 			config {
 				image = "stvdputten/social-network-microservices:latest"
 				command = "SocialGraphService"
@@ -817,8 +820,10 @@ job "social-network" {
                                 sidecar_service {
                                         proxy {
                                                 upstreams {
-                                                        destination_name = "social-graph-service"
-                                                        local_bind_port = 9090
+                                                        destination_name = "jaeger-agent-service"
+                                                        local_bind_port = 6371
+							datacenter = "dc1"
+							local_bind_address = "127.0.0.1"
                                                 }
                                         }
                                 }
