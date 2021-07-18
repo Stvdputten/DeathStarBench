@@ -77,18 +77,19 @@ job "social-network" {
 			// 	CONSUL_HTTP_ADDR="${}"
 			//  }
 
-			template {
-				destination = "local/resolv.conf"
-				data = <<EOF
-				nameserver {{ env "attr.unique.network.ip-address" }}
-				nameserver 8.8.8.8
-				nameserver 8.8.4.4
-				EOF
-			}
+			// template {
+			// 	destination = "local/resolv.conf"
+			// 	data = <<EOF
+			// 	nameserver {{ env "attr.unique.network.ip-address" }}
+			// 	nameserver 8.8.8.8
+			// 	nameserver 8.8.4.4
+			// 	EOF
+			// }
 
 
 			 config {
 				image = "stvdputten/openresty-thrift:latest"
+				network_mode = "bridge"
 
 				// privileged = true
 				// mount {
@@ -97,14 +98,16 @@ job "social-network" {
 				// 	source = "/etc/resolv.conf"
 				// }
 				volumes = [
-					"local/resolv.conf:/etc/resolv.conf"
+					"local/resolv.conf:/etc/resolv.conf",
+					"${HOME}/DeathStarBench/socialNetwork/nomad/nginx-wen-server/lua-scripts-nomad:/usr/local/openresty/nginx/lua-scripts",
 				]
 
-				mount {
-					type = "bind"
-					target = "/usr/local/openresty/nginx/lua-scripts"
-					source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad"
-				}
+
+				// mount {
+				// 	type = "bind"
+				// 	target = "/usr/local/openresty/nginx/lua-scripts"
+				// 	source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad"
+				// }
 				mount {
 					type = "bind"
 					target = "/usr/local/openresty/nginx/pages"
