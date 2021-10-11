@@ -91,6 +91,10 @@ job "social-network" {
 
     task "nginx-thrift" {
       driver = "docker"
+      volume "DSB" {
+        type   = "host"
+        source = "/users/stvdp/DeathStarBench"
+      }
 
       //  env {
       // 	CONSUL_HTTP_ADDR="${}"
@@ -118,7 +122,7 @@ job "social-network" {
         // }
         volumes = [
           "local/resolv.conf:/etc/resolv.conf",
-          "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-wen-server/lua-scripts-nomad:/usr/local/openresty/nginx/lua-scripts",
+          "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad:/usr/local/openresty/nginx/lua-scripts",
         ]
 
 
