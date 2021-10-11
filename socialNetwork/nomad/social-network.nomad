@@ -91,10 +91,10 @@ job "social-network" {
 
     task "nginx-thrift" {
       driver = "docker"
-      volume "DSB" {
-        type   = "host"
-        source = "/users/stvdp/DeathStarBench"
-      }
+      // volume "DSB" {
+      //   type   = "host"
+      //   source = "/users/stvdp/DeathStarBench"
+      // }
 
       //  env {
       // 	CONSUL_HTTP_ADDR="${}"
