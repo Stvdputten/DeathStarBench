@@ -80,6 +80,20 @@ job "social-network" {
             //   destination_name = "unique-id-service"
             //   local_bind_port  = 9099
             // }
+            // upstreams {
+            //   destination_name = "url-shorten-service"
+            //   local_bind_port  = 9100
+            // }
+          }
+        }
+      }
+    }
+
+    service {
+      name = "nginx-thrift-url-shorten-service"
+      connect {
+        sidecar_service {
+          proxy {
             upstreams {
               destination_name = "url-shorten-service"
               local_bind_port  = 9100
@@ -120,17 +134,17 @@ job "social-network" {
         // 	target = "local/resolv.conf"
         // 	source = "/etc/resolv.conf"
         // }
-        volumes = [
-          "local/resolv.conf:/etc/resolv.conf",
-          "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad:/usr/local/openresty/nginx/lua-scripts",
-        ]
+        // volumes = [
+        //   "local/resolv.conf:/etc/resolv.conf",
+        //   "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad:/usr/local/openresty/nginx/lua-scripts",
+        // ]
 
 
-        // mount {
-        // 	type = "bind"
-        // 	target = "/usr/local/openresty/nginx/lua-scripts"
-        // 	source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad"
-        // }
+        mount {
+        	type = "bind"
+        	target = "/usr/local/openresty/nginx/lua-scripts"
+        	source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/lua-scripts-nomad"
+        }
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/pages"
@@ -596,6 +610,7 @@ job "social-network" {
           "--config",
           "/social-network-microservices/config/mongod.conf"
         ]
+        
         mount {
           type   = "bind"
           target = "/keys"
@@ -605,9 +620,6 @@ job "social-network" {
           type   = "bind"
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-        volumes {
-          enabled = "true"
         }
       }
       service {
