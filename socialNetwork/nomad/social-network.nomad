@@ -1,11 +1,3 @@
-plugin "docker" {
-  config {
-    volumes {
-      enabled = true
-    }
-  }
-}
-
 job "social-network" {
   datacenters = ["dc1"]
 
