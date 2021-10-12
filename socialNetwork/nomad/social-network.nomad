@@ -10,26 +10,6 @@ job "social-network" {
       }
     }
 
-    // service {
-    // 	name = "prometheus"
-    // 	port = "http"
-    // 	tags = ["monitoring","prometheus"]
-
-    // 	check {
-    // 		name     = "Prometheus HTTP"
-    // 		type     = "http"
-    // 		path     = "/targets"
-    // 		interval = "5s"
-    // 		timeout  = "2s"
-
-    // 		check_restart {
-    // 			limit           = 2
-    // 			grace           = "60s"
-    // 			ignore_warnings = false
-    // 		}
-    // 	}
-    // }
-
     service {
       name = "nginx-thrift-jaeger-agent"
 
@@ -113,7 +93,7 @@ job "social-network" {
       config {
         image        = "stvdputten/openresty-thrift:latest"
         network_mode = "bridge"
-
+        ports = ["http"]
         // privileged = true
         // mount {
         // 	type = "bind"
@@ -166,50 +146,51 @@ job "social-network" {
     }
   }
 
-  //   group "media-frontend" {
-  //     count = 1
-  //     network {
-  //       mode = "bridge"
-  //       port "http" {
-  //         static = 8081
-  //         to     = 8080
-  //       }
-  //     }
+    group "media-frontend" {
+      count = 1
+      network {
+        mode = "bridge"
+        port "http" {
+          static = 8081
+          to     = 8080
+        }
+      }
 
-  //     service {
-  //       name = "media-frontend-jaeger-agent"
+      service {
+        name = "media-frontend-jaeger-agent"
 
-  //       connect {
-  //         sidecar_service {
-  //           proxy {
-  //             upstreams {
-  //               destination_name = "jaeger-agent"
-  //               local_bind_port  = 6831
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
+        connect {
+          sidecar_service {
+            proxy {
+              upstreams {
+                destination_name = "jaeger-agent"
+                local_bind_port  = 6831
+              }
+            }
+          }
+        }
+      }
 
-  //     task "media-frontend" {
-  //       driver       = "docker"
-  // //       network_mode = "bridge"
+      task "media-frontend" {
+        driver       = "docker"
+  //       network_mode = "bridge"
 
-  //       config {
-  //         image = "yg397/media-frontend:xenial"
-  //         mount {
-  //           type   = "bind"
-  //           target = "/usr/local/openresty/nginx/lua-scripts"
-  //           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
-  //         }
-  //         mount {
-  //           type   = "bind"
-  //           target = "/usr/local/openresty/nginx/conf/nginx.conf"
-  //           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
-  //         }
-  //       }
-  //     }
-  //   }
+        config {
+          image = "yg397/media-frontend:xenial"
+          ports = ["http"]
+          mount {
+            type   = "bind"
+            target = "/usr/local/openresty/nginx/lua-scripts"
+            source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
+          }
+          mount {
+            type   = "bind"
+            target = "/usr/local/openresty/nginx/conf/nginx.conf"
+            source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          }
+        }
+      }
+    }
 
     group "user-mention" {
       network {
@@ -1174,7 +1155,6 @@ job "social-network" {
       service {
         name = "jaeger-agent"
         port = "http"
-
       }
       env {
         COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
