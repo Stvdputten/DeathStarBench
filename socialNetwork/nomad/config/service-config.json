@@ -15,7 +15,7 @@
     "timeout_ms": 10000
   },
   "write-home-timeline-service": {
-    "addr": "write-home-timeline-service",
+    "addr": "127.0.0.1",
     "workers": 32,
     "keepalive_ms": 10000,
     "connections": 512,
@@ -180,7 +180,7 @@
   "user-service": {
     "addr": "127.0.0.1",
     "port": 9090,
-    "netif": "eth0",
+    "netif": "eno1",
     "keepalive_ms": 10000,
     "connections": 512,
     "timeout_ms": 10000
