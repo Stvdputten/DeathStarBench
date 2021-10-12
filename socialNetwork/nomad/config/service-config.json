@@ -180,7 +180,7 @@
   "user-service": {
     "addr": "127.0.0.1",
     "port": 9090,
-    "netif": "eno1",
+    "netif": "eth0",
     "keepalive_ms": 10000,
     "connections": 512,
     "timeout_ms": 10000
