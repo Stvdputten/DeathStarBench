@@ -166,50 +166,50 @@ job "social-network" {
     }
   }
 
-  //   group "media-frontend" {
-  //     count = 1
-  //     network {
-  //       mode = "bridge"
-  //       port "http" {
-  //         static = 8081
-  //         to     = 8080
-  //       }
-  //     }
+    group "media-frontend" {
+      count = 1
+      network {
+        mode = "bridge"
+        port "http" {
+          static = 8081
+          to     = 8080
+        }
+      }
 
-  //     service {
-  //       name = "media-frontend-jaeger-agent"
+      service {
+        name = "media-frontend-jaeger-agent"
 
-  //       connect {
-  //         sidecar_service {
-  //           proxy {
-  //             upstreams {
-  //               destination_name = "jaeger-agent"
-  //               local_bind_port  = 6831
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
+        connect {
+          sidecar_service {
+            proxy {
+              upstreams {
+                destination_name = "jaeger-agent"
+                local_bind_port  = 6831
+              }
+            }
+          }
+        }
+      }
 
-  //     task "media-frontend" {
-  //       driver       = "docker"
-  // //       network_mode = "bridge"
+      task "media-frontend" {
+        driver       = "docker"
+  //       network_mode = "bridge"
 
-  //       config {
-  //         image = "yg397/media-frontend:xenial"
-  //         mount {
-  //           type   = "bind"
-  //           target = "/usr/local/openresty/nginx/lua-scripts"
-  //           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
-  //         }
-  //         mount {
-  //           type   = "bind"
-  //           target = "/usr/local/openresty/nginx/conf/nginx.conf"
-  //           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
-  //         }
-  //       }
-  //     }
-  //   }
+        config {
+          image = "yg397/media-frontend:xenial"
+          mount {
+            type   = "bind"
+            target = "/usr/local/openresty/nginx/lua-scripts"
+            source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
+          }
+          mount {
+            type   = "bind"
+            target = "/usr/local/openresty/nginx/conf/nginx.conf"
+            source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          }
+        }
+      }
+    }
 
     group "user-mention" {
       network {
