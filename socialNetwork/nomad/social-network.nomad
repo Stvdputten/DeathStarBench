@@ -21,6 +21,10 @@ job "social-network" {
               local_bind_port  = 6831
             }
             upstreams {
+                    destination_name = "jaeger-agent-ui"
+                    local_bind_port =  16686
+            }
+            upstreams {
               destination_name = "user-service"
               local_bind_port  = 9090
             }
@@ -92,7 +96,6 @@ job "social-network" {
 
       config {
         image        = "stvdputten/openresty-thrift:latest"
-        network_mode = "bridge"
         ports = ["http"]
         // privileged = true
         // mount {
@@ -166,6 +169,10 @@ job "social-network" {
                 destination_name = "jaeger-agent"
                 local_bind_port  = 6831
               }
+              upstreams {
+                destination_name = "jaeger-agent-ui"
+                local_bind_port  = 16686
+              }
             }
           }
         }
@@ -173,7 +180,6 @@ job "social-network" {
 
       task "media-frontend" {
         driver       = "docker"
-  //       network_mode = "bridge"
 
         config {
           image = "yg397/media-frontend:xenial"
@@ -265,6 +271,10 @@ job "social-network" {
               upstreams {
                 destination_name = "jaeger-agent"
                 local_bind_port  = 6831
+              }
+              upstreams {
+                destination_name = "jaeger-agent-ui"
+                local_bind_port  = 16686
               }
             }
           }
@@ -983,7 +993,6 @@ job "social-network" {
 
       network {
         mode = "bridge"
-
         port "http" {}
       }
 
@@ -1008,10 +1017,10 @@ job "social-network" {
                 destination_name = "jaeger-agent"
                 local_bind_port  = 6831
               }
-              // upstreams {
-              //         destination_name = "jaeger-agent-ui"
-              //         local_bind_port =  16686
-              // }
+              upstreams {
+                      destination_name = "jaeger-agent-ui"
+                      local_bind_port =  16686
+              }
             }
           }
         }
