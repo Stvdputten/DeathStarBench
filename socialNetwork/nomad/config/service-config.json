@@ -19,7 +19,7 @@
     "workers": 32,
     "keepalive_ms": 10000,
     "connections": 512,
-    "port": 9090,
+    "port": 9101,
     "timeout_ms": 10000
   },
   "home-timeline-redis": {

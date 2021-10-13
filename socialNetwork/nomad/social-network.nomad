@@ -4,6 +4,9 @@ job "social-network" {
   group "nginx-thrift" {
     network {
       mode = "bridge"
+      dns {    
+        servers = ["172.17.0.1"]  
+      }
       port "http" {
         static = 8080
         to     = 8080
