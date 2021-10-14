@@ -56,7 +56,7 @@ function _M.UploadMedia()
 
   local conn = mongo()
   conn:set_timeout(1000)
-  local ok, err = conn:connect("media-mongodb", 27017)
+  local ok, err = conn:connect("127.0.0.1", 27017)
   if not ok then
     ngx.log(ngx.ERR, "mongodb connect failed: "..err)
   end
