@@ -4,9 +4,9 @@ job "social-network" {
   group "nginx-thrift" {
     network {
       mode = "bridge"
-      dns {    
-        servers = ["172.17.0.1"]  
-      }
+      // dns {    
+      //   servers = ["172.17.0.1"]  
+      // }
       port "http" {
         static = 8080
         to     = 8080
@@ -460,10 +460,6 @@ job "social-network" {
             source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
           }
         }
-        // service {
-        // 	name = "user-service"
-        // 	port = "http"
-        // }
       }
 
       task "user-memcached" {
@@ -844,7 +840,6 @@ job "social-network" {
     }
 
 
-  //   // } 
     group "home-timeline" {
       network {
         mode = "bridge"
@@ -920,11 +915,6 @@ job "social-network" {
           name = "home-timeline-mongodb"
           tags = ["db_m"]
           port = "http"
-          // check {
-          // 	type = "tcp"
-          // 	interval = "10s"
-          // 	timeout = "4s"
-          // }
         }
       }
 
@@ -952,12 +942,6 @@ job "social-network" {
           name = "home-timeline-redis"
           tags = ["db_r"]
           port = "http"
-
-          // check {
-          // 	type = "tcp"
-          // 	interval = "10s"
-          // 	timeout = "4s"
-          // }
         }
       }
 
@@ -992,10 +976,10 @@ job "social-network" {
                 destination_name = "jaeger-agent"
                 local_bind_port  = 6831
               }
-              upstreams {
-                      destination_name = "jaeger-agent-ui"
-                      local_bind_port =  16686
-              }
+              // upstreams {
+              //         destination_name = "jaeger-agent-ui"
+              //         local_bind_port =  16686
+              // }
             }
           }
         }
@@ -1004,9 +988,6 @@ job "social-network" {
       task "social-graph-service" {
         driver = "docker"
 
-        // env {
-        // 	JAEGER_SERVICE_NAME = "http://${NOMAD_UPSTREAM_ADDR_jaeger_agent}"
-        // }
         config {
           image   = "stvdputten/social-network-microservices:latest"
           command = "SocialGraphService"
@@ -1021,20 +1002,6 @@ job "social-network" {
             source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
           }
         }
-
-        // service {
-        // 	name = "social-graph-service"
-        // 	tags = ["sg_service"]
-        // 	port = "http"
-
-
-        // 	// check {
-        // 	// 	type = "tcp"
-        // 	// 	interval = "10s"
-        // 	// 	timeout = "4s"
-        // 	// }
-        // // https://www.nomadproject.io/docs/integrations/consul-connect
-        // }
       }
 
       task "social-graph-mongodb" {
