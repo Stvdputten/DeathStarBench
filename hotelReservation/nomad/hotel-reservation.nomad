@@ -67,6 +67,9 @@ job "hotel-reservation" {
 
     task "jaeger" {
       driver = "docker"
+      service {
+        name = "jaeger-hotel"
+      }
 
       config {
         image = "jaegertracing/all-in-one:1.23.0"
