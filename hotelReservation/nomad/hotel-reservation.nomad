@@ -4,17 +4,21 @@ job "hotel-reservation" {
   group "hotel-reservation" {
     network {
       mode = "bridge"
-      port "http" {
+      port "frontend" {
         static = 5000
         to     = 5000
       }
-      // port "dns-ui" {
-      //   static = 4000
-      //   to = 8500
-      // }
+      port "dns-ui" {
+        static = 4000
+        to = 8500
+      }
       port "dns" {
         static = 4001
         to     = 8600
+      }
+      port "frontend" {
+        static = 5000
+        to     = 5000
       }
     }
 
@@ -27,7 +31,7 @@ job "hotel-reservation" {
       config {
         image = "consul:1.9.6"
         // network_mode = "bridge"
-        // ports = ["dns-ui", "dns"]
+        ports = ["dns-ui", "dns"]
         // ["8300/tcp"] = 8300
         // ["8400/tcp"] = 8400
         // ["8500/tcp"] = 8500
@@ -55,7 +59,7 @@ job "hotel-reservation" {
       config {
         image   = "stvdputten/hotel_reserv_frontend_single_node"
         command = "frontend"
-        ports   = ["http"]
+        ports   = ["frontend"]
         // dns_servers = ["172.26.64.8"]
         mount {
           type   = "bind"
@@ -75,7 +79,7 @@ job "hotel-reservation" {
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
         // dns_servers = ["${NOMAD_ADDR_dns}"]
-        extra_hosts = ["consul.hotel:127.0.0.1"]
+        extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
       }
     }
   }
