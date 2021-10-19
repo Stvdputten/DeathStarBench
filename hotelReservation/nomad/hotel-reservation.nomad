@@ -1,7 +1,7 @@
-job "hotel-reservation" {
+job "hotel-reservat" {
   datacenters = ["dc1"]
 
-  group "hotel-reservation" {
+  group "hotel-reservat" {
     network {
       mode = "bridge"
       port "frontend" {
@@ -116,17 +116,29 @@ job "hotel-reservation" {
 
     task "frontend" {
       driver = "docker"
+      template {
+        destination = "local/resolv.conf"
+        data        = <<EOF
+nameserver 127.0.0.1
+nameserver 128.110.156.4
+search service.consul
+EOF
+      }
 
       config {
         image = "stvdputten/hotel_reserv_frontend_single_node"
         command = "frontend"
         ports       = ["frontend"]
-        // extra_hosts = ["consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
+        // extra_hosts = ["consul.service.consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
         }
+      volumes = [
+          "local/resolv.conf:/etc/resolv.conf"
+      ]
+
       }
     }
 

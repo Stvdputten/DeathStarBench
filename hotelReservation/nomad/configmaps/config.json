@@ -1,6 +1,6 @@
 {
-  "consulAddress": "consul.service.consul:8500",
-  "jaegerAddress": "jaeger-hotel.service.consul:6831",
+  "consulAddress": "consul:8500",
+  "jaegerAddress": "jaeger-hotel:6831",
   "FrontendIP": "frontend-hotel",
   "FrontendPort": "5000",
   "GeoIP": "geo-hotel",
