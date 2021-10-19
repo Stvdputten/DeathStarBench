@@ -1,4 +1,4 @@
-job "hotel-reserv" {
+job "hotel-reservation" {
   datacenters = ["dc1"]
 
   group "hotel-reservation" {
@@ -101,7 +101,7 @@ job "hotel-reserv" {
         image       = "stvdputten/hotel_reserv_frontend_single_node"
         command     = "frontend"
         ports       = ["frontend"]
-        extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
+        // extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
@@ -113,20 +113,20 @@ job "hotel-reserv" {
       }
     }
 
-    // task "profile" {
-    //   driver = "docker"
+    task "profile" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/hotel_reserv_profile_single_node"
-    //     command = "profile"
-    //     ports   = ["profile"]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
-    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-    //     }
-    //   }
-    // }
+      config {
+        image   = "stvdputten/hotel_reserv_profile_single_node"
+        command = "profile"
+        ports   = ["profile"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+        }
+      }
+    }
 
     task "memcached-profile" {
       driver = "docker"
@@ -310,7 +310,7 @@ job "hotel-reserv" {
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
         // dns_servers = ["${NOMAD_ADDR_dns}"]
-        extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
+        // extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
       }
     }
 
