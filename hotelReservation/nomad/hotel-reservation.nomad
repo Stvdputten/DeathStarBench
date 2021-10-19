@@ -12,22 +12,57 @@ job "hotel-reservation" {
         static = 4000
         to     = 8500
       }
-      port "dns" {
-        static = 4001
-        to     = 8600
-      }
+      // port "dns" {
+      //   // static = 53
+      //   to     = 8600
+      // }
+      // port "consul" {
+      //   to = 8300
+      // }
+      // port "consul-8400" {
+      //   to = 8400
+      // }
     }
+
+    // service {
+    //   name = "consul-dns-53"
+    //   connect {
+    //     sidecar_service {
+    //       proxy {
+    //         upstreams {
+    //           destination_name = "dns"
+    //           local_bind_port  = 8600
+    //         }
+    //         upstreams {
+    //           destination_name = "consul"
+    //           local_bind_port  = 8300
+    //         }
+    //         upstreams {
+    //           destination_name = "consul-8400"
+    //           local_bind_port  = 8400
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // service {
+    //   name = "dns"
+    //   port = 8600
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
 
     task "consul" {
       driver = "docker"
-      service {
-        name = "hr-consul-docker"
-      }
+      // service {
+      //   name = "hr-consul-docker"
+      // }
 
       config {
         image = "consul:1.9.6"
         // network_mode = "bridge"
-        ports = ["dns-ui", "dns"]
+        ports = ["dns-ui", "dns", "consul", "consul-8400"]
         // ["8300/tcp"] = 8300
         // ["8400/tcp"] = 8400
         // ["8500/tcp"] = 8500
@@ -38,207 +73,237 @@ job "hotel-reservation" {
         command = "consul"
         args = [
           "agent",
+          "-dev",
           "-data-dir=/consul/data",
           "-config-dir=/consul/config",
-          "-dev",
           "-client",
           "0.0.0.0",
           "-bind",
-          "{{ GetInterfaceIP \"eth0\"}}"
+          "{{ GetInterfaceIP \"eth0\"}}",
+          "-dns-port",
+          "53"
         ]
       }
     }
 
-    task "profile" {
+    task "frontend" {
       driver = "docker"
+      template {
+        destination = "local/resolv.conf"
+        data        = <<EOF
+nameserver {{ env "attr.unique.network.ip-address" }}
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+      }
 
       config {
-        image   = "stvdputten/hotel_reserv_profile_single_node"
-        command = "profile"
-        ports   = ["profile"]
+        image       = "stvdputten/hotel_reserv_frontend_single_node"
+        command     = "frontend"
+        ports       = ["profile"]
+        extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
         }
+        // volumes = [
+        //   "local/resolv.conf:/etc/resolv.conf"
+        // ]
       }
     }
+
+    // task "profile" {
+    //   driver = "docker"
+
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_profile_single_node"
+    //     command = "profile"
+    //     ports   = ["profile"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
     task "memcached-profile" {
       driver = "docker"
 
+      env {
+        MEMCACHED_CACHE_SIZE = "128"
+        MEMCACHED_THREADS    = "2"
+      }
       config {
         image = "memcached:1.6.9"
         ports = ["mem-profile"]
-        env {
-          MEMCACHED_CACHE_SIZE = "128"
-          MEMCACHED_THREADS    = "2"
-        }
       }
     }
 
-    task "mongodb-profile" {
-      driver = "docker"
+    // task "mongodb-profile" {
+    //   driver = "docker"
 
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-profile"]
-      }
-    }
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-profile"]
+    //   }
+    // }
 
-    task "geo" {
-      driver = "docker"
+    // task "geo" {
+    //   driver = "docker"
 
-      config {
-        image   = "stvdputten/hotel_reserv_geo_single_node"
-        command = "geo"
-        ports   = ["geo"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
-        }
-      }
-    }
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_geo_single_node"
+    //     command = "geo"
+    //     ports   = ["geo"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
-    task "mongodb-geo" {
-      driver = "docker"
+    // task "mongodb-geo" {
+    //   driver = "docker"
 
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-geo"]
-      }
-    }
-
-
-    task "rate" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/hotel_reserv_rate_single_node"
-        command = "rate"
-        ports   = ["rate"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
-        }
-      }
-    }
-
-    task "memcached-rate" {
-      driver = "docker"
-
-      config {
-        image = "memcached:1.6.9"
-        ports = ["mem-rate"]
-        env {
-          MEMCACHED_CACHE_SIZE = "128"
-          MEMCACHED_THREADS    = "2"
-        }
-      }
-    }
-
-    task "mongodb-rate" {
-      driver = "docker"
-
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-rate"]
-      }
-    }
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-geo"]
+    //   }
+    // }
 
 
-    task "recommendation" {
-      driver = "docker"
+    // task "rate" {
+    //   driver = "docker"
 
-      config {
-        image   = "stvdputten/hotel_reserv_recommend_single_node"
-        command = "recommendation"
-        ports   = ["recommendation"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
-        }
-      }
-    }
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_rate_single_node"
+    //     command = "rate"
+    //     ports   = ["rate"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
-    task "mongodb-recommendation" {
-      driver = "docker"
+    // task "memcached-rate" {
+    //   driver = "docker"
 
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-recommendation"]
-      }
-    }
+    //     env {
+    //       MEMCACHED_CACHE_SIZE = "128"
+    //       MEMCACHED_THREADS    = "2"
+    //     }
+    //   config {
+    //     image = "memcached:1.6.9"
+    //     ports = ["mem-rate"]
+    //   }
+    // }
+
+    // task "mongodb-rate" {
+    //   driver = "docker"
+
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-rate"]
+    //   }
+    // }
 
 
-    task "user" {
-      driver = "docker"
+    // task "recommendation" {
+    //   driver = "docker"
 
-      config {
-        image   = "stvdputten/hotel_reserv_user_single_node"
-        command = "user"
-        ports   = ["user"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
-        }
-      }
-    }
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_recommend_single_node"
+    //     command = "recommendation"
+    //     ports   = ["recommendation"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
-    task "mongodb-user" {
-      driver = "docker"
+    // task "mongodb-recommendation" {
+    //   driver = "docker"
 
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-user"]
-      }
-    }
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-recommendation"]
+    //   }
+    // }
 
-    task "reservation" {
-      driver = "docker"
 
-      config {
-        image   = "stvdputten/hotel_reserv_reservation_single_node"
-        command = "reservation"
-        ports   = ["reservation"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/deathstarbench/hotelreservation/nomad/configmaps/config.json"
-        }
-      }
-    }
+    // task "user" {
+    //   driver = "docker"
 
-    task "memcached-reserve" {
-      driver = "docker"
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_user_single_node"
+    //     command = "user"
+    //     ports   = ["user"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
-      config {
-        image = "memcached:1.6.9"
-        ports = ["mem-reserve"]
-        env {
-          MEMCACHED_CACHE_SIZE = "128"
-          MEMCACHED_THREADS    = "2"
-        }
-      }
-    }
+    // task "mongodb-user" {
+    //   driver = "docker"
 
-    task "mongodb-reserve" {
-      driver = "docker"
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-user"]
+    //   }
+    // }
 
-      config {
-        image = "mongo:4.4.6"
-        ports = ["mongo-reservation"]
-      }
-    }
+    // task "reservation" {
+    //   driver = "docker"
+
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_reservation_single_node"
+    //     command = "reservation"
+    //     ports   = ["reservation"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
+
+    // task "memcached-reserve" {
+    //   driver = "docker"
+
+    //   config {
+    //     image = "memcached:1.6.9"
+    //     ports = ["mem-reserve"]
+    //     env {
+    //       MEMCACHED_CACHE_SIZE = "128"
+    //       MEMCACHED_THREADS    = "2"
+    //     }
+    //   }
+    // }
+
+    // task "mongodb-reserve" {
+    //   driver = "docker"
+
+    //   config {
+    //     image = "mongo:4.4.6"
+    //     ports = ["mongo-reservation"]
+    //   }
+    // }
 
     task "jaeger" {
       driver = "docker"
       service {
         name = "jaeger-hotel"
+        address_mode = "driver"
       }
 
       config {
