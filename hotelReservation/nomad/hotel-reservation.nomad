@@ -74,7 +74,6 @@ job "hotel-reservation" {
           "agent",
           "-dev",
           "-data-dir=/consul/data",
-          "-config-dir=/etc/consul.d",
           "-enable-script-checks",
           "-client",
           "0.0.0.0",
@@ -93,70 +92,68 @@ job "hotel-reservation" {
     }
   
 
-    task "frontend" {
-      service {
-        name = "frontend-hr"
-        check {
-          type = "script"
-          interval = "10s"
-          timeout = "2s"
-          name     = "Service registration through http"
-          command = "curl" 
-          args = ["-X", "PUT", "-d", "{\"name\":\"frontend\", \"Port\":5000}", "http://localhost:8500/v1/agent/service/register"]
-        }
-      } 
-      driver = "docker"
-      template {
-        destination = "local/resolv.conf"
-        data        = <<EOF
-nameserver 127.0.0.1
-nameserver 128.110.156.4
-search service.consul
-EOF
-      }
+//     task "frontend" {
+//       driver = "docker"
+//       template {
+//         destination = "local/resolv.conf"
+//         data        = <<EOF
+// nameserver 127.0.0.1
+// nameserver 128.110.156.4
+// search service.consul
+// EOF
+//       }
 
-      config {
-        image = "stvdputten/hotel_reserv_frontend_single_node"
-        command = "frontend"
-        ports       = ["frontend"]
-        // advertise_ipv6_address = true
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-        }
-      volumes = [
-          "local/resolv.conf:/etc/resolv.conf"
-      ]
+//       config {
+//         image = "stvdputten/hotel_reserv_frontend_single_node"
+//         command = "frontend"
+//         ports       = ["frontend"]
+//         mount {
+//           type   = "bind"
+//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
+//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+//         }
+//       volumes = [
+//           "local/resolv.conf:/etc/resolv.conf"
+//       ]
+//       }
+//       service {
+//         name = "frontend-hr"
+//         check {
+//           type = "script"
+//           interval = "10s"
+//           timeout = "2s"
+//           name     = "Service registration through http"
+//           command = "curl" 
+//           args = ["-X", "PUT", "-d", "{\"name\":\"frontend\", \"Port\":5000}", "http://localhost:8500/v1/agent/service/register"]
+//         }
+//       } 
+//     }
 
-      }
-    }
+    // task "profile" {
+    //   driver = "docker"
 
-    task "profile" {
-      driver = "docker"
-
-      service {
-        name = "profile-hr"
-        check {
-          type = "script"
-          interval = "10s"
-          timeout = "2s"
-          name     = "Service registration through http"
-          command = "curl" 
-          args = ["-X", "PUT", "-d", "{\"name\":\"profile\", \"Port\":8081}", "http://localhost:8500/v1/agent/service/register"]
-        }
-      } 
-      config {
-        image   = "stvdputten/hotel_reserv_profile_single_node"
-        command = "profile"
-        ports   = ["profile"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-        }
-      }
-    }
+    //   service {
+    //     name = "profile-hr"
+    //     check {
+    //       type = "script"
+    //       interval = "10s"
+    //       timeout = "2s"
+    //       name     = "Service registration through http"
+    //       command = "curl" 
+    //       args = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\", \"Port\":8081}", "http://localhost:8500/v1/agent/service/register"]
+    //     }
+    //   } 
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_profile_single_node"
+    //     command = "profile"
+    //     ports   = ["profile"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
     task "memcached-profile" {
       driver = "docker"
@@ -166,9 +163,12 @@ EOF
         MEMCACHED_THREADS    = "2"
       }
       config {
+        privileged = true
         command = "memcached"
         args = ["-p", "11213"]
         image = "memcached:1.6.9"
+        // image = "memcached:1.6.9-alpine"
+      //  image="bitnami/memcached:1.6.9"
         ports = ["mem-profile"]
       }
       service {
@@ -179,7 +179,7 @@ EOF
           timeout = "2s"
           name     = "service registration through http"
           command = "curl" 
-          args = ["-x", "put", "-d", "{\"name\":\"memcached-profile-hotel\", \"port\":112113}", "http://localhost:8500/v1/agent/service/register"]
+          args = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\", \"Port\":112113}", "http://localhost:8500/v1/agent/service/register"]
         }
       } 
     }
@@ -535,6 +535,14 @@ EOF
       }
       service {
         name = "jaeger-hr"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "Install packages"
+          command = "apk" 
+          args = ["add", "curl"]
+        }
         check {
           type = "script"
           interval = "10s"
