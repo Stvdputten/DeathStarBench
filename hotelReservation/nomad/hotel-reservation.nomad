@@ -55,10 +55,27 @@ job "hotel-reservation" {
 
     task "consul" {
       driver = "docker"
+      lifecycle {
+        hook    = "prestart"
+        sidecar = true
+      }
       // service {
       //   name = "hr-consul-docker"
       // }
+      template {
+        data = <<EOTC
+{ "service": { "name":"frontend", "address":"127.0.0.1", "port":5000 } }
 
+        EOTC
+        destination = "local/frontend.json"
+      }
+      template {
+        data = <<EOTC
+{ "service": { "name":"jaeger-hotel", "address":"127.0.0.1", "port":6831 } }
+
+        EOTC
+        destination = "local/jaeger.json"
+      }
       config {
         image = "consul:1.9.6"
         // network_mode = "bridge"
@@ -75,7 +92,8 @@ job "hotel-reservation" {
           "agent",
           "-dev",
           "-data-dir=/consul/data",
-          "-config-dir=/consul/config",
+          "-config-dir=/etc/consul.d",
+          "-enable-script-checks",
           "-client",
           "0.0.0.0",
           "-bind",
@@ -83,43 +101,27 @@ job "hotel-reservation" {
           "-dns-port",
           "53"
         ]
+        mount {
+          type   = "bind"
+          target = "/etc/consul.d/frontend.json"
+          source = "local/frontend.json"
+        }
+        mount {
+          type   = "bind"
+          target = "/etc/consul.d/jaeger.json"
+          source = "local/jaeger.json"
+        }
       }
     }
 
     task "frontend" {
       driver = "docker"
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver {{ env "attr.unique.network.ip-address" }}
-// nameserver 8.8.8.8
-// nameserver 8.8.4.4
-// EOF
-//       }
 
       config {
-        image       = "stvdputten/hotel_reserv_frontend_single_node"
-        command     = "frontend"
+        image = "stvdputten/hotel_reserv_frontend_single_node"
+        command = "frontend"
         ports       = ["frontend"]
-        // extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-        }
-        // volumes = [
-        //   "local/resolv.conf:/etc/resolv.conf"
-        // ]
-      }
-    }
-
-    task "profile" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/hotel_reserv_profile_single_node"
-        command = "profile"
-        ports   = ["profile"]
+        // extra_hosts = ["consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
@@ -127,6 +129,21 @@ job "hotel-reservation" {
         }
       }
     }
+
+    // task "profile" {
+    //   driver = "docker"
+
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_profile_single_node"
+    //     command = "profile"
+    //     ports   = ["profile"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+    // }
 
     task "memcached-profile" {
       driver = "docker"
@@ -301,16 +318,12 @@ job "hotel-reservation" {
 
     task "jaeger" {
       driver = "docker"
-      service {
-        name = "jaeger-hotel"
-        address_mode = "driver"
-      }
 
       config {
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
         // dns_servers = ["${NOMAD_ADDR_dns}"]
-        // extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
+        extra_hosts = ["consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
       }
     }
 
