@@ -1,7 +1,7 @@
-job "hotel-reservat" {
+job "hotel-reservation" {
   datacenters = ["dc1"]
 
-  group "hotel-reservat" {
+  group "hotel-reservation" {
     network {
       mode = "bridge"
       port "frontend" {
@@ -12,46 +12,11 @@ job "hotel-reservat" {
         static = 4000
         to     = 8500
       }
-      // port "dns" {
-      //   // static = 53
-      //   to     = 8600
-      // }
-      // port "consul" {
-      //   to = 8300
-      // }
-      // port "consul-8400" {
-      //   to = 8400
-      // }
+      port "test" {
+        static = 5001
+        to = 5000
+      }
     }
-
-    // service {
-    //   name = "consul-dns-53"
-    //   connect {
-    //     sidecar_service {
-    //       proxy {
-    //         upstreams {
-    //           destination_name = "dns"
-    //           local_bind_port  = 8600
-    //         }
-    //         upstreams {
-    //           destination_name = "consul"
-    //           local_bind_port  = 8300
-    //         }
-    //         upstreams {
-    //           destination_name = "consul-8400"
-    //           local_bind_port  = 8400
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    // service {
-    //   name = "dns"
-    //   port = 8600
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "consul" {
       driver = "docker"
@@ -59,27 +24,34 @@ job "hotel-reservat" {
         hook    = "prestart"
         sidecar = true
       }
-      // service {
-      //   name = "hr-consul-docker"
-      // }
       template {
         data = <<EOTC
 { "service": { "name":"frontend", "address":"127.0.0.1", "port":5000 } }
-
         EOTC
         destination = "local/frontend.json"
       }
       template {
         data = <<EOTC
 { "service": { "name":"jaeger-hotel", "address":"127.0.0.1", "port":6831 } }
-
         EOTC
         destination = "local/jaeger.json"
+      }
+      template {
+        data = <<EOTC
+{ "service": { "name":"profile-hotel", "address":"127.0.0.1", "port":6831 } }
+        EOTC
+        destination = "local/profile.json"
+      }
+      template {
+        data = <<EOTC
+{ "service": { "name":"mongodb-profile-hotel", "address":"127.0.0.1", "port":27019 } }
+        EOTC
+        destination = "local/mongo-profile.json"
       }
       config {
         image = "consul:1.9.6"
         // network_mode = "bridge"
-        ports = ["dns-ui", "dns", "consul", "consul-8400"]
+        ports = ["dns-ui"]
         // ["8300/tcp"] = 8300
         // ["8400/tcp"] = 8400
         // ["8500/tcp"] = 8500
@@ -101,20 +73,34 @@ job "hotel-reservat" {
           "-dns-port",
           "53"
         ]
-        mount {
-          type   = "bind"
-          target = "/etc/consul.d/frontend.json"
-          source = "local/frontend.json"
-        }
-        mount {
-          type   = "bind"
-          target = "/etc/consul.d/jaeger.json"
-          source = "local/jaeger.json"
-        }
+        volumes = [
+            "local/frontend.json:/etc/consul.d/frontend.json",
+            "local/jaeger.json:/etc/consul.d/jaeger.json",
+            "local/mongo-profile.json:/etc/consul.d/mongo-profile.json",
+            "local/profile.json:/etc/consul.d/profile.json"
+        ]
       }
     }
+  
 
     task "frontend" {
+      env = {
+        "test" = "'bob'"
+      }
+      service {
+        name = "frontend-hr"
+        port = "test"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "curl"
+          // command = "curl -X PUT -d '{\"name\":\"bob\"}' http://localhost:8500/v1/agent/service/register" 
+          command = "curl" 
+          args = ["-X", "PUT", "-d", "{\"name\":\"frontend\", \"Port\":5000}", "http://localhost:8500/v1/agent/service/register"]
+          // args = ["-X", "PUT", "-d", "${}", "http://localhost:8500/v1/agent/service/register"]
+        }
+      } 
       driver = "docker"
       template {
         destination = "local/resolv.conf"
@@ -129,7 +115,7 @@ EOF
         image = "stvdputten/hotel_reserv_frontend_single_node"
         command = "frontend"
         ports       = ["frontend"]
-        // extra_hosts = ["consul.service.consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
+        // advertise_ipv6_address = true
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
@@ -165,19 +151,23 @@ EOF
         MEMCACHED_THREADS    = "2"
       }
       config {
+        command = "memcached"
+        args = ["-p", "11213"]
         image = "memcached:1.6.9"
         ports = ["mem-profile"]
       }
     }
 
-    // task "mongodb-profile" {
-    //   driver = "docker"
+    task "mongodb-profile" {
+      driver = "docker"
 
-    //   config {
-    //     image = "mongo:4.4.6"
-    //     ports = ["mongo-profile"]
-    //   }
-    // }
+      config {    
+        command = "mongod"
+        args = ["--port", "27019"]
+        image = "mongo:4.4.6"
+        ports = ["mongo-profile"]
+      }
+    }
 
     // task "geo" {
     //   driver = "docker"
@@ -334,8 +324,6 @@ EOF
       config {
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
-        // dns_servers = ["${NOMAD_ADDR_dns}"]
-        extra_hosts = ["consul:127.0.0.1", "jaeger-hotel:127.0.0.1"]
       }
     }
 
