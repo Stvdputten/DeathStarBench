@@ -20,7 +20,7 @@
   "ReserveIP": "reservation-hotel",
   "ReservePort": "8087",
   "ReserveMongoAddress": "mongodb-reservation-hotel:27022",
-  "ReserveMemcAddress": "memcached-reserve-hotel:11214",
+  "ReserveMemcAddress": "memcached-reservation-hotel:11214",
   "SearchIP": "search-hotel",
   "SearchPort": "8082",
   "UserIP": "user-hotel",

@@ -12,10 +12,28 @@ job "hotel-reservation" {
         static = 4000
         to     = 8500
       }
-      port "test" {
-        static = 5001
-        to = 5000
+      port "jaeger-ui" {
+        static = 16686
+        to = 16686
       }
+      // port "jaeger-5778" {
+      //   to     = 5778
+      // }
+      // port "jaeger-6832" {
+      //   to = 6832
+      // }
+      port "jaeger" {
+        to = 6831
+      }
+      // port "jaeger-5775" {
+      //   to = 5775
+      // }
+      // port "jaeger-14269" {
+      //   to = 14269
+      // }
+      // port "jaeger-14268" {
+      //   to = 14268
+      // }
     }
 
     task "consul" {
@@ -24,41 +42,33 @@ job "hotel-reservation" {
         hook    = "prestart"
         sidecar = true
       }
-      template {
-        data = <<EOTC
-{ "service": { "name":"frontend", "address":"127.0.0.1", "port":5000 } }
-        EOTC
-        destination = "local/frontend.json"
-      }
-      template {
-        data = <<EOTC
-{ "service": { "name":"jaeger-hotel", "address":"127.0.0.1", "port":6831 } }
-        EOTC
-        destination = "local/jaeger.json"
-      }
-      template {
-        data = <<EOTC
-{ "service": { "name":"profile-hotel", "address":"127.0.0.1", "port":6831 } }
-        EOTC
-        destination = "local/profile.json"
-      }
-      template {
-        data = <<EOTC
-{ "service": { "name":"mongodb-profile-hotel", "address":"127.0.0.1", "port":27019 } }
-        EOTC
-        destination = "local/mongo-profile.json"
-      }
+//       template {
+//         data = <<EOTC
+// { "service": { "name":"frontend", "address":"127.0.0.1", "port":5000 } }
+//         EOTC
+//         destination = "local/frontend.json"
+//       }
+//       template {
+//         data = <<EOTC
+// { "service": { "name":"jaeger-hotel", "address":"127.0.0.1", "port":6831 } }
+//         EOTC
+//         destination = "local/jaeger.json"
+//       }
+//       template {
+//         data = <<EOTC
+// { "service": { "name":"profile-hotel", "address":"127.0.0.1", "port":6831 } }
+//         EOTC
+//         destination = "local/profile.json"
+//       }
+//       template {
+//         data = <<EOTC
+// { "service": { "name":"mongodb-profile-hotel", "address":"127.0.0.1", "port":27019 } }
+//         EOTC
+//         destination = "local/mongo-profile.json"
+//       }
       config {
         image = "consul:1.9.6"
-        // network_mode = "bridge"
         ports = ["dns-ui"]
-        // ["8300/tcp"] = 8300
-        // ["8400/tcp"] = 8400
-        // ["8500/tcp"] = 8500
-        // ["8300/udp"] = 8300
-        // ["8400/udp"] = 8400
-        // ["8500/udp"] = 8500
-        // ["8600/udp"] = 8600
         command = "consul"
         args = [
           "agent",
@@ -73,32 +83,26 @@ job "hotel-reservation" {
           "-dns-port",
           "53"
         ]
-        volumes = [
-            "local/frontend.json:/etc/consul.d/frontend.json",
-            "local/jaeger.json:/etc/consul.d/jaeger.json",
-            "local/mongo-profile.json:/etc/consul.d/mongo-profile.json",
-            "local/profile.json:/etc/consul.d/profile.json"
-        ]
+        // volumes = [
+        //     "local/frontend.json:/etc/consul.d/frontend.json",
+        //     "local/jaeger.json:/etc/consul.d/jaeger.json",
+        //     "local/mongo-profile.json:/etc/consul.d/mongo-profile.json",
+        //     "local/profile.json:/etc/consul.d/profile.json"
+        // ]
       }
     }
   
 
     task "frontend" {
-      env = {
-        "test" = "'bob'"
-      }
       service {
         name = "frontend-hr"
-        port = "test"
         check {
           type = "script"
           interval = "10s"
           timeout = "2s"
-          name     = "curl"
-          // command = "curl -X PUT -d '{\"name\":\"bob\"}' http://localhost:8500/v1/agent/service/register" 
+          name     = "Service registration through http"
           command = "curl" 
           args = ["-X", "PUT", "-d", "{\"name\":\"frontend\", \"Port\":5000}", "http://localhost:8500/v1/agent/service/register"]
-          // args = ["-X", "PUT", "-d", "${}", "http://localhost:8500/v1/agent/service/register"]
         }
       } 
       driver = "docker"
@@ -128,20 +132,31 @@ EOF
       }
     }
 
-    // task "profile" {
-    //   driver = "docker"
+    task "profile" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/hotel_reserv_profile_single_node"
-    //     command = "profile"
-    //     ports   = ["profile"]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
-    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-    //     }
-    //   }
-    // }
+      service {
+        name = "profile-hr"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "Service registration through http"
+          command = "curl" 
+          args = ["-X", "PUT", "-d", "{\"name\":\"profile\", \"Port\":8081}", "http://localhost:8500/v1/agent/service/register"]
+        }
+      } 
+      config {
+        image   = "stvdputten/hotel_reserv_profile_single_node"
+        command = "profile"
+        ports   = ["profile"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+        }
+      }
+    }
 
     task "memcached-profile" {
       driver = "docker"
@@ -156,6 +171,17 @@ EOF
         image = "memcached:1.6.9"
         ports = ["mem-profile"]
       }
+      service {
+        name = "memcached-profile-hr"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "service registration through http"
+          command = "curl" 
+          args = ["-x", "put", "-d", "{\"name\":\"memcached-profile-hotel\", \"port\":112113}", "http://localhost:8500/v1/agent/service/register"]
+        }
+      } 
     }
 
     task "mongodb-profile" {
@@ -167,6 +193,17 @@ EOF
         image = "mongo:4.4.6"
         ports = ["mongo-profile"]
       }
+      service {
+        name = "mongodb-profile-hr"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "Service registration through http"
+          command = "curl" 
+          args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\", \"Port\":27019}", "http://localhost:8500/v1/agent/service/register"]
+        }
+      } 
     }
 
     // task "geo" {
@@ -182,6 +219,18 @@ EOF
     //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
     //     }
     //   }
+      // service {
+      //   name = "geo-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"geo-hotel\", \"Port\":8083}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
+
     // }
 
     // task "mongodb-geo" {
@@ -191,6 +240,17 @@ EOF
     //     image = "mongo:4.4.6"
     //     ports = ["mongo-geo"]
     //   }
+      // service {
+      //   name = "mongodb-geo-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-geo\", \"Port\":27017}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
 
@@ -207,10 +267,32 @@ EOF
     //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
     //     }
     //   }
+      // service {
+      //   name = "rate-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"rate-hotel\", \"Port\":8084}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "memcached-rate" {
     //   driver = "docker"
+      // service {
+      //   name = "memcached-rate-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"memcached-rate-hotel\", \"Port\":11212}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
 
     //     env {
     //       MEMCACHED_CACHE_SIZE = "128"
@@ -219,6 +301,8 @@ EOF
     //   config {
     //     image = "memcached:1.6.9"
     //     ports = ["mem-rate"]
+    //     command = "memcached"
+    //     args = ["-p", "11212"]
     //   }
     // }
 
@@ -228,7 +312,20 @@ EOF
     //   config {
     //     image = "mongo:4.4.6"
     //     ports = ["mongo-rate"]
+    //     command = "mongod"
+    //     args = ["--port", "27020"]
     //   }
+      // service {
+      //   name = "mongodb-rate-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-rate-hotel\", \"Port\":27020}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
 
@@ -245,6 +342,17 @@ EOF
     //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
     //     }
     //   }
+      // service {
+      //   name = "recommendation-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"recommendation-hotel\", \"Port\":8085}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "mongodb-recommendation" {
@@ -253,7 +361,20 @@ EOF
     //   config {
     //     image = "mongo:4.4.6"
     //     ports = ["mongo-recommendation"]
+    //     command = "mongod"
+    //     args = ["--port", "27021"]
     //   }
+      // service {
+      //   name = "mongodb-recommendation-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-recommendation-hotel\", \"Port\":27021}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
 
@@ -270,6 +391,17 @@ EOF
     //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
     //     }
     //   }
+      // service {
+      //   name = "user-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"user-hotel\", \"Port\":8086}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "mongodb-user" {
@@ -278,7 +410,20 @@ EOF
     //   config {
     //     image = "mongo:4.4.6"
     //     ports = ["mongo-user"]
+    //     command = "mongod"
+    //     args = ["--port", "27023"]
     //   }
+      // service {
+      //   name = "mongodb-user-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-user-hotel\", \"Port\":27023}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "reservation" {
@@ -294,6 +439,17 @@ EOF
     //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
     //     }
     //   }
+      // service {
+      //   name = "reservation-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"reservation-hotel\", \"Port\":8087}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "memcached-reserve" {
@@ -306,7 +462,20 @@ EOF
     //       MEMCACHED_CACHE_SIZE = "128"
     //       MEMCACHED_THREADS    = "2"
     //     }
+    //    command = "memcached"
+    //    args = ["-p", "11214"]
     //   }
+      // service {
+      //   name = "memcached-reservation-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"memcached-reservation-hotel\", \"Port\":11214}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     // task "mongodb-reserve" {
@@ -315,7 +484,46 @@ EOF
     //   config {
     //     image = "mongo:4.4.6"
     //     ports = ["mongo-reservation"]
+    //     command = "mongod"
+    //     args = ["--port", "27022"]
     //   }
+      // service {
+      //   name = "mongodb-reservation-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-reservation-hotel\", \"Port\":27022}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
+    // }
+
+    // task "search" {
+    //   driver = "docker"
+
+    //   config {
+    //     image   = "stvdputten/hotel_reserv_search_single_node"
+    //     command = "search"
+    //     ports   = ["search"]
+    //     mount {
+    //       type   = "bind"
+    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
+    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+    //     }
+    //   }
+      // service {
+      //   name = "search-hr"
+      //   check {
+      //     type = "script"
+      //     interval = "10s"
+      //     timeout = "2s"
+      //     name     = "Service registration through http"
+      //     command = "curl" 
+      //     args = ["-X", "PUT", "-d", "{\"name\":\"search-hotel\", \"Port\":8082}", "http://localhost:8500/v1/agent/service/register"]
+      //   }
+      // } 
     // }
 
     task "jaeger" {
@@ -325,6 +533,17 @@ EOF
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
       }
+      service {
+        name = "jaeger-hr"
+        check {
+          type = "script"
+          interval = "10s"
+          timeout = "2s"
+          name     = "Service registration through http"
+          command = "curl" 
+          args = ["-X", "PUT", "-d", "{\"name\":\"jaeger-hotel\", \"Port\":6831}", "http://localhost:8500/v1/agent/service/register"]
+        }
+      } 
     }
 
   }
