@@ -155,37 +155,46 @@ job "hotel-reservation" {
     //   }
     // }
 
-    task "memcached-profile" {
-      driver = "docker"
+    // task "memcached-profile" {
+    //   driver = "docker"
 
-      env {
-        MEMCACHED_CACHE_SIZE = "128"
-        MEMCACHED_THREADS    = "2"
-      }
-      config {
-        privileged = true
-        command = "memcached"
-        args = ["-p", "11213"]
-        image = "memcached:1.6.9"
-        // image = "memcached:1.6.9-alpine"
-      //  image="bitnami/memcached:1.6.9"
-        ports = ["mem-profile"]
-      }
-      service {
-        name = "memcached-profile-hr"
-        check {
-          type = "script"
-          interval = "10s"
-          timeout = "2s"
-          name     = "service registration through http"
-          command = "curl" 
-          args = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\", \"Port\":112113}", "http://localhost:8500/v1/agent/service/register"]
-        }
-      } 
-    }
+    //   env {
+    //     MEMCACHED_CACHE_SIZE = "128"
+    //     MEMCACHED_THREADS    = "2"
+    //   }
+    //   config {
+    //     privileged = true
+    //     command = "memcached"
+    //     args = ["-p", "11213"]
+    //     image = "memcached:1.6.9"
+    //     // image = "memcached:1.6.9-alpine"
+    //   //  image="bitnami/memcached:1.6.9"
+    //     ports = ["mem-profile"]
+    //   }
+    //   service {
+    //     name = "memcached-profile-hr"
+    //     check {
+    //       type = "script"
+    //       interval = "10s"
+    //       timeout = "2s"
+    //       name     = "service registration through http"
+    //       command = "curl" 
+    //       args = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\", \"Port\":112113}", "http://localhost:8500/v1/agent/service/register"]
+    //     }
+    //   } 
+    // }
 
     task "mongodb-profile" {
       driver = "docker"
+//       env {
+//         ip="hostname -i"
+//       }
+//       template {
+//         data = <<EOTC
+// { "service": { "name":"mongodb-profile-hotel", "address":"{{ env "ip" }}", "port":27019 } }
+//         EOTC
+//         destination = "local/mongo-profile.json"
+//       }
 
       config {    
         command = "mongod"
@@ -195,14 +204,40 @@ job "hotel-reservation" {
       }
       service {
         name = "mongodb-profile-hr"
-        check {
-          type = "script"
-          interval = "10s"
-          timeout = "2s"
-          name     = "Service registration through http"
-          command = "curl" 
-          args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\", \"Port\":27019}", "http://localhost:8500/v1/agent/service/register"]
-        }
+        // check {
+        //   type = "script"
+        //   interval = "10s"
+        //   timeout = "2s"
+        //   name     = "Update"
+        //   command = "apt" 
+        //   args = ["update"]
+        //   check_restart {            
+        //     limit = 3            
+        //     grace = "90s"            
+        //     ignore_warnings = false          
+        //   }
+        // }
+        // check {
+        //   type = "script"
+        //   interval = "10s"
+        //   timeout = "2s"
+        //   name     = "Install curl"
+        //   command = "apt-get" 
+        //   args = ["install", "net-tools", "-y"]
+        //   check_restart {            
+        //     limit = 3            
+        //     grace = "90s"            
+        //     ignore_warnings = false          
+        //   }
+        // }
+        // check {
+        //   type = "script"
+        //   interval = "10s"
+        //   timeout = "2s"
+        //   name     = "Service registration through http"
+        //   command = "curl" 
+        //   args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\", \"Port\":27019}", "http://localhost:8500/v1/agent/service/register"]
+        // }
       } 
     }
 
