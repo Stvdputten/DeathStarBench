@@ -1,4 +1,4 @@
-job "hotel-reservation" {
+job "hotel-reserv" {
   datacenters = ["dc1"]
 
   group "hotel-reservation" {
@@ -88,19 +88,19 @@ job "hotel-reservation" {
 
     task "frontend" {
       driver = "docker"
-      template {
-        destination = "local/resolv.conf"
-        data        = <<EOF
-nameserver {{ env "attr.unique.network.ip-address" }}
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-EOF
-      }
+//       template {
+//         destination = "local/resolv.conf"
+//         data        = <<EOF
+// nameserver {{ env "attr.unique.network.ip-address" }}
+// nameserver 8.8.8.8
+// nameserver 8.8.4.4
+// EOF
+//       }
 
       config {
         image       = "stvdputten/hotel_reserv_frontend_single_node"
         command     = "frontend"
-        ports       = ["profile"]
+        ports       = ["frontend"]
         extra_hosts = ["consul-hotel:127.0.0.1", "jaeger-hotel:127.0.0.1"]
         mount {
           type   = "bind"
