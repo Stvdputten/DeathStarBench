@@ -7,7 +7,7 @@ EXEC=docker
 
 USER="stvdputten"
 
-TAG="latest"
+TAG="nomad"
 
 # ENTER THE ROOT FOLDER
 cd ../

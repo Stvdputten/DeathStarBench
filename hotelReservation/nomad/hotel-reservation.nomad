@@ -162,6 +162,14 @@ EOF
     }
 
     task "geo" {
+      template {
+        destination = "local/resolv.conf"
+        data        = <<EOF
+nameserver 127.0.0.1
+nameserver 128.110.156.4
+search service.consul
+EOF
+      }
       lifecycle {
         hook    = "poststart"
         sidecar = true
@@ -181,6 +189,9 @@ EOF
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
         }
+        volumes = [
+            "local/resolv.conf:/etc/resolv.conf"
+        ]
       }
       // service {
       //   name = "geo-hr"
