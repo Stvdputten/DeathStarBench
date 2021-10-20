@@ -6,7 +6,7 @@
   /mongodb-profile 27019:27017
 /search 8082
 /geo 8083
-  /mongodb-reserve 27018:27017
+  /mongodb-geo 27018:27017
 /rate 8084
   /memcached-rate 11212
   /mongodb-rate 27020:27017
