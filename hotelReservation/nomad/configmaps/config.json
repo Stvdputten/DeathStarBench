@@ -26,5 +26,5 @@
   "UserIP": "user-hotel",
   "UserPort": "8086",
   "UserMongoAddress": "mongodb-user-hotel:27023",
-  "Orchestrator": "not-k8s"
+  "Orchestrator": "nomad"
 }

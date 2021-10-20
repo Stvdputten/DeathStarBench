@@ -25,15 +25,6 @@ job "hotel-reservation" {
       port "jaeger" {
         to = 6831
       }
-      // port "jaeger-5775" {
-      //   to = 5775
-      // }
-      // port "jaeger-14269" {
-      //   to = 14269
-      // }
-      // port "jaeger-14268" {
-      //   to = 14268
-      // }
     }
 
     task "consul" {
@@ -42,30 +33,6 @@ job "hotel-reservation" {
         hook    = "prestart"
         sidecar = true
       }
-//       template {
-//         data = <<EOTC
-// { "service": { "name":"frontend", "address":"127.0.0.1", "port":5000 } }
-//         EOTC
-//         destination = "local/frontend.json"
-//       }
-//       template {
-//         data = <<EOTC
-// { "service": { "name":"jaeger-hotel", "address":"127.0.0.1", "port":6831 } }
-//         EOTC
-//         destination = "local/jaeger.json"
-//       }
-//       template {
-//         data = <<EOTC
-// { "service": { "name":"profile-hotel", "address":"127.0.0.1", "port":6831 } }
-//         EOTC
-//         destination = "local/profile.json"
-//       }
-//       template {
-//         data = <<EOTC
-// { "service": { "name":"mongodb-profile-hotel", "address":"127.0.0.1", "port":27019 } }
-//         EOTC
-//         destination = "local/mongo-profile.json"
-//       }
       config {
         image = "consul:1.9.6"
         ports = ["dns-ui"]
@@ -82,17 +49,48 @@ job "hotel-reservation" {
           "-dns-port",
           "53"
         ]
-        // volumes = [
-        //     "local/frontend.json:/etc/consul.d/frontend.json",
-        //     "local/jaeger.json:/etc/consul.d/jaeger.json",
-        //     "local/mongo-profile.json:/etc/consul.d/mongo-profile.json",
-        //     "local/profile.json:/etc/consul.d/profile.json"
-        // ]
       }
     }
   
 
-//     task "frontend" {
+    task "frontend" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      template {
+        destination = "local/resolv.conf"
+        data        = <<EOF
+nameserver 127.0.0.1
+nameserver 128.110.156.4
+search service.consul
+EOF
+      }
+
+      config {
+        image = "stvdputten/hotel_reserv_frontend_single_node:nomad"
+        command = "sh"
+        args = ["-c",
+         "curl -X PUT -d '{\"name\":\"frontend-hotel\", \"Port\":5000}' localhost:8500/v1/agent/service/register && frontend"
+        ]
+        ports       = ["frontend"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+        }
+      volumes = [
+          "local/resolv.conf:/etc/resolv.conf"
+      ]
+      }
+    }
+
+//     task "profile" {
+//       lifecycle {
+//         hook    = "poststart"
+//         sidecar = true
+//       }
 //       driver = "docker"
 //       template {
 //         destination = "local/resolv.conf"
@@ -103,157 +101,87 @@ job "hotel-reservation" {
 // EOF
 //       }
 
+//       // service {
+//       //   name = "profile-hr"
+//       //   check {
+//       //     type = "script"
+//       //     interval = "10s"
+//       //     timeout = "2s"
+//       //     name     = "Service registration through http"
+//       //     command = "curl" 
+//       //     args = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\", \"Port\":8081}", "http://localhost:8500/v1/agent/service/register"]
+//       //   }
+//       // } 
 //       config {
-//         image = "stvdputten/hotel_reserv_frontend_single_node"
-//         command = "frontend"
-//         ports       = ["frontend"]
+//         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
+//         // command = "profile"
+//         command = "sh"
+//         args = ["-c",
+//          "curl -X PUT -d '{\"name\":\"profile-hotel\", \"Port\":8081}' localhost:8500/v1/agent/service/register && profile"
+//         ]
+//         ports   = ["profile"]
 //         mount {
 //           type   = "bind"
 //           target = "/go/src/github.com/harlow/go-micro-services/config.json"
 //           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
 //         }
-//       volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//       ]
+//         volumes = [
+//             "local/resolv.conf:/etc/resolv.conf"
+//         ]
 //       }
-//       service {
-//         name = "frontend-hr"
-//         check {
-//           type = "script"
-//           interval = "10s"
-//           timeout = "2s"
-//           name     = "Service registration through http"
-//           command = "curl" 
-//           args = ["-X", "PUT", "-d", "{\"name\":\"frontend\", \"Port\":5000}", "http://localhost:8500/v1/agent/service/register"]
-//         }
-//       } 
 //     }
 
-    // task "profile" {
-    //   driver = "docker"
+    task "memcached-profile" {
+      driver = "docker"
 
-    //   service {
-    //     name = "profile-hr"
-    //     check {
-    //       type = "script"
-    //       interval = "10s"
-    //       timeout = "2s"
-    //       name     = "Service registration through http"
-    //       command = "curl" 
-    //       args = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\", \"Port\":8081}", "http://localhost:8500/v1/agent/service/register"]
-    //     }
-    //   } 
-    //   config {
-    //     image   = "stvdputten/hotel_reserv_profile_single_node"
-    //     command = "profile"
-    //     ports   = ["profile"]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
-    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-    //     }
-    //   }
-    // }
-
-    // task "memcached-profile" {
-    //   driver = "docker"
-
-    //   env {
-    //     MEMCACHED_CACHE_SIZE = "128"
-    //     MEMCACHED_THREADS    = "2"
-    //   }
-    //   config {
-    //     privileged = true
-    //     command = "memcached"
-    //     args = ["-p", "11213"]
-    //     image = "memcached:1.6.9"
-    //     // image = "memcached:1.6.9-alpine"
-    //   //  image="bitnami/memcached:1.6.9"
-    //     ports = ["mem-profile"]
-    //   }
-    //   service {
-    //     name = "memcached-profile-hr"
-    //     check {
-    //       type = "script"
-    //       interval = "10s"
-    //       timeout = "2s"
-    //       name     = "service registration through http"
-    //       command = "curl" 
-    //       args = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\", \"Port\":112113}", "http://localhost:8500/v1/agent/service/register"]
-    //     }
-    //   } 
-    // }
+      env {
+        MEMCACHED_CACHE_SIZE = "128"
+        MEMCACHED_THREADS    = "2"
+      }
+      config {
+        command = "sh"
+        args = ["-c", 
+         "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\", \"Port\":11213}' localhost:8500/v1/agent/service/register && memcached -p 11213"
+        ]
+       image="stvdputten/memcached"
+        ports = ["mem-profile"]
+      }
+    }
 
     task "mongodb-profile" {
       driver = "docker"
-//       env {
-//         ip="hostname -i"
-//       }
-//       template {
-//         data = <<EOTC
-// { "service": { "name":"mongodb-profile-hotel", "address":"{{ env "ip" }}", "port":27019 } }
-//         EOTC
-//         destination = "local/mongo-profile.json"
-//       }
 
       config {    
-        command = "mongod"
-        args = ["--port", "27019"]
-        image = "mongo:4.4.6"
+        command = "sh"
+        args = ["-c",
+         "curl -X PUT -d '{\"name\":\"mongodb-profile-hotel\", \"Port\":27019}' localhost:8500/v1/agent/service/register && mongod --port 27019"
+        ]
+        image = "stvdputten/mongo"
         ports = ["mongo-profile"]
       }
-      service {
-        name = "mongodb-profile-hr"
-        // check {
-        //   type = "script"
-        //   interval = "10s"
-        //   timeout = "2s"
-        //   name     = "Update"
-        //   command = "apt" 
-        //   args = ["update"]
-        //   check_restart {            
-        //     limit = 3            
-        //     grace = "90s"            
-        //     ignore_warnings = false          
-        //   }
-        // }
-        // check {
-        //   type = "script"
-        //   interval = "10s"
-        //   timeout = "2s"
-        //   name     = "Install curl"
-        //   command = "apt-get" 
-        //   args = ["install", "net-tools", "-y"]
-        //   check_restart {            
-        //     limit = 3            
-        //     grace = "90s"            
-        //     ignore_warnings = false          
-        //   }
-        // }
-        // check {
-        //   type = "script"
-        //   interval = "10s"
-        //   timeout = "2s"
-        //   name     = "Service registration through http"
-        //   command = "curl" 
-        //   args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\", \"Port\":27019}", "http://localhost:8500/v1/agent/service/register"]
-        // }
-      } 
     }
 
-    // task "geo" {
-    //   driver = "docker"
+    task "geo" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/hotel_reserv_geo_single_node"
-    //     command = "geo"
-    //     ports   = ["geo"]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/go/src/github.com/harlow/go-micro-services/config.json"
-    //       source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
-    //     }
-    //   }
+      config {
+        image   = "stvdputten/hotel_reserv_geo_single_node:nomad"
+        // command = "geo"
+        command = "sh"
+        args = ["-c",
+         "curl -X PUT -d '{\"name\":\"geo-hotel\", \"Port\":8083}' localhost:8500/v1/agent/service/register && geo"
+        ]
+        ports   = ["geo"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+        }
+      }
       // service {
       //   name = "geo-hr"
       //   check {
@@ -266,27 +194,20 @@ job "hotel-reservation" {
       //   }
       // } 
 
-    // }
+    }
 
-    // task "mongodb-geo" {
-    //   driver = "docker"
+    task "mongodb-geo" {
+      driver = "docker"
 
-    //   config {
-    //     image = "mongo:4.4.6"
-    //     ports = ["mongo-geo"]
-    //   }
-      // service {
-      //   name = "mongodb-geo-hr"
-      //   check {
-      //     type = "script"
-      //     interval = "10s"
-      //     timeout = "2s"
-      //     name     = "Service registration through http"
-      //     command = "curl" 
-      //     args = ["-X", "PUT", "-d", "{\"name\":\"mongodb-geo\", \"Port\":27017}", "http://localhost:8500/v1/agent/service/register"]
-      //   }
-      // } 
-    // }
+      config {    
+        command = "sh"
+        args = ["-c",
+         "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\", \"Port\":27017}' localhost:8500/v1/agent/service/register && mongod --port 27017"
+        ]
+        image = "stvdputten/mongo"
+        ports = ["mongo-profile"]
+      }
+    }
 
 
     // task "rate" {

@@ -1,0 +1,9 @@
+FROM memcached:1.6.9
+
+USER root
+RUN apt-get update && apt-get install -y curl
+
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+USER memcache
+EXPOSE 11211
+CMD [ "memcached" ]

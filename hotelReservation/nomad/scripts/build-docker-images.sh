@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-cd $(dirname $0)/..
+# cd $(dirname $0)/..
 
 
 EXEC=docker
 
-USER="salehsedghpour"
+USER="stvdputten"
 
-TAG="latest"
+TAG="nomad"
 
 # ENTER THE ROOT FOLDER
 cd ../
