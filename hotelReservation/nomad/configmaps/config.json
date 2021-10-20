@@ -5,7 +5,7 @@
   "FrontendPort": "5000",
   "GeoIP": "geo-hotel",
   "GeoPort": "8083",
-  "GeoMongoAddress": "mongodb-geo:27018",
+  "GeoMongoAddress": "mongodb-geo-hotel:27018",
   "ProfileIP": "profile-hotel",
   "ProfilePort": "8081",
   "ProfileMongoAddress": "mongodb-profile-hotel:27019",

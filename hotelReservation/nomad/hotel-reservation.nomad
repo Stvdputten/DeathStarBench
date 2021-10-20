@@ -170,7 +170,6 @@ EOF
         args = ["-c",
          "curl -X PUT -d '{\"name\":\"geo-hotel\",  \"address\":\"127.0.0.1\", \"Port\":8083}' localhost:8500/v1/agent/service/register && geo"
         ]
-        ports   = ["geo"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
