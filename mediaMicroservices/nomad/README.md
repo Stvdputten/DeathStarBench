@@ -1,6 +1,6 @@
 # Overview of services and ports
 /consul 
-/frontend 5000
+/nginx-web-server 
 /profile 8081
   /memcached-profile 11213
   /mongodb-profile 27019:27017
