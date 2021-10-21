@@ -35,6 +35,10 @@ job "media-microservices" {
         static = 4000
         to     = 8500
       }
+      // port "dns" {
+      //   static = 53
+      //   to     = 53
+      // }
     }
 
     task "consul" {
@@ -57,8 +61,6 @@ job "media-microservices" {
           "0.0.0.0",
           "-dns-port",
           "53",
-          "-recursor",
-          "8.8.8.8"
         ]
       }
       resources {
@@ -95,12 +97,20 @@ job "media-microservices" {
         }
         check {
           type     = "script"          
-          name     = "check dns"          
+          name     = "check dns 53"          
           command  = "dig"          
           args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
           interval = "5s"          
           timeout  = "20s"
         }
+        // check {
+        //   type     = "script"          
+        //   name     = "check dns 8600"          
+        //   command  = "dig"          
+        //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
+        //   interval = "5s"          
+        //   timeout  = "20s"
+        // }
       }
     }
   }
@@ -121,9 +131,9 @@ job "media-microservices" {
   group "movie-id-service" {
     network {
       mode = "bridge"
-      dns {
-        servers = ["127.0.0.1"]
-      }
+      // dns {
+      //   servers = ["127.0.0.1"]
+      // }
     }
 
     service {
@@ -172,7 +182,7 @@ job "media-microservices" {
         name = "consul-dns-check-other-nodes"
         check {
           type     = "script"          
-          name     = "check dns"          
+          name     = "check dns 53"          
           command  = "dig"          
           args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
           interval = "5s"          
@@ -186,6 +196,14 @@ job "media-microservices" {
           interval = "5s"          
           timeout  = "20s"
         }
+        // check {
+        //   type     = "script"          
+        //   name     = "check dns 8600"          
+        //   command  = "dig"          
+        //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
+        //   interval = "5s"          
+        //   timeout  = "20s"
+        // }
       }
     }
 
