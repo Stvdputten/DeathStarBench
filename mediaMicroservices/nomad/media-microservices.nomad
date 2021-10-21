@@ -14,7 +14,7 @@ job "media-microservices" {
     count = 1
     service {
       name = "consul-dns"
-      port = "8600"
+      port = "53"
 
       connect {
         sidecar_service {}
@@ -40,25 +40,30 @@ job "media-microservices" {
     task "consul" {
       driver = "docker"
       env {
-        CONSUL_ALLOW_PRILEGED_PORTS = ""
+        CONSUL_ALLOW_PRILEGED_PORTS = "yes"
       }
       config {
         image = "consul:1.9.6"
         ports = ["dns-ui", "dns"]
-        // "-bind",
-          // "0.0.0.0",
-          // "-dns-port",
-          // "53",
-          // "-recursor",
-          // "8.8.8.8"
+          // "{{ GetInterfaceIP \"eth0\"}}",
         command = "consul"
         args = [
           "agent",
           "-dev",
           "-data-dir=/consul/data",
           "-client",
-          "{{ GetInterfaceIP \"eth0\"}}",
+          "0.0.0.0",
+          "-bind",
+          "0.0.0.0",
+          "-dns-port",
+          "53",
+          "-recursor",
+          "8.8.8.8"
         ]
+      }
+      resources {
+        cpu = 500
+        memory = 1024
       }
     }
 
@@ -77,6 +82,25 @@ job "media-microservices" {
         // volumes = [
         //     "local/resolv.conf:/etc/resolv.conf"
         // ]
+      }
+      service {
+        name = "consul-dns-check-single-node"
+        check {
+          type     = "script"          
+          name     = "check dns-ui"          
+          command  = "curl"          
+          args     = ["127.0.0.1:8500"]          
+          interval = "5s"          
+          timeout  = "20s"
+        }
+        check {
+          type     = "script"          
+          name     = "check dns"          
+          command  = "dig"          
+          args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+          interval = "5s"          
+          timeout  = "20s"
+        }
       }
     }
   }
@@ -97,9 +121,9 @@ job "media-microservices" {
   group "movie-id-service" {
     network {
       mode = "bridge"
-      // dns { 
-      //   servers = ["127.0.0.1"] 
-      // }
+      dns {
+        servers = ["127.0.0.1"]
+      }
     }
 
     service {
@@ -108,7 +132,7 @@ job "media-microservices" {
           proxy {
             upstreams {
               destination_name = "consul-dns"
-              local_bind_port  = 8600
+              local_bind_port  = 53
             }
             upstreams {
               destination_name = "consul-ui"
@@ -143,7 +167,25 @@ job "media-microservices" {
         // volumes = [
         //     "local/resolv.conf:/etc/resolv.conf"
         // ]
-        // dns_servers = ["0.0.0.0", "127.0.0.1"]
+      }
+      service {
+        name = "consul-dns-check-other-nodes"
+        check {
+          type     = "script"          
+          name     = "check dns"          
+          command  = "dig"          
+          args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+          interval = "5s"          
+          timeout  = "20s"
+        }
+        check {
+          type     = "script"          
+          name     = "check dns-ui"          
+          command  = "curl"          
+          args     = ["127.0.0.1:8500"]          
+          interval = "5s"          
+          timeout  = "20s"
+        }
       }
     }
 
