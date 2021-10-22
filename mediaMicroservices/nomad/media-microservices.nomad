@@ -47,201 +47,141 @@ job "media-microservices" {
   //     }
 
   //   }
-  
-    // group "dns-proxy-server" {
-    //   network {
-    //     mode = "bridge"
-    //   }
 
-    //   task "dns-proxy"{
-    //     driver = "docker"
-    //     config {
-    //       image = "defreitas/dns-proxy-server"
-    //       // hostname = "dns.mageddo"
-    //       // args = ["-dns", "172.26.64.1"]
-    //       mount {
-    //         type = "bind"
-    //         target = "/var/run/docker.sock"
-    //         source = "/var/run/docker.sock"
-    //       }
-    //     }
-    //   }
-    // task "movie-id-mongodb" {
-    //   //       template {
-    //   //         destination = "local/resolv.conf"
-    //   //         data        = <<EOF
-    //   // nameserver 127.0.0.1
-    //   // nameserver 128.110.156.4
-    //   // search service.consul
-    //   // EOF
-    //   //       }
-    //   driver = "docker"
-    //   config {
-    //     image = "stvdputten/mongo"
-    //     // volumes = [
-    //     //     "local/resolv.conf:/etc/resolv.conf"
-    //     // ]
-    //   }
-    //   service {
-    //     name = "consul-dns-check-single-node"
-    //     // check {
-    //     //   type     = "script"          
-    //     //   name     = "check dns 53"          
-    //     //   command  = "dig"          
-    //     //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-    //     //   interval = "5s"          
-    //     //   timeout  = "20s"
-    //     // }
-    //     // check {
-    //     //   type     = "script"          
-    //     //   name     = "check dns-ui"          
-    //     //   command  = "curl"          
-    //     //   args     = ["127.0.0.1:8500"]          
-    //     //   interval = "5s"          
-    //     //   timeout  = "20s"
-    //     // }
-    //     // check {
-    //     //   type     = "script"          
-    //     //   name     = "check dns 8600"          
-    //     //   command  = "dig"          
-    //     //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
-    //     //   interval = "5s"          
-    //     //   timeout  = "20s"
-    //     // }
-    //   }
-    // }
-
-    // }
-
-  // }
-
-  group "consul" {
-    count = 1
-    service {
-      name = "consul-dns"
-      port = "8600"
-
-      connect {
-        sidecar_service {}
-      }
-    }
-    service {
-      name = "consul-ui"
-      port = "8500"
-
-      connect {
-        sidecar_service {}
-      }
-    }
-
-    network {
-      mode = "bridge"
-      port "dns-ui" {
-        static = 4000
-        to     = 8500
-      }
-      port "dns" {
-        static = 53
-        to     = 8600
-      }
-    }
-
-    task "consul" {
-      service {
-        name = "consul-dns-container"
-      }
-      driver = "docker"
-      env {
-        consul_allow_prileged_ports = "yes"
-      }
-      config {
-        image = "consul:1.9.6"
-        ports = ["dns-ui", "dns"]
-          // "{{ getinterfaceip \"eth0\"}}",
-        command = "consul"
-        args = [
-          "agent",
-          "-dev",
-          "-data-dir=/consul/data",
-          "-client",
-          "0.0.0.0",
-          "-bind",
-          "0.0.0.0",
-          "-dns-port",
-          "8600",
-        ]
-      }
-      resources {
-        cpu = 500
-        memory = 1024
-      }
-    }
-
-    task "movie-id-mongodb" {
-      //       template {
-      //         destination = "local/resolv.conf"
-      //         data        = <<EOF
-      // nameserver 127.0.0.1
-      // nameserver 128.110.156.4
-      // search service.consul
-      // EOF
-      //       }
-      driver = "docker"
-      config {
-        image = "stvdputten/mongo"
-        // volumes = [
-        //     "local/resolv.conf:/etc/resolv.conf"
-        // ]
-      }
-      service {
-        name = "consul-dns-check-single-node"
-        check {
-          type     = "script"          
-          name     = "check dns-ui"          
-          command  = "curl"          
-          args     = ["127.0.0.1:8500"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
-        // check {
-        //   type     = "script"          
-        //   name     = "check dns 53"          
-        //   command  = "dig"          
-        //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-        //   interval = "5s"          
-        //   timeout  = "20s"
-        // }
-        check {
-          type     = "script"          
-          name     = "check dns 8600"          
-          command  = "dig"          
-          args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
-      }
-    }
-  }
-
-  // group "id-service" {
+  // group "dns-proxy-server" {
   //   network {
   //     mode = "bridge"
   //   }
-  //   task "unique-id-service" {
+
+  //   task "dns-proxy"{
   //     driver = "docker"
   //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "UniqueIdService"
+  //       image = "defreitas/dns-proxy-server"
+  //       // hostname = "dns.mageddo"
+  //       // args = ["-dns", "172.26.64.1"]
+  //       mount {
+  //         type = "bind"
+  //         target = "/var/run/docker.sock"
+  //         source = "/var/run/docker.sock"
+  //       }
   //     }
+  //   }
+  // task "movie-id-mongodb" {
+  //   //       template {
+  //   //         destination = "local/resolv.conf"
+  //   //         data        = <<EOF
+  //   // nameserver 127.0.0.1
+  //   // nameserver 128.110.156.4
+  //   // search service.consul
+  //   // EOF
+  //   //       }
+  //   driver = "docker"
+  //   config {
+  //     image = "stvdputten/mongo"
+  //     // volumes = [
+  //     //     "local/resolv.conf:/etc/resolv.conf"
+  //     // ]
+  //   }
+  //   service {
+  //     name = "consul-dns-check-single-node"
+  //     // check {
+  //     //   type     = "script"          
+  //     //   name     = "check dns 53"          
+  //     //   command  = "dig"          
+  //     //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+  //     //   interval = "5s"          
+  //     //   timeout  = "20s"
+  //     // }
+  //     // check {
+  //     //   type     = "script"          
+  //     //   name     = "check dns-ui"          
+  //     //   command  = "curl"          
+  //     //   args     = ["127.0.0.1:8500"]          
+  //     //   interval = "5s"          
+  //     //   timeout  = "20s"
+  //     // }
+  //     // check {
+  //     //   type     = "script"          
+  //     //   name     = "check dns 8600"          
+  //     //   command  = "dig"          
+  //     //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
+  //     //   interval = "5s"          
+  //     //   timeout  = "20s"
+  //     // }
   //   }
   // }
 
-  group "movie-id-service" {
+  // }
+
+  // }
+
+  // group "consul" {
+  //   count = 1
+  //   service {
+  //     name = "consul-dns"
+  //     port = "8600"
+
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
+  //   service {
+  //     name = "consul-ui"
+  //     port = "8500"
+
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
+
+  //   network {
+  //     mode = "bridge"
+  //     port "dns-ui" {
+  //       static = 4000
+  //       to     = 8500
+  //     }
+  //     port "dns" {
+  //       static = 53
+  //       to     = 8600
+  //     }
+  //   }
+
+  //   task "consul" {
+  //     service {
+  //       name = "consul-dns-container"
+  //     }
+  //     driver = "docker"
+  //     env {
+  //       consul_allow_prileged_ports = "yes"
+  //     }
+  //     config {
+  //       image = "consul:1.9.6"
+  //       ports = ["dns-ui", "dns"]
+  //         // "0.0.0.0",
+  //       command = "consul"
+  //       args = [
+  //         "agent",
+  //         "-dev",
+  //         "-data-dir=/consul/data",
+  //         "-client",
+  //         "0.0.0.0",
+  //         "-bind",
+  //         "{{ GetInterfaceIP \"eth0\"}}",
+  //         "-dns-port",
+  //         "8600",
+  //       ]
+  //     }
+  //     resources {
+  //       cpu = 500
+  //       memory = 1024
+  //     }
+  //   }
+
+  // }
+
+  group "unique-id-service" {
     network {
       mode = "bridge"
-      // dns {
-      //   servers = ["127.0.0.1"]
-      // }
     }
 
     service {
@@ -249,69 +189,63 @@ job "media-microservices" {
         sidecar_service {
           proxy {
             upstreams {
-              destination_name = "consul-dns"
-              local_bind_port  = 8600
-            }
-            upstreams {
-              destination_name = "consul-ui"
-              local_bind_port  = 8500
+              destination_name = "jaeger"
+              local_bind_port  = 6831
             }
           }
         }
       }
     }
 
-    // task "movie-id-service" {
-    //   driver = "docker"
-    //   config {
-    //     image   = "stvdputten/media-microservices:latest"
-    //     command = "MovieIdService"
-    //   }
-    // }
+    task "unique-id-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && UniqueIdService"]
+      }
+    }
+  }
+
+  group "movie-id-service" {
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
+
+    task "movie-id-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+      }
+    }
 
     task "movie-id-mongodb" {
-      //       template {
-      //         destination = "local/resolv.conf"
-      //         data        = <<EOF
-      // nameserver 127.0.0.1
-      // nameserver 128.110.156.4
-      // search service.consul
-      // EOF
-      //       }
       driver = "docker"
       config {
         image = "stvdputten/mongo"
-
-        // volumes = [
-        //     "local/resolv.conf:/etc/resolv.conf"
-        // ]
-      }
-      service {
-        name = "consul-dns-check-other-nodes"
-        // check {
-        //   type     = "script"          
-        //   name     = "check dns 53"          
-        //   command  = "dig"          
-        //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-        //   interval = "5s"          
-        //   timeout  = "20s"
-        // }
-        // check {
-        //   type     = "script"          
-        //   name     = "check dns-ui"          
-        //   command  = "curl"          
-        //   args     = ["127.0.0.1:8500"]          
-        //   interval = "5s"          
-        //   timeout  = "20s"
-        // }
-        // check {
-        //   type     = "script"          
-        //   name     = "check dns 8600"          
-        //   command  = "dig"          
-        //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
-        //   interval = "5s"          
-        //   timeout  = "20s"
-        // }
       }
     }
 
@@ -323,258 +257,438 @@ job "media-microservices" {
     }
   }
 
-  // group "text-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+  group "text-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "text-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "TextService"
-  //     }
-  //   }
-  // }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  // group "rating-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "text-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && TextService"]
+      }
+    }
+  }
 
-  //   task "rating-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "RatingService"
-  //     }
-  //   }
+  group "rating-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "rating-redis" {
-  //     driver = "docker"
-  //     config {
-  //       image = "redis:alpine3.13"
-  //     }
-  //   }
-  // }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  // group "user-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "rating-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+      }
+    }
 
-  //   task "user-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "UserService"
-  //     }
-  //   }
+    task "rating-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+      }
+    }
+  }
 
-  //   task "user-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+  group "user-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "user-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  // group "compose-review-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "user-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+      }
+    }
 
-  //   task "compose-review-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "ComposeReviewService"
-  //     }
-  //   }
+    task "user-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
 
-  //   task "compose-review-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    task "user-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
-  // group "review-storage-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+  group "compose-review-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "review-storage-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "ReviewStorageService"
-  //     }
-  //   }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  //   task "review-storage-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+    task "compose-review-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+      }
+    }
 
-  //   task "review-storage-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    task "compose-review-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
-  // group "user-review-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+  group "review-storage-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "user-review-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "UserReviewService"
-  //     }
-  //   }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  //   task "user-review-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+    task "review-storage-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
+      }
+    }
 
-  //   task "user-review-redis" {
-  //     driver = "docker"
-  //     config {
-  //       image = "redis:alpine3.13"
-  //     }
-  //   }
-  // }
+    task "review-storage-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
 
-  // group "movie-review-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "review-storage-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
-  //   task "movie-review-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "MovieReviewService"
-  //     }
-  //   }
+  group "user-review-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "movie-review-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  //   task "movie-review-redis" {
-  //     driver = "docker"
-  //     config {
-  //       image = "redis:alpine3.13"
-  //     }
-  //   }
-  // }
+    task "user-review-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+      }
+    }
+
+    task "user-review-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
+
+    task "user-review-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+      }
+    }
+  }
+
+  group "movie-review-service" {
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
+
+    task "movie-review-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+      }
+    }
+
+    task "movie-review-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
+
+    task "movie-review-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+      }
+    }
+  }
 
 
-  // group "cast-info-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+  group "cast-info-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "cast-info-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "CastInfoService"
-  //     }
-  //   }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  //   task "cast-info-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+    task "cast-info-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
+      }
+    }
 
-  //   task "cast-info-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    task "cast-info-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
 
-  // group "plot-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "cast-info-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
-  //   task "plot-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "PlotService"
-  //     }
-  //   }
+  group "plot-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "plot-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
 
-  //   task "plot-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    task "plot-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
+      }
+    }
 
-  // group "movie-info-service" {
-  //   network {
-  //     mode = "bridge"
-  //   }
+    task "plot-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
 
-  //   task "movie-info-service" {
-  //     driver = "docker"
-  //     config {
-  //       image   = "stvdputten/media-microservices:latest"
-  //       command = "MovieInfoService"
-  //     }
-  //   }
+    task "plot-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
-  //   task "movie-info-mongodb" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/mongo"
-  //     }
-  //   }
+  group "movie-info-service" {
+    network {
+      mode = "bridge"
+    }
 
-  //   task "movie-info-memcached" {
-  //     driver = "docker"
-  //     config {
-  //       image = "stvdputten/memcached"
-  //     }
-  //   }
-  // }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
+
+    task "movie-info-service" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/media-microservices:nomad"
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
+      }
+    }
+
+    task "movie-info-mongodb" {
+      driver = "docker"
+      config {
+        image = "stvdputten/mongo"
+      }
+    }
+
+    task "movie-info-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+      }
+    }
+  }
 
   group "jaeger" {
     network {
@@ -587,6 +701,21 @@ job "media-microservices" {
         to = 6831
       }
     }
+    service {
+      name = "jaeger"
+      port = "6831"
+      connect {
+        sidecar_service {}
+      }
+    }
+    service {
+      name = "jaeger-ui"
+      port = "16686"
+      connect {
+        sidecar_service {}
+      }
+    }
+
 
     task "jaeger" {
       driver = "docker"

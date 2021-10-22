@@ -147,3 +147,7 @@ geo profile rate recommendation reservation user
     "port": 9090
   }
 }
+
+
+# Issues
+(Consul connect doesn't add hosts)[https://www.google.com/search?client=firefox-b-d&q=extra+hosts+nomad]
