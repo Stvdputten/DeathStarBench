@@ -47,113 +47,178 @@ job "media-microservices" {
   //     }
 
   //   }
+  
+    // group "dns-proxy-server" {
+    //   network {
+    //     mode = "bridge"
+    //   }
+
+    //   task "dns-proxy"{
+    //     driver = "docker"
+    //     config {
+    //       image = "defreitas/dns-proxy-server"
+    //       // hostname = "dns.mageddo"
+    //       // args = ["-dns", "172.26.64.1"]
+    //       mount {
+    //         type = "bind"
+    //         target = "/var/run/docker.sock"
+    //         source = "/var/run/docker.sock"
+    //       }
+    //     }
+    //   }
+    // task "movie-id-mongodb" {
+    //   //       template {
+    //   //         destination = "local/resolv.conf"
+    //   //         data        = <<EOF
+    //   // nameserver 127.0.0.1
+    //   // nameserver 128.110.156.4
+    //   // search service.consul
+    //   // EOF
+    //   //       }
+    //   driver = "docker"
+    //   config {
+    //     image = "stvdputten/mongo"
+    //     // volumes = [
+    //     //     "local/resolv.conf:/etc/resolv.conf"
+    //     // ]
+    //   }
+    //   service {
+    //     name = "consul-dns-check-single-node"
+    //     // check {
+    //     //   type     = "script"          
+    //     //   name     = "check dns 53"          
+    //     //   command  = "dig"          
+    //     //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+    //     //   interval = "5s"          
+    //     //   timeout  = "20s"
+    //     // }
+    //     // check {
+    //     //   type     = "script"          
+    //     //   name     = "check dns-ui"          
+    //     //   command  = "curl"          
+    //     //   args     = ["127.0.0.1:8500"]          
+    //     //   interval = "5s"          
+    //     //   timeout  = "20s"
+    //     // }
+    //     // check {
+    //     //   type     = "script"          
+    //     //   name     = "check dns 8600"          
+    //     //   command  = "dig"          
+    //     //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
+    //     //   interval = "5s"          
+    //     //   timeout  = "20s"
+    //     // }
+    //   }
+    // }
+
+    // }
 
   // }
 
-  group "consul" {
-    count = 1
-    service {
-      name = "consul-dns"
-      port = "53"
+  // group "consul" {
+  //   count = 1
+  //   service {
+  //     name = "consul-dns"
+  //     port = "53"
 
-      connect {
-        sidecar_service {}
-      }
-    }
-    service {
-      name = "consul-ui"
-      port = "8500"
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
+  //   service {
+  //     name = "consul-ui"
+  //     port = "8500"
 
-      connect {
-        sidecar_service {}
-      }
-    }
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
 
-    network {
-      mode = "bridge"
-      port "dns-ui" {
-        static = 4000
-        to     = 8500
-      }
-      // port "dns" {
-      //   static = 53
-      //   to     = 53
-      // }
-    }
+  //   network {
+  //     mode = "bridge"
+  //     port "dns-ui" {
+  //       static = 4000
+  //       to     = 8500
+  //     }
+  //     // port "dns" {
+  //     //   static = 53
+  //     //   to     = 53
+  //     // }
+  //   }
 
-    task "consul" {
-      driver = "docker"
-      env {
-        CONSUL_ALLOW_PRILEGED_PORTS = "yes"
-      }
-      config {
-        image = "consul:1.9.6"
-        ports = ["dns-ui", "dns"]
-          // "{{ GetInterfaceIP \"eth0\"}}",
-        command = "consul"
-        args = [
-          "agent",
-          "-dev",
-          "-data-dir=/consul/data",
-          "-client",
-          "0.0.0.0",
-          "-bind",
-          "0.0.0.0",
-          "-dns-port",
-          "53",
-        ]
-      }
-      resources {
-        cpu = 500
-        memory = 1024
-      }
-    }
+  //   task "consul" {
+  //     driver = "docker"
+  //     env {
+  //       CONSUL_ALLOW_PRILEGED_PORTS = "yes"
+  //     }
+  //     config {
+  //       image = "consul:1.9.6"
+  //       ports = ["dns-ui", "dns"]
+  //         // "{{ GetInterfaceIP \"eth0\"}}",
+  //       command = "consul"
+  //       args = [
+  //         "agent",
+  //         "-dev",
+  //         "-data-dir=/consul/data",
+  //         "-client",
+  //         "0.0.0.0",
+  //         "-bind",
+  //         "0.0.0.0",
+  //         "-dns-port",
+  //         "53",
+  //       ]
+  //     }
+  //     resources {
+  //       cpu = 500
+  //       memory = 1024
+  //     }
+  //   }
 
-    task "movie-id-mongodb" {
-      //       template {
-      //         destination = "local/resolv.conf"
-      //         data        = <<EOF
-      // nameserver 127.0.0.1
-      // nameserver 128.110.156.4
-      // search service.consul
-      // EOF
-      //       }
-      driver = "docker"
-      config {
-        image = "stvdputten/mongo"
-        // volumes = [
-        //     "local/resolv.conf:/etc/resolv.conf"
-        // ]
-      }
-      service {
-        name = "consul-dns-check-single-node"
-        check {
-          type     = "script"          
-          name     = "check dns-ui"          
-          command  = "curl"          
-          args     = ["127.0.0.1:8500"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
-        check {
-          type     = "script"          
-          name     = "check dns 53"          
-          command  = "dig"          
-          args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
-        // check {
-        //   type     = "script"          
-        //   name     = "check dns 8600"          
-        //   command  = "dig"          
-        //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
-        //   interval = "5s"          
-        //   timeout  = "20s"
-        // }
-      }
-    }
-  }
+  //   task "movie-id-mongodb" {
+  //     //       template {
+  //     //         destination = "local/resolv.conf"
+  //     //         data        = <<EOF
+  //     // nameserver 127.0.0.1
+  //     // nameserver 128.110.156.4
+  //     // search service.consul
+  //     // EOF
+  //     //       }
+  //     driver = "docker"
+  //     config {
+  //       image = "stvdputten/mongo"
+  //       // volumes = [
+  //       //     "local/resolv.conf:/etc/resolv.conf"
+  //       // ]
+  //     }
+  //     service {
+  //       name = "consul-dns-check-single-node"
+  //       check {
+  //         type     = "script"          
+  //         name     = "check dns-ui"          
+  //         command  = "curl"          
+  //         args     = ["127.0.0.1:8500"]          
+  //         interval = "5s"          
+  //         timeout  = "20s"
+  //       }
+  //       check {
+  //         type     = "script"          
+  //         name     = "check dns 53"          
+  //         command  = "dig"          
+  //         args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+  //         interval = "5s"          
+  //         timeout  = "20s"
+  //       }
+  //       // check {
+  //       //   type     = "script"          
+  //       //   name     = "check dns 8600"          
+  //       //   command  = "dig"          
+  //       //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
+  //       //   interval = "5s"          
+  //       //   timeout  = "20s"
+  //       // }
+  //     }
+  //   }
+  // }
 
   // group "id-service" {
   //   network {
@@ -176,22 +241,22 @@ job "media-microservices" {
       // }
     }
 
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "consul-dns"
-              local_bind_port  = 53
-            }
-            upstreams {
-              destination_name = "consul-ui"
-              local_bind_port  = 8500
-            }
-          }
-        }
-      }
-    }
+    // service {
+    //   connect {
+    //     sidecar_service {
+    //       proxy {
+    //         upstreams {
+    //           destination_name = "consul-dns"
+    //           local_bind_port  = 53
+    //         }
+    //         upstreams {
+    //           destination_name = "consul-ui"
+    //           local_bind_port  = 8500
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     // task "movie-id-service" {
     //   driver = "docker"
@@ -220,22 +285,22 @@ job "media-microservices" {
       }
       service {
         name = "consul-dns-check-other-nodes"
-        check {
-          type     = "script"          
-          name     = "check dns 53"          
-          command  = "dig"          
-          args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
-        check {
-          type     = "script"          
-          name     = "check dns-ui"          
-          command  = "curl"          
-          args     = ["127.0.0.1:8500"]          
-          interval = "5s"          
-          timeout  = "20s"
-        }
+        // check {
+        //   type     = "script"          
+        //   name     = "check dns 53"          
+        //   command  = "dig"          
+        //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
+        //   interval = "5s"          
+        //   timeout  = "20s"
+        // }
+        // check {
+        //   type     = "script"          
+        //   name     = "check dns-ui"          
+        //   command  = "curl"          
+        //   args     = ["127.0.0.1:8500"]          
+        //   interval = "5s"          
+        //   timeout  = "20s"
+        // }
         // check {
         //   type     = "script"          
         //   name     = "check dns 8600"          
