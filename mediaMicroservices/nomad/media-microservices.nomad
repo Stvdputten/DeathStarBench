@@ -5,179 +5,52 @@ variable "home_dir" {
 
 job "media-microservices" {
   datacenters = ["dc1"]
-  constraint {
-    operator = "distinct_hosts"
-    value    = "true"
+  // constraint {
+  //   operator = "distinct_hosts"
+  //   value    = "true"
+  // }
+
+  group "nginx-web-server" {
+    network {
+      mode = "bridge"
+      port "nginx" {
+        static = 8080
+        to     = 8080
+      }
+    }
+
+    task "nginx-web-server" {
+      driver = "docker"
+      config {
+        image = "yg397/openresty-thrift:xenial"
+        ports = ["nginx"]
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/lua-scripts"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservice/lua-scripts"
+        }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nginx.conf"
+        }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/jaeger-config.json"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/jaeger-config.json"
+        }
+        mount {
+          type   = "bind"
+          target = "/gen-lua"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/gen-lua"
+        }
+      }
+
+    }
+
+
   }
 
-  // group "nginx-web-server" {
-  //   network {
-  //     mode = "bridge"
-  //     port "nginx" {
-  //       static = 8080
-  //       to     = 8080
-  //     }
-  //   }
-
-  //   task "nginx-web-server" {
-  //     driver = "docker"
-  //     config {
-  //       image = "yg397/openresty-thrift:xenial"
-  //       ports = ["nginx"]
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/lua-scripts"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/lua-scripts"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/conf/nginx.conf"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nginx.conf"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/jaeger-config.json"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/jaeger-config.json"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/gen-lua"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/gen-lua"
-  //       }
-  //     }
-
-  //   }
-
-  // group "dns-proxy-server" {
-  //   network {
-  //     mode = "bridge"
-  //   }
-
-  //   task "dns-proxy"{
-  //     driver = "docker"
-  //     config {
-  //       image = "defreitas/dns-proxy-server"
-  //       // hostname = "dns.mageddo"
-  //       // args = ["-dns", "172.26.64.1"]
-  //       mount {
-  //         type = "bind"
-  //         target = "/var/run/docker.sock"
-  //         source = "/var/run/docker.sock"
-  //       }
-  //     }
-  //   }
-  // task "movie-id-mongodb" {
-  //   //       template {
-  //   //         destination = "local/resolv.conf"
-  //   //         data        = <<EOF
-  //   // nameserver 127.0.0.1
-  //   // nameserver 128.110.156.4
-  //   // search service.consul
-  //   // EOF
-  //   //       }
-  //   driver = "docker"
-  //   config {
-  //     image = "stvdputten/mongo"
-  //     // volumes = [
-  //     //     "local/resolv.conf:/etc/resolv.conf"
-  //     // ]
-  //   }
-  //   service {
-  //     name = "consul-dns-check-single-node"
-  //     // check {
-  //     //   type     = "script"          
-  //     //   name     = "check dns 53"          
-  //     //   command  = "dig"          
-  //     //   args     = ["@127.0.0.1", "-p" , "53", "consul.service.consul"]          
-  //     //   interval = "5s"          
-  //     //   timeout  = "20s"
-  //     // }
-  //     // check {
-  //     //   type     = "script"          
-  //     //   name     = "check dns-ui"          
-  //     //   command  = "curl"          
-  //     //   args     = ["127.0.0.1:8500"]          
-  //     //   interval = "5s"          
-  //     //   timeout  = "20s"
-  //     // }
-  //     // check {
-  //     //   type     = "script"          
-  //     //   name     = "check dns 8600"          
-  //     //   command  = "dig"          
-  //     //   args     = ["@127.0.0.1", "-p" , "8600", "consul.service.consul"]          
-  //     //   interval = "5s"          
-  //     //   timeout  = "20s"
-  //     // }
-  //   }
-  // }
-
-  // }
-
-  // }
-
-  // group "consul" {
-  //   count = 1
-  //   service {
-  //     name = "consul-dns"
-  //     port = "8600"
-
-  //     connect {
-  //       sidecar_service {}
-  //     }
-  //   }
-  //   service {
-  //     name = "consul-ui"
-  //     port = "8500"
-
-  //     connect {
-  //       sidecar_service {}
-  //     }
-  //   }
-
-  //   network {
-  //     mode = "bridge"
-  //     port "dns-ui" {
-  //       static = 4000
-  //       to     = 8500
-  //     }
-  //     port "dns" {
-  //       static = 53
-  //       to     = 8600
-  //     }
-  //   }
-
-  //   task "consul" {
-  //     service {
-  //       name = "consul-dns-container"
-  //     }
-  //     driver = "docker"
-  //     env {
-  //       consul_allow_prileged_ports = "yes"
-  //     }
-  //     config {
-  //       image = "consul:1.9.6"
-  //       ports = ["dns-ui", "dns"]
-  //         // "0.0.0.0",
-  //       command = "consul"
-  //       args = [
-  //         "agent",
-  //         "-dev",
-  //         "-data-dir=/consul/data",
-  //         "-client",
-  //         "0.0.0.0",
-  //         "-bind",
-  //         "{{ GetInterfaceIP \"eth0\"}}",
-  //         "-dns-port",
-  //         "8600",
-  //       ]
-  //     }
-  //     resources {
-  //       cpu = 500
-  //       memory = 1024
-  //     }
-  //   }
-
-  // }
 
   group "unique-id-service" {
     network {
@@ -198,10 +71,10 @@ job "media-microservices" {
     }
 
     task "unique-id-service" {
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
-      }
+      // lifecycle {
+      //   hook    = "poststart"
+      //   sidecar = true
+      // }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
@@ -276,15 +149,15 @@ job "media-microservices" {
     }
 
     task "text-service" {
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
-      }
+      // lifecycle {
+      //   hook    = "poststart"
+      //   sidecar = true
+      // }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && TextService"]
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && TextService"]
       }
     }
   }
