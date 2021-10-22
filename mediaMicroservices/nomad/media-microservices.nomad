@@ -10,6 +10,46 @@ job "media-microservices" {
     value    = "true"
   }
 
+  // group "nginx-web-server" {
+  //   network {
+  //     mode = "bridge"
+  //     port "nginx" {
+  //       static = 8080
+  //       to     = 8080
+  //     }
+  //   }
+
+  //   task "nginx-web-server" {
+  //     driver = "docker"
+  //     config {
+  //       image = "yg397/openresty-thrift:xenial"
+  //       ports = ["nginx"]
+  //       mount {
+  //         type   = "bind"
+  //         target = "/usr/local/openresty/nginx/lua-scripts"
+  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/lua-scripts"
+  //       }
+  //       mount {
+  //         type   = "bind"
+  //         target = "/usr/local/openresty/nginx/conf/nginx.conf"
+  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nginx.conf"
+  //       }
+  //       mount {
+  //         type   = "bind"
+  //         target = "/usr/local/openresty/nginx/jaeger-config.json"
+  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/jaeger-config.json"
+  //       }
+  //       mount {
+  //         type   = "bind"
+  //         target = "/gen-lua"
+  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/gen-lua"
+  //       }
+  //     }
+
+  //   }
+
+  // }
+
   group "consul" {
     count = 1
     service {
@@ -383,45 +423,6 @@ job "media-microservices" {
   //   }
   // }
 
-  // group "nginx-web-server" {
-  //   network {
-  //     mode = "bridge"
-  //     port "nginx" {
-  //       static = 8080
-  //       to     = 8080
-  //     }
-  //   }
-
-  //   task "nginx-web-server" {
-  //     driver = "docker"
-  //     config {
-  //       image = "yg397/openresty-thrift:xenial"
-  //       ports = ["nginx"]
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/configsmaps/lua-scripts"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/configsmaps/lua-scripts"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/conf/nginx.conf"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/configmaps/nginx.conf"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/usr/local/openresty/nginx/jaeger-config.json"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/configmaps/jaeger-config.json"
-  //       }
-  //       mount {
-  //         type   = "bind"
-  //         target = "/gen-lua"
-  //         source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/configmaps/gen-lua"
-  //       }
-  //     }
-
-  //   }
-
-  // }
 
   // group "cast-info-service" {
   //   network {
