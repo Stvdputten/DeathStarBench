@@ -8,7 +8,7 @@ local function _UploadUserId(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local UserServiceClient = require 'media_service_UserService'
   local user_client = GenericObjectPool:connection(
-    UserServiceClient,"user-service",9090)
+    UserServiceClient,"user-service",9094)
   user_client:UploadUserWithUsername(req_id, post.username, carrier)
   GenericObjectPool:returnConnection(user_client)
 end
@@ -17,7 +17,7 @@ local function _UploadText(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local TextServiceClient = require 'media_service_TextService'
   local text_client = GenericObjectPool:connection(
-    TextServiceClient,"text-service",9090)
+    TextServiceClient,"text-service",9092)
   text_client:UploadText(req_id, post.text, carrier)
   GenericObjectPool:returnConnection(text_client)
 end
@@ -26,7 +26,7 @@ local function _UploadMovieId(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local MovieIdServiceClient = require 'media_service_MovieIdService'
   local movie_id_client = GenericObjectPool:connection(
-    MovieIdServiceClient,"movie-id-service",9090)
+    MovieIdServiceClient,"movie-id-service",9091)
   movie_id_client:UploadMovieId(req_id, post.title, tonumber(post.rating), carrier)
   GenericObjectPool:returnConnection(movie_id_client)
 end

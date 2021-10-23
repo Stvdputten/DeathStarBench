@@ -6,7 +6,7 @@
   },
   "movie-id-service": {
     "addr": "movie-id-service",
-    "port": 9090
+    "port": 9091
   },
   "movie-id-mongodb": {
     "addr": "movie-id-mongodb",
@@ -26,11 +26,11 @@
   },
   "text-service": {
     "addr": "text-service",
-    "port": 9090
+    "port": 9092
   },
   "rating-service": {
     "addr": "rating-service",
-    "port": 9090
+    "port": 9093
   },
   "rating-redis": {
     "addr": "rating-redis",
@@ -38,11 +38,11 @@
   },
   "user-service": {
     "addr": "user-service",
-    "port": 9090
+    "port": 9094
   },
   "compose-review-service": {
     "addr": "compose-review-service",
-    "port": 9090
+    "port": 9095
   },
   "compose-review-memcached": {
     "addr": "compose-review-memcached",
@@ -50,7 +50,7 @@
   },
   "review-storage-service": {
     "addr": "review-storage-service",
-    "port": 9090
+    "port": 9096
   },
   "review-storage-mongodb": {
     "addr": "review-storage-mongodb",
@@ -62,7 +62,7 @@
   },
   "user-review-service": {
     "addr": "user-review-service",
-    "port": 9090
+    "port": 9097
   },
   "user-review-mongodb": {
     "addr": "user-review-mongodb",
@@ -74,7 +74,7 @@
   },
   "movie-review-service": {
     "addr": "movie-review-service",
-    "port": 9090
+    "port": 9098
   },
   "movie-review-mongodb": {
     "addr": "movie-review-mongodb",
@@ -86,7 +86,7 @@
   },
   "cast-info-service": {
     "addr": "cast-info-service",
-    "port": 9090
+    "port": 9099
   },
   "cast-info-mongodb": {
     "addr": "cast-info-mongodb",
@@ -98,7 +98,7 @@
   },
   "plot-service": {
     "addr": "plot-service",
-    "port": 9090
+    "port": 9100
   },
   "plot-mongodb": {
     "addr": "plot-mongodb",
@@ -110,7 +110,7 @@
   },
   "movie-info-service": {
     "addr": "movie-info-service",
-    "port": 9090
+    "port": 9101
   },
   "movie-info-mongodb": {
     "addr": "movie-info-mongodb",

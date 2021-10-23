@@ -19,6 +19,63 @@ job "media-microservices" {
       }
     }
 
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "unique-id-service"
+              local_bind_port  = 9090
+            }
+            upstreams {
+              destination_name = "movie-id-service"
+              local_bind_port  = 9091
+            }
+            upstreams {
+              destination_name = "text-service"
+              local_bind_port  = 9092
+            }
+            upstreams {
+              destination_name = "rating-service"
+              local_bind_port  = 9093
+            }
+            upstreams {
+              destination_name = "user-service"
+              local_bind_port  = 9094
+            }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
+            }
+            upstreams {
+              destination_name = "review-storage-service"
+              local_bind_port  = 9096
+            }
+            upstreams {
+              destination_name = "user-review-service"
+              local_bind_port  = 9097
+            }
+            upstreams {
+              destination_name = "movie-review-service"
+              local_bind_port  = 9098
+            }
+            upstreams {
+              destination_name = "cast-info-service"
+              local_bind_port  = 9099
+            }
+            upstreams {
+              destination_name = "plot-service"
+              local_bind_port  = 9100
+            }
+            upstreams {
+              destination_name = "movie-info-service"
+              local_bind_port  = 9101
+            }
+          }
+        }
+      }
+    }
+
     task "nginx-web-server" {
       driver = "docker"
       config {
@@ -27,22 +84,22 @@ job "media-microservices" {
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/lua-scripts"
-          source = "/users/stvdp/DeathStarBench/mediaMicroservice/lua-scripts"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/lua-scripts"
         }
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/conf/nginx.conf"
-          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/nginx.conf"
         }
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/jaeger-config.json"
-          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/jaeger-config.json"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/jaeger-config.json"
         }
         mount {
           type   = "bind"
           target = "/gen-lua"
-          source = "/users/stvdp/DeathStarBench/mediaMicroservice/nomad/gen-lua"
+          source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/gen-lua"
         }
       }
 
@@ -55,6 +112,13 @@ job "media-microservices" {
   group "unique-id-service" {
     network {
       mode = "bridge"
+    }
+    service {
+      name = "unique-id-service"
+      port = "9090"
+      connect {
+        sidecar_service {}
+      }
     }
 
     service {
@@ -71,10 +135,6 @@ job "media-microservices" {
     }
 
     task "unique-id-service" {
-      // lifecycle {
-      //   hook    = "poststart"
-      //   sidecar = true
-      // }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
