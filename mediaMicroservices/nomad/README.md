@@ -151,3 +151,19 @@ geo profile rate recommendation reservation user
 
 # Issues
 (Consul connect doesn't add hosts)[https://www.google.com/search?client=firefox-b-d&q=extra+hosts+nomad]
+
+# /etc/hosts setup
+127.0.0.1  jaeger
+127.0.0.1  unique-id-service
+127.0.0.1  movie-id-service
+127.0.0.1  cast-info-service
+127.0.0.1  text-service
+127.0.0.1  rating-id-service
+127.0.0.1  user-service
+127.0.0.1  compose-review-service
+127.0.0.1  review-storage-service
+127.0.0.1  user-review-service
+127.0.0.1  movie-review-service
+127.0.0.1  movie-review-service
+127.0.0.1  plot-service
+127.0.0.1  movie-info-service
