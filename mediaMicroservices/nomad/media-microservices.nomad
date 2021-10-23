@@ -1,8 +1,3 @@
-variable "home_dir" {
-  type    = string
-  default = "/users/stvdp"
-}
-
 job "media-microservices" {
   datacenters = ["dc1"]
   // constraint {
@@ -23,6 +18,10 @@ job "media-microservices" {
       connect {
         sidecar_service {
           proxy {
+            upstreams {
+              destination_name = "jaeger"
+              local_bind_port  = 6831
+            }
             upstreams {
               destination_name = "unique-id-service"
               local_bind_port  = 9090
@@ -81,6 +80,8 @@ job "media-microservices" {
       config {
         image = "yg397/openresty-thrift:xenial"
         ports = ["nginx"]
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/lua-scripts"
@@ -102,10 +103,7 @@ job "media-microservices" {
           source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/gen-lua"
         }
       }
-
     }
-
-
   }
 
 
@@ -150,6 +148,14 @@ job "media-microservices" {
     }
 
     service {
+      name = "movie-id-service"
+      port = "9091"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    service {
       connect {
         sidecar_service {
           proxy {
@@ -191,6 +197,13 @@ job "media-microservices" {
   }
 
   group "text-service" {
+    service {
+      name = "text-service"
+      port = "9092"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -223,6 +236,13 @@ job "media-microservices" {
   }
 
   group "rating-service" {
+    service {
+      name = "rating-service"
+      port = "9093"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -262,6 +282,13 @@ job "media-microservices" {
   }
 
   group "user-service" {
+    service {
+      name = "user-service"
+      port = "9094"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -308,6 +335,13 @@ job "media-microservices" {
   }
 
   group "compose-review-service" {
+    service {
+      name = "compose-review-service"
+      port = "9095"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -347,6 +381,13 @@ job "media-microservices" {
   }
 
   group "review-storage-service" {
+    service {
+      name = "review-storage-service"
+      port = "9096"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -393,6 +434,13 @@ job "media-microservices" {
   }
 
   group "user-review-service" {
+    service {
+      name = "user-review-service"
+      port = "9097"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -439,6 +487,13 @@ job "media-microservices" {
   }
 
   group "movie-review-service" {
+    service {
+      name = "movie-review-service"
+      port = "9098"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -486,6 +541,13 @@ job "media-microservices" {
 
 
   group "cast-info-service" {
+    service {
+      name = "cast-info-service"
+      port = "9099"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -532,6 +594,13 @@ job "media-microservices" {
   }
 
   group "plot-service" {
+    service {
+      name = "plot-service"
+      port = "9100"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
@@ -578,6 +647,13 @@ job "media-microservices" {
   }
 
   group "movie-info-service" {
+    service {
+      name = "movie-info-service"
+      port = "9101"
+      connect {
+        sidecar_service {}
+      }
+    }
     network {
       mode = "bridge"
     }
