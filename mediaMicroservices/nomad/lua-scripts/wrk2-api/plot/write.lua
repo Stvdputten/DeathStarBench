@@ -32,7 +32,7 @@ function _M.WritePlot()
     ngx.exit(ngx.HTTP_BAD_REQUEST)
   end
 
-  local client = GenericObjectPool:connection(PlotServiceClient, "plot-service", 9100)
+  local client = GenericObjectPool:connection(PlotServiceClient, "plot-service.service.consul", 9100)
   client:WritePlot(req_id, plot["plot_id"], plot["plot"], carrier)
   GenericObjectPool:returnConnection(client)
 end

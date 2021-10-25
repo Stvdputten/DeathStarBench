@@ -110,6 +110,10 @@ job "media-microservices" {
   group "unique-id-service" {
     network {
       mode = "bridge"
+      port "http" {
+        static = 9090
+        to     = 9090
+      }
     }
     service {
       name = "unique-id-service"
@@ -127,6 +131,10 @@ job "media-microservices" {
               destination_name = "jaeger"
               local_bind_port  = 6831
             }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
+            }
           }
         }
       }
@@ -137,7 +145,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && UniqueIdService"]
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && UniqueIdService"]
+        ports = ["http"]
       }
     }
   }
@@ -145,6 +154,10 @@ job "media-microservices" {
   group "movie-id-service" {
     network {
       mode = "bridge"
+      port "http" {
+        static = 9091
+        to     = 9091
+      }
     }
 
     service {
@@ -163,6 +176,10 @@ job "media-microservices" {
               destination_name = "jaeger"
               local_bind_port  = 6831
             }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
+            }
           }
         }
       }
@@ -177,7 +194,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        ports = ["http"]
       }
     }
 
@@ -206,6 +224,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9092
+        to     = 9092
+      }
     }
 
     service {
@@ -216,21 +238,22 @@ job "media-microservices" {
               destination_name = "jaeger"
               local_bind_port  = 6831
             }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
+            }
           }
         }
       }
     }
 
     task "text-service" {
-      // lifecycle {
-      //   hook    = "poststart"
-      //   sidecar = true
-      // }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && TextService"]
+        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts  && echo '127.0.0.1  jaeger' >> /etc/hosts && TextService"]
+        ports = ["http"]
       }
     }
   }
@@ -245,6 +268,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9093
+        to     = 9093
+      }
     }
 
     service {
@@ -254,6 +281,10 @@ job "media-microservices" {
             upstreams {
               destination_name = "jaeger"
               local_bind_port  = 6831
+            }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
             }
           }
         }
@@ -269,7 +300,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        ports = ["http"]
       }
     }
 
@@ -291,6 +323,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9094
+        to     = 9094
+      }
     }
 
     service {
@@ -300,6 +336,10 @@ job "media-microservices" {
             upstreams {
               destination_name = "jaeger"
               local_bind_port  = 6831
+            }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
             }
           }
         }
@@ -315,7 +355,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        ports = ["http"]
       }
     }
 
@@ -344,6 +385,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9095
+        to     = 9095
+      }
     }
 
     service {
@@ -353,6 +398,10 @@ job "media-microservices" {
             upstreams {
               destination_name = "jaeger"
               local_bind_port  = 6831
+            }
+            upstreams {
+              destination_name = "cast-info-service"
+              local_bind_port  = 9099
             }
           }
         }
@@ -368,7 +417,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        args    = ["-c", "echo '127.0.0.1  cast-info-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        ports = ["http"]
       }
     }
 
@@ -390,6 +440,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9096
+        to     = 9096
+      }
     }
 
     service {
@@ -415,6 +469,7 @@ job "media-microservices" {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
+        ports = ["http"]
       }
     }
 
@@ -443,6 +498,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9097
+        to     = 9097
+      }
     }
 
     service {
@@ -452,6 +511,14 @@ job "media-microservices" {
             upstreams {
               destination_name = "jaeger"
               local_bind_port  = 6831
+            }
+            upstreams {
+              destination_name = "unique-id-service"
+              local_bind_port  = 9090
+            }
+            upstreams {
+              destination_name = "compose-review-service"
+              local_bind_port  = 9095
             }
           }
         }
@@ -467,7 +534,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        args    = ["-c", "echo '127.0.0.1  unique-id-service' >> /etc/hosts  && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        ports = ["http"]
       }
     }
 
@@ -496,6 +564,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9098
+        to     = 9098
+      }
     }
 
     service {
@@ -505,6 +577,10 @@ job "media-microservices" {
             upstreams {
               destination_name = "jaeger"
               local_bind_port  = 6831
+            }
+            upstreams {
+              destination_name = "review-storage-service"
+              local_bind_port  = 9096
             }
           }
         }
@@ -520,7 +596,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+        args    = ["-c", "echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+        ports = ["http"]
       }
     }
 
@@ -550,6 +627,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9099
+        to     = 9099
+      }
     }
 
     service {
@@ -575,6 +656,7 @@ job "media-microservices" {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
+        ports = ["http"]
       }
     }
 
@@ -603,6 +685,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9100
+        to     = 9100
+      }
     }
 
     service {
@@ -628,6 +714,7 @@ job "media-microservices" {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
+        ports = ["http"]
       }
     }
 
@@ -656,6 +743,10 @@ job "media-microservices" {
     }
     network {
       mode = "bridge"
+      port "http" {
+        static = 9101
+        to     = 9101
+      }
     }
 
     service {
@@ -681,6 +772,7 @@ job "media-microservices" {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
+        ports = ["http"]
       }
     }
 
@@ -707,6 +799,7 @@ job "media-microservices" {
         to     = 16686
       }
       port "jaeger" {
+        static = 6831
         to = 6831
       }
     }
