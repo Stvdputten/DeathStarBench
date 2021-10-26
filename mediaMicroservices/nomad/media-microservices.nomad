@@ -30,6 +30,10 @@ job "media-microservices" {
             //   destination_name = "jaeger"
             //   local_bind_port  = 6831
             // }
+            // upstreams {
+            //   destination_name = "jaeger-zipkin"
+            //   local_bind_port  = 9411
+            // }
             upstreams {
               destination_name = "unique-id-service"
               local_bind_port  = 9090
@@ -88,8 +92,12 @@ job "media-microservices" {
       config {
         image = "yg397/openresty-thrift:xenial"
         ports = ["nginx"]
+        // command = "/usr/local/openresty/bin/openresty"
+        // args = ["-g", "daemon off;"]
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        // command = "sh"
+        // args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/lua-scripts"
@@ -121,13 +129,13 @@ job "media-microservices" {
         sidecar_service {}
       }
     }
-    service {
-      name = "jaeger-ui"
-      port = "16686"
-      connect {
-        sidecar_service {}
-      }
-    }
+    // service {
+    //   name = "jaeger-ui"
+    //   port = "16686"
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
 
 
     task "jaeger" {
@@ -827,44 +835,51 @@ job "media-microservices" {
     }
   }
 
-  group "jaeger" {
-    network {
-      mode = "bridge"
-      port "jaeger-ui" {
-        static = 16686
-        to     = 16686
-      }
-      port "jaeger" {
-        static = 6831
-        to = 6831
-      }
-    }
-    service {
-      name = "jaeger"
-      port = "6831"
-      connect {
-        sidecar_service {}
-      }
-    }
-    service {
-      name = "jaeger-ui"
-      port = "16686"
-      connect {
-        sidecar_service {}
-      }
-    }
+  // group "jaeger" {
+  //   network {
+  //     mode = "bridge"
+  //     port "jaeger-ui" {
+  //       static = 16686
+  //       to     = 16686
+  //     }
+  //     port "jaeger" {
+  //       static = 6831
+  //       to = 6831
+  //     }
+  //   }
+  //   service {
+  //     name = "jaeger"
+  //     port = "6831"
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
+  //   service {
+  //     name = "jaeger-ui"
+  //     port = "16686"
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
+  //   service {
+  //     name = "jaeger-zipkin"
+  //     port = "9411"
+  //     connect {
+  //       sidecar_service {}
+  //     }
+  //   }
 
 
-    task "jaeger" {
-      driver = "docker"
-      env {
-        COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
-      }
-      config {
-        image = "jaegertracing/all-in-one:latest"
-        ports = ["jaeger", "jaeger-ui"]
-      }
-    }
-  }
+  //   task "jaeger" {
+  //     driver = "docker"
+  //     env {
+  //       COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
+  //     }
+  //     config {
+  //       image = "jaegertracing/all-in-one:latest"
+  //       ports = ["jaeger", "jaeger-ui"]
+  //     }
+  //   }
+  // }
 
 }
