@@ -12,16 +12,24 @@ job "media-microservices" {
         static = 8080
         to     = 8080
       }
+      port "jaeger-ui" {
+        static = 16686
+        to     = 16686
+      }
+      port "jaeger" {
+        static = 6831
+        to = 6831
+      }
     }
 
     service {
       connect {
         sidecar_service {
           proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
+            // upstreams {
+            //   destination_name = "jaeger"
+            //   local_bind_port  = 6831
+            // }
             upstreams {
               destination_name = "unique-id-service"
               local_bind_port  = 9090
@@ -102,6 +110,34 @@ job "media-microservices" {
           target = "/gen-lua"
           source = "/users/stvdp/DeathStarBench/mediaMicroservices/nomad/gen-lua"
         }
+      }
+    }
+
+    
+    service {
+      name = "jaeger"
+      port = "6831"
+      connect {
+        sidecar_service {}
+      }
+    }
+    service {
+      name = "jaeger-ui"
+      port = "16686"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+
+    task "jaeger" {
+      driver = "docker"
+      env {
+        COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
+      }
+      config {
+        image = "jaegertracing/all-in-one:latest"
+        ports = ["jaeger", "jaeger-ui"]
       }
     }
   }
