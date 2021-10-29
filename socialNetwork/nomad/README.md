@@ -1,6 +1,6 @@
 
 # ports in nginx forwarded by service mesh
-jaeger-agent: 6831
+jaeger-agent: 6831 - ZIPKIN 9411
 jaeger-agent-ui: 16686
 user-service: 9090
 social-graph-service: 9091
