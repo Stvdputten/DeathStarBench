@@ -1,5 +1,6 @@
-job "DeathStarBench" {
+job "deathstarbench" {
   datacenters = ["dc1"]
+
 
   group "social-network" {
     network {
@@ -7,12 +8,41 @@ job "DeathStarBench" {
       port "http" {
         static = 8080
       }
-      port "media" {
-        static = 8081
-        to     = 8080
-      }
       port "jaeger-ui" {
         static = 16686
+      }
+    }
+
+    service {
+      name = "jaeger-agent"
+      port = "6831"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            // upstreams {
+            //   destination_name = "jaeger"
+            //   local_bind_port  = 6831
+            // }
+            // upstreams {
+            //   destination_name = "jaeger-zipkin"
+            //   local_bind_port  = 9411
+            // }
+            upstreams {
+              destination_name = "media-frontend"
+              local_bind_port  = 8081
+            }
+            upstreams {
+              destination_name = "unique-id-service"
+              local_bind_port  = 9099
+            }
+          }
+        }
       }
     }
 
@@ -67,26 +97,6 @@ job "DeathStarBench" {
     }
 
 
-    // task "media-frontend" {
-    //   driver = "docker"
-
-    //   config {
-    //     image = "yg397/media-frontend:xenial"
-    //     ports = ["media"]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/usr/local/openresty/nginx/lua-scripts"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/usr/local/openresty/nginx/conf/nginx.conf"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
-    //     }
-    //   }
-    // }
-
-
 
     task "user-mention-service" {
       driver = "docker"
@@ -94,25 +104,6 @@ job "DeathStarBench" {
       config {
         image   = "stvdputten/social-network-microservices:nomad"
         command = "UserMentionService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "unique-id" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UniqueIdService"
         mount {
           type   = "bind"
           target = "/keys"
@@ -526,21 +517,100 @@ job "DeathStarBench" {
           "6382"
         ]
       }
-
     }
-
 
     task "jaeger" {
       driver = "docker"
       config {
         image = "jaegertracing/all-in-one:1.23.0"
       }
-      service {
-        name = "jaeger-agent"
-        port = "http"
-      }
       env {
         COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
+      }
+    }
+  }
+
+  group "unique-id-service" {
+    network {
+      mode = "bridge"
+    }
+    service {
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "jaeger-agent"
+              local_bind_port  = 6831
+            }
+          }
+        }
+      }
+    }
+
+    service {
+      name = "unique-id-service"
+      port = "9099"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    task "unique-id" {
+      driver = "docker"
+
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "UniqueIdService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+  }
+
+  group "media-frontend" {
+    network {
+      mode = "bridge"
+      port "media" {
+        static = 8081
+        to     = 8080
+      }
+    }
+    service {
+      name = "media-frontend"
+      port = "8080"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    task "media-frontend" {
+      driver = "docker"
+      resources {
+        cpu    = 100 * 4
+        memory = 256 * 4
+      }
+
+      config {
+        image = "yg397/media-frontend:xenial"
+        ports = ["media"]
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/lua-scripts"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/lua-scripts-nomad"
+        }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+        }
       }
     }
   }
