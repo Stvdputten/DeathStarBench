@@ -206,7 +206,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "UserMentionService"
           mount {
             type   = "bind"
@@ -260,7 +260,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "UniqueIdService"
           mount {
             type   = "bind"
@@ -309,7 +309,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "TextService"
           mount {
             type   = "bind"
@@ -358,7 +358,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "MediaService"
           mount {
             type   = "bind"
@@ -447,7 +447,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "UserService"
           mount {
             type   = "bind"
@@ -537,7 +537,7 @@ job "social-network" {
       }
 
       config {
-        image   = "stvdputten/social-network-microservices:latest"
+        image   = "stvdputten/social-network-microservices:nomad"
         command = "UrlShortenService"
         mount {
           type   = "bind"
@@ -630,7 +630,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "UserTimelineService"
           mount {
             type   = "bind"
@@ -733,7 +733,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "PostStorageService"
           mount {
             type   = "bind"
@@ -822,7 +822,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "ComposePostService"
           mount {
             type   = "bind"
@@ -873,7 +873,7 @@ job "social-network" {
       task "home-timeline-service" {
         driver = "docker"
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "SocialGraphService"
           mount {
             type   = "bind"
@@ -989,7 +989,7 @@ job "social-network" {
         driver = "docker"
 
         config {
-          image   = "stvdputten/social-network-microservices:latest"
+          image   = "stvdputten/social-network-microservices:nomad"
           command = "SocialGraphService"
           mount {
             type   = "bind"
