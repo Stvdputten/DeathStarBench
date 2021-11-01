@@ -14,6 +14,10 @@ job "DeathStarBench" {
 
     task "nginx-thrift" {
       driver = "docker"
+      resources {        
+        cpu    = 100 * 4     
+        memory = 256 * 4
+      }
 
       config {
         image = "stvdputten/openresty-thrift:latest"
