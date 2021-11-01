@@ -874,7 +874,7 @@ job "social-network" {
         driver = "docker"
         config {
           image   = "stvdputten/social-network-microservices:nomad"
-          command = "SocialGraphService"
+          command = "HomeTimelineService"
           mount {
             type   = "bind"
             target = "/keys"

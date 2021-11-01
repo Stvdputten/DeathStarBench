@@ -34,11 +34,11 @@ job "DeathStarBench" {
           target = "/usr/local/openresty/nginx/conf/nginx.conf"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/conf/nginx.conf"
         }
-        // mount {
-        //   type   = "bind"
-        //   target = "/usr/local/openresty/nginx/jaeger-config.json"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/jaeger-config.json"
-        // }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/jaeger-config.json"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/nginx-web-server/jaeger-config.json"
+        }
         mount {
           type   = "bind"
           target = "/gen-lua"
@@ -98,8 +98,6 @@ job "DeathStarBench" {
         }
       }
     }
-
-
 
     task "unique-id" {
       driver = "docker"
@@ -181,7 +179,8 @@ job "DeathStarBench" {
     task "media-memcached" {
       driver = "docker"
       config {
-        image = "memcached:1.6.9"
+        image = "stvdputten/memcached"
+        command = "memcached"
       }
       service {
         name = "media-memcached"
@@ -193,11 +192,11 @@ job "DeathStarBench" {
     task "media-mongodb" {
       driver = "docker"
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
-          "--config",
-          "/social-network-microservices/config/mongod.conf"
+          "--port",
+          "27017"
         ]
         mount {
           type   = "bind"
@@ -218,234 +217,248 @@ job "DeathStarBench" {
 
 
 
-    // task "user-service" {
-    //   driver = "docker"
+    task "user-service" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/social-network-microservices:nomad"
-    //     command = "UserService"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "UserService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
 
-    // task "user-memcached" {
-    //   driver = "docker"
-    //   config {
-    //     image = "memcached:1.6.9"
-    //   }
-    //   service {
-    //     name = "user-memcached"
-    //     tags = ["db_mem"]
-    //     port = "http"
-    //   }
-    // }
+    task "user-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+        command = "memcached"
+        args = [
+          "-p",
+          "11212"
+        ]
 
-    // task "user-mongodb" {
-    //   driver = "docker"
-    //   config {
-    //     image   = "mongo:4.4.6"
-    //     command = "mongod"
-    //     args = [
-    //       "--config",
-    //       "/social-network-microservices/config/mongod.conf"
-    //     ]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      }
+      service {
+        name = "user-memcached"
+        tags = ["db_mem"]
+        port = "http"
+      }
+    }
+
+    task "user-mongodb" {
+      driver = "docker"
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27018"
+        ]
+      }
+    }
 
 
-    // task "url-shorten-service" {
-    //   driver = "docker"
-    //   env {
-    //     JAEGER_AGENT_URL = "http://${NOMAD_UPSTREAM_ADDR_jaeger_agent}"
-    //   }
+    task "url-shorten-service" {
+      driver = "docker"
+      // env {
+      //   JAEGER_AGENT_URL = "http://${NOMAD_UPSTREAM_ADDR_jaeger_agent}"
+      // }
 
-    //   config {
-    //     image   = "stvdputten/social-network-microservices:nomad"
-    //     command = "UrlShortenService"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "UrlShortenService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
 
-    // task "url-shorten-mongodb" {
-    //   driver = "docker"
-    //   config {
-    //     image   = "mongo:4.4.6"
-    //     command = "mongod"
-    //     args = [
-    //       "--config",
-    //       "/social-network-microservices/config/mongod.conf"
-    //     ]
+    task "url-shorten-mongodb" {
+      driver = "docker"
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27022"
+        ]
 
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      }
+    }
 
-    // task "url-shorten-memcached" {
-    //   driver = "docker"
-    //   config {
-    //     image = "memcached:1.6.9"
-    //   }
+    task "url-shorten-memcached" {
+      driver = "docker"
+      config {
+        image = "stvdputten/memcached"
+        command = "memcached"
+        args = [
+          "-p",
+          "11213"
+        ]
+      }
 
-    // }
+    }
 
 
-    // task "user-timeline-service" {
-    //   driver = "docker"
+    task "user-timeline-service" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/social-network-microservices:nomad"
-    //     command = "UserTimelineService"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "UserTimelineService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
 
-    // task "user-timeline-mongodb" {
-    //   driver = "docker"
+    task "user-timeline-mongodb" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "mongo:4.4.6"
-    //     command = "mongod"
-    //     args = [
-    //       "--config",
-    //       "/social-network-microservices/config/mongod.conf"
-    //     ]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27019"
+        ]
+      }
+    }
 
-    // task "user-timeline-redis" {
-    //   driver = "docker"
-    //   config {
-    //     image = "redis:alpine3.13"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //     command = "redis-server"
-    //     args = [
-    //       "/social-network-microservices/config/redis.conf"
-    //     ]
-    //   }
+    task "user-timeline-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+        command = "redis-server"
+        args = [
+          "--port",
+          "6381"
+        ]
+      }
+    }
 
+    task "post-storage-service" {
+      driver = "docker"
 
-    // }
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "PostStorageService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
 
-    // task "post-storage-service" {
-    //   driver = "docker"
+    task "post-storage-memcached" {
+      driver = "docker"
 
-    //   config {
-    //     image   = "stvdputten/social-network-microservices:nomad"
-    //     command = "PostStorageService"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+      config {
+        image = "memcached:1.6.9"
+        command = "memcached"
+        args = [
+          "-p",
+          "11214"
+        ]
+      }
+    }
 
-    // task "post-storage-memcached" {
-    //   driver = "docker"
+    task "post-storage-mongodb" {
+      driver = "docker"
 
-    //   config {
-    //     image = "memcached:1.6.9"
-    //   }
-    // }
-
-    // task "post-storage-mongodb" {
-    //   driver = "docker"
-
-    //   config {
-    //     image   = "mongo:4.4.6"
-    //     command = "mongod"
-    //     args = [
-    //       "--config",
-    //       "/social-network-microservices/config/mongod.conf"
-    //     ]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
-
-
-
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27021"
+        ]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
 
     task "home-timeline-service" {
       driver = "docker"
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "HomeTimelineService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "home-timeline-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+        command = "redis-server"
+        args = [
+          "--port",
+          "6379"
+        ]
+      }
+
+    }
+
+    task "social-graph-service" {
+      driver = "docker"
+
       config {
         image   = "stvdputten/social-network-microservices:nomad"
         command = "SocialGraphService"
@@ -462,69 +475,51 @@ job "DeathStarBench" {
       }
     }
 
-    // task "social-graph-service" {
-    //   driver = "docker"
+    task "social-graph-mongodb" {
+      driver = "docker"
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27020"
+        ]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
 
-    //   config {
-    //     image   = "stvdputten/social-network-microservices:nomad"
-    //     command = "SocialGraphService"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
-    // }
+    }
 
-    // task "social-graph-mongodb" {
-    //   driver = "docker"
-    //   config {
-    //     image   = "mongo:4.4.6"
-    //     command = "mongod"
-    //     args = [
-    //       "--config",
-    //       "/social-network-microservices/config/mongod.conf"
-    //     ]
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //   }
+    task "social-graph-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+        command = "redis-server"
+        args = [
+          "--port",
+          "6382"
+        ]
+      }
 
-    // }
-
-    // task "social-graph-redis" {
-    //   driver = "docker"
-    //   config {
-    //     image = "redis:alpine3.13"
-    //     mount {
-    //       type   = "bind"
-    //       target = "/keys"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-    //     }
-    //     mount {
-    //       type   = "bind"
-    //       target = "/social-network-microservices/config"
-    //       source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-    //     }
-    //     command = "redis-server"
-    //     args = [
-    //       "/social-network-microservices/config/redis.conf"
-    //     ]
-    //   }
-
-    // }
+    }
 
 
     task "jaeger" {
