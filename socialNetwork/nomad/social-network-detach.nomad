@@ -8,9 +8,9 @@ job "deathstarbench" {
   group "social-network" {
     constraint {
       attribute = "${attr.unique.hostname}"
-      value = "node3.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
+      value     = "node3.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
     }
-    
+
     network {
       mode = "bridge"
       port "http" {
@@ -24,64 +24,64 @@ job "deathstarbench" {
       }
     }
 
-    service {
-      name = "nginx-upstreams"
+    // service {
+    //   name = "nginx-upstreams"
 
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "media-frontend"
-              local_bind_port  = 8081
-            }
-            // upstreams {
-            //   destination_name = "user-service"
-            //   local_bind_port  = 9090
-            // }
-            // upstreams {
-            //   destination_name = "social-graph-service"
-            //   local_bind_port  = 9091
-            // }
-            // upstreams {
-            //   destination_name = "media-service"
-            //   local_bind_port  = 9092
-            // }
-            // upstreams {
-            //   destination_name = "user-timeline-service"
-            //   local_bind_port  = 9093
-            // }
-            upstreams {
-              destination_name = "compose-post-service"
-              local_bind_port  = 9094
-            }
-            // upstreams {
-            //   destination_name = "home-timeline-service"
-            //   local_bind_port  = 9095
-            // }
-            upstreams {
-              destination_name = "user-mention-service"
-              local_bind_port  = 9096
-            }
-            // upstreams {
-            //   destination_name = "post-storage-service"
-            //   local_bind_port  = 9097
-            // }
-            upstreams {
-              destination_name = "text-service"
-              local_bind_port  = 9098
-            }
-            upstreams {
-              destination_name = "unique-id-service"
-              local_bind_port  = 9099
-            }
-            // upstreams {
-            //   destination_name = "url-shorten-service"
-            //   local_bind_port  = 9100
-            // }
-          }
-        }
-      }
-    }
+    //   connect {
+    //     sidecar_service {
+    //       proxy {
+    //         upstreams {
+    //           destination_name = "media-frontend"
+    //           local_bind_port  = 8081
+    //         }
+    //         // upstreams {
+    //         //   destination_name = "user-service"
+    //         //   local_bind_port  = 9090
+    //         // }
+    //         // upstreams {
+    //         //   destination_name = "social-graph-service"
+    //         //   local_bind_port  = 9091
+    //         // }
+    //         // upstreams {
+    //         //   destination_name = "media-service"
+    //         //   local_bind_port  = 9092
+    //         // }
+    //         // upstreams {
+    //         //   destination_name = "user-timeline-service"
+    //         //   local_bind_port  = 9093
+    //         // }
+    //         upstreams {
+    //           destination_name = "compose-post-service"
+    //           local_bind_port  = 9094
+    //         }
+    //         // upstreams {
+    //         //   destination_name = "home-timeline-service"
+    //         //   local_bind_port  = 9095
+    //         // }
+    //         upstreams {
+    //           destination_name = "user-mention-service"
+    //           local_bind_port  = 9096
+    //         }
+    //         // upstreams {
+    //         //   destination_name = "post-storage-service"
+    //         //   local_bind_port  = 9097
+    //         // }
+    //         upstreams {
+    //           destination_name = "text-service"
+    //           local_bind_port  = 9098
+    //         }
+    //         upstreams {
+    //           destination_name = "unique-id-service"
+    //           local_bind_port  = 9099
+    //         }
+    //         // upstreams {
+    //         //   destination_name = "url-shorten-service"
+    //         //   local_bind_port  = 9100
+    //         // }
+    //       }
+    //     }
+    //   }
+    // }
 
     task "nginx-thrift" {
       driver = "docker"
@@ -90,9 +90,13 @@ job "deathstarbench" {
         memory = 256 * 4
       }
 
+      service {
+        name = "nginx-frontend"
+      }
+
       config {
-        image = "stvdputten/openresty-thrift:latest"
-        ports = ["http"]
+        image   = "stvdputten/openresty-thrift:latest"
+        ports   = ["http"]
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
 
@@ -135,312 +139,39 @@ job "deathstarbench" {
     }
 
 
-
-    task "media-service" {
+    task "jaeger" {
       driver = "docker"
 
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "MediaService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "media-memcached" {
-      driver = "docker"
-      config {
-        image   = "stvdputten/memcached"
-        command = "memcached"
-      }
       service {
-        name = "media-memcached"
-        tags = ["db_mem"]
-        port = "http"
+        name = "jaeger"
       }
-    }
-
-    task "media-mongodb" {
-      driver = "docker"
-      config {
-        image   = "stvdputten/mongo"
-        command = "mongod"
-        args = [
-          "--port",
-          "27017"
-        ]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-      service {
-        name = "media-mongodb"
-        port = "http"
-      }
-    }
-
-
-
-    task "user-service" {
-      driver = "docker"
 
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UserService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        image = "jaegertracing/all-in-one:1.23.0"
       }
     }
+  }
 
-    task "user-memcached" {
-      driver = "docker"
-      config {
-        image   = "stvdputten/memcached"
-        command = "memcached"
-        args = [
-          "-p",
-          "11212"
-        ]
-
+  group "social-graph" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9091
       }
-      service {
-        name = "user-memcached"
-        tags = ["db_mem"]
-        port = "http"
-      }
-    }
-
-    task "user-mongodb" {
-      driver = "docker"
-      config {
-        image   = "mongo:4.4.6"
-        command = "mongod"
-        args = [
-          "--port",
-          "27018"
-        ]
-      }
-    }
-
-
-    task "url-shorten-service" {
-      driver = "docker"
-      // env {
-      //   JAEGER_AGENT_URL = "http://${NOMAD_UPSTREAM_ADDR_jaeger_agent}"
-      // }
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UrlShortenService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "url-shorten-mongodb" {
-      driver = "docker"
-      config {
-        image   = "mongo:4.4.6"
-        command = "mongod"
-        args = [
-          "--port",
-          "27022"
-        ]
-
-      }
-    }
-
-    task "url-shorten-memcached" {
-      driver = "docker"
-      config {
-        image   = "stvdputten/memcached"
-        command = "memcached"
-        args = [
-          "-p",
-          "11213"
-        ]
-      }
-
-    }
-
-
-    task "user-timeline-service" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UserTimelineService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "user-timeline-mongodb" {
-      driver = "docker"
-
-      config {
-        image   = "mongo:4.4.6"
-        command = "mongod"
-        args = [
-          "--port",
-          "27019"
-        ]
-      }
-    }
-
-    task "user-timeline-redis" {
-      driver = "docker"
-      config {
-        image   = "redis:alpine3.13"
-        command = "redis-server"
-        args = [
-          "--port",
-          "6381"
-        ]
-      }
-    }
-
-    task "post-storage-service" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "PostStorageService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "post-storage-memcached" {
-      driver = "docker"
-
-      config {
-        image   = "memcached:1.6.9"
-        command = "memcached"
-        args = [
-          "-p",
-          "11214"
-        ]
-      }
-    }
-
-    task "post-storage-mongodb" {
-      driver = "docker"
-
-      config {
-        image   = "mongo:4.4.6"
-        command = "mongod"
-        args = [
-          "--port",
-          "27021"
-        ]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "home-timeline-service" {
-      driver = "docker"
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "HomeTimelineService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "home-timeline-redis" {
-      driver = "docker"
-      config {
-        image = "redis:alpine3.13"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-        command = "redis-server"
-        args = [
-          "--port",
-          "6379"
-        ]
-      }
-
     }
 
     task "social-graph-service" {
       driver = "docker"
 
+      service {
+        name = "social-graph"
+      }
+
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "SocialGraphService"
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "SocialGraphService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -499,15 +230,384 @@ job "deathstarbench" {
       }
     }
 
-    task "jaeger" {
+  }
+
+  group "post-storage" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9097
+      }
+    }
+    task "post-storage-service" {
+      driver = "docker"
+
+      config {
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "PostStorageService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && PostStorageService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "post-storage-memcached" {
+      driver = "docker"
+
+      config {
+        image   = "memcached:1.6.9"
+        command = "memcached"
+        args = [
+          "-p",
+          "11214"
+        ]
+      }
+    }
+
+    task "post-storage-mongodb" {
+      driver = "docker"
+
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27021"
+        ]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+  }
+
+  group "home-timeline" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9095
+      }
+    }
+
+    task "home-timeline-service" {
       driver = "docker"
 
       service {
-        name = "jaeger"
+        name = "home-timeline"
       }
 
       config {
-        image = "jaegertracing/all-in-one:1.23.0"
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "HomeTimelineService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && HomeTimelineService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "home-timeline-redis" {
+      driver = "docker"
+      config {
+        image = "redis:alpine3.13"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+        command = "redis-server"
+        args = [
+          "--port",
+          "6379"
+        ]
+      }
+    }
+  }
+
+
+  group "user-timeline" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9093
+      }
+    }
+
+    task "user-timeline-service" {
+      driver = "docker"
+
+      service {
+        name = "user-timeline"
+      }
+
+      config {
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "UserTimelineService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UserTimelineService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "user-timeline-mongodb" {
+      driver = "docker"
+
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27019"
+        ]
+      }
+    }
+
+    task "user-timeline-redis" {
+      driver = "docker"
+      config {
+        image   = "redis:alpine3.13"
+        command = "redis-server"
+        args = [
+          "--port",
+          "6381"
+        ]
+      }
+    }
+
+  }
+
+  group "url-shorten" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9100
+      }
+    }
+
+    task "url-shorten-service" {
+      driver = "docker"
+
+      service {
+        name = "url-shorten"
+      }
+
+      config {
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "UrlShortenService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UrlShortenService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "url-shorten-mongodb" {
+      driver = "docker"
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27022"
+        ]
+
+      }
+    }
+
+    task "url-shorten-memcached" {
+      driver = "docker"
+      config {
+        image   = "stvdputten/memcached"
+        command = "memcached"
+        args = [
+          "-p",
+          "11213"
+        ]
+      }
+
+    }
+
+  }
+
+  group "user" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value     = "node4.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
+    }
+
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9090
+      }
+    }
+
+    task "user-service" {
+      driver = "docker"
+
+      service {
+        name = "user"
+      }
+
+      config {
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "UserService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UserService"]
+
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "user-memcached" {
+      driver = "docker"
+      config {
+        image   = "stvdputten/memcached"
+        command = "memcached"
+        args = [
+          "-p",
+          "11212"
+        ]
+
+      }
+    }
+
+    task "user-mongodb" {
+      driver = "docker"
+      config {
+        image   = "mongo:4.4.6"
+        command = "mongod"
+        args = [
+          "--port",
+          "27018"
+        ]
+      }
+    }
+  }
+
+  group "media" {
+    network {
+      mode = "bridge"
+      port "http" {
+        static = 9092
+      }
+    }
+
+    // service {
+    //   name = "media-service"
+    //   port = 9094
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
+
+    task "media-service" {
+      driver = "docker"
+
+      service {
+        name = "media"
+      }
+
+      config {
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "MediaService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && MediaService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
+      }
+    }
+
+    task "media-memcached" {
+      driver = "docker"
+      config {
+        image   = "stvdputten/memcached"
+        command = "memcached"
+      }
+    }
+
+    task "media-mongodb" {
+      driver = "docker"
+      config {
+        image   = "stvdputten/mongo"
+        command = "mongod"
+        args = [
+          "--port",
+          "27017"
+        ]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        }
       }
     }
   }
@@ -515,24 +615,31 @@ job "deathstarbench" {
   group "compose-post" {
     network {
       mode = "bridge"
-    }
-
-    service {
-      name = "compose-post-service"
-      port = 9094
-      connect {
-        sidecar_service {}
+      port "http" {
+        static = 9094
       }
     }
+
+    // service {
+    //   name = "compose-post-service"
+    //   port = 9094
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
 
     task "compose-post-service" {
       driver = "docker"
 
+      service {
+        name = "compose-post"
+      }
+
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
+        image = "stvdputten/social-network-microservices:nomad"
         // command = "ComposePostService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger' >> /etc/hosts && ComposePostService"]
+        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && ComposePostService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -550,21 +657,28 @@ job "deathstarbench" {
   group "text-service" {
     network {
       mode = "bridge"
-    }
-
-    service {
-      name = "text-service"
-      port = 9098
-      connect {
-        sidecar_service {}
+      port "http" {
+        static = 9098
       }
     }
+
+    // service {
+    //   name = "text-service"
+    //   port = 9098
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
 
     task "text-service" {
       driver = "docker"
 
+      service {
+        name = "text"
+      }
+
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
+        image = "stvdputten/social-network-microservices:nomad"
         // command = "TextService"
         command = "sh"
         args    = ["-c", "echo '128.110.217.111 jaeger' >> /etc/hosts && TextService"]
@@ -585,18 +699,25 @@ job "deathstarbench" {
   group "user-mention" {
     network {
       mode = "bridge"
-    }
-
-    service {
-      name = "user-mention-service"
-      port = 9096
-      connect {
-        sidecar_service {}
+      port "http" {
+        static = 9096
       }
     }
 
+    // service {
+    //   name = "user-mention-service"
+    //   port = 9096
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
+
     task "user-mention-service" {
       driver = "docker"
+
+      service {
+        name = "user-mention"
+      }
 
       config {
         image   = "stvdputten/social-network-microservices:nomad"
@@ -619,24 +740,32 @@ job "deathstarbench" {
   group "unique-id-service" {
     network {
       mode = "bridge"
-    }
-
-    service {
-      name = "unique-id-service"
-      port = "9099"
-      connect {
-        sidecar_service {}
+      port "http" {
+        static = 9099
       }
     }
 
-    task "unique-id" {
+    // service {
+    //   name = "unique-id-service"
+    //   port = "9099"
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
+
+    task "unique-id-service" {
       driver = "docker"
+
+      service {
+        name = "unique-id"
+      }
 
       config {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UniqueIdService"
         command = "sh"
         args    = ["-c", "echo '128.110.217.76  jaeger' >> /etc/hosts && UniqueIdService"]
+        ports   = ["http"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -659,19 +788,23 @@ job "deathstarbench" {
         to     = 8080
       }
     }
-    service {
-      name = "media-frontend"
-      port = "8080"
-      connect {
-        sidecar_service {}
-      }
-    }
+    // service {
+    //   name = "media-frontend"
+    //   port = "8080"
+    //   connect {
+    //     sidecar_service {}
+    //   }
+    // }
 
     task "media-frontend" {
       driver = "docker"
       resources {
         cpu    = 100 * 4
         memory = 256 * 4
+      }
+
+      service {
+        name = "media-frontend"
       }
 
       config {
