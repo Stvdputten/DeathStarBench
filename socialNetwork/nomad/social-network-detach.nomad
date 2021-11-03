@@ -1,8 +1,17 @@
 job "deathstarbench" {
   datacenters = ["dc1"]
+  constraint {
+    operator = "distinct_hosts"
+    value = "true"
+  }
 
 
   group "social-network" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value = "node3.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
+    }
+    
     network {
       mode = "bridge"
       port "http" {
@@ -11,35 +20,64 @@ job "deathstarbench" {
       port "jaeger-ui" {
         static = 16686
       }
-    }
-
-    service {
-      name = "jaeger-agent"
-      port = "6831"
-      connect {
-        sidecar_service {}
+      port "jaeger" {
+        static = 6831
       }
     }
 
     service {
+      name = "nginx-upstreams"
+
       connect {
         sidecar_service {
           proxy {
-            // upstreams {
-            //   destination_name = "jaeger"
-            //   local_bind_port  = 6831
-            // }
-            // upstreams {
-            //   destination_name = "jaeger-zipkin"
-            //   local_bind_port  = 9411
-            // }
             upstreams {
               destination_name = "media-frontend"
               local_bind_port  = 8081
             }
             upstreams {
+              destination_name = "user-service"
+              local_bind_port  = 9090
+            }
+            upstreams {
+              destination_name = "social-graph-service"
+              local_bind_port  = 9091
+            }
+            upstreams {
+              destination_name = "media-service"
+              local_bind_port  = 9092
+            }
+            upstreams {
+              destination_name = "user-timeline-service"
+              local_bind_port  = 9093
+            }
+            upstreams {
+              destination_name = "compose-post-service"
+              local_bind_port  = 9094
+            }
+            upstreams {
+              destination_name = "home-timeline-service"
+              local_bind_port  = 9095
+            }
+            upstreams {
+              destination_name = "user-mention-service"
+              local_bind_port  = 9096
+            }
+            upstreams {
+              destination_name = "post-storage-service"
+              local_bind_port  = 9097
+            }
+            upstreams {
+              destination_name = "text-service"
+              local_bind_port  = 9098
+            }
+            upstreams {
               destination_name = "unique-id-service"
               local_bind_port  = 9099
+            }
+            upstreams {
+              destination_name = "url-shorten-service"
+              local_bind_port  = 9100
             }
           }
         }
@@ -92,69 +130,10 @@ job "deathstarbench" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-
       }
     }
 
 
-
-    task "user-mention-service" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UserMentionService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-
-    task "text-service" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "TextService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
-
-    task "compose-post-service" {
-      driver = "docker"
-
-      config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "ComposePostService"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
-      }
-    }
 
     task "media-service" {
       driver = "docker"
@@ -521,30 +500,109 @@ job "deathstarbench" {
 
     task "jaeger" {
       driver = "docker"
+
+      service {
+        name = "jaeger"
+      }
+
       config {
         image = "jaegertracing/all-in-one:1.23.0"
-      }
-      env {
-        COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
       }
     }
   }
 
-  group "unique-id-service" {
+  group "compose-post" {
     network {
       mode = "bridge"
     }
+
     service {
+      name = "compose-post-service"
+      port = 9094
       connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger-agent"
-              local_bind_port  = 6831
-            }
-          }
+        sidecar_service {}
+      }
+    }
+
+    task "compose-post-service" {
+      driver = "docker"
+
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        // command = "ComposePostService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger' >> /etc/hosts && ComposePostService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
       }
+    }
+  }
+
+  group "text-service" {
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      name = "text-service"
+      port = 9098
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    task "text-service" {
+      driver = "docker"
+
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        // command = "TextService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.111 jaeger' >> /etc/hosts && TextService"]
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+      }
+    }
+  }
+
+  group "user-mention" {
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      name = "user-mention-service"
+      port = 9096
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    task "user-mention-service" {
+      driver = "docker"
+
+      config {
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "UserMentionService"
+        mount {
+          type   = "bind"
+          target = "/keys"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+      }
+    }
+  }
+
+
+  group "unique-id-service" {
+    network {
+      mode = "bridge"
     }
 
     service {
@@ -565,11 +623,6 @@ job "deathstarbench" {
           type   = "bind"
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }

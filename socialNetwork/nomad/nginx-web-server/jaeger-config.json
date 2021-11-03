@@ -3,7 +3,7 @@
   "diabled": false,
   "reporter": {
     "logSpans": false,
-    "localAgentHostPort": "127.0.0.1:6831",
+    "localAgentHostPort": "jaeger:6831",
     "queueSize": 1000000,
     "bufferFlushInterval": 10
   },
