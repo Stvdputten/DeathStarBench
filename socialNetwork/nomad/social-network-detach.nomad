@@ -1,4 +1,4 @@
-job "deathstarbench10" {
+job "deathstarbench11" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -21,6 +21,9 @@ job "deathstarbench10" {
       }
       port "jaeger" {
         static = 6831
+      }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
       }
     }
 
@@ -95,6 +98,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image   = "stvdputten/openresty-thrift:latest"
         ports   = ["http"]
         command = "sh"
@@ -158,6 +162,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9091
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     task "social-graph-service" {
@@ -168,10 +175,12 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "SocialGraphService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.82 user-service.service.consul' >> /etc/hosts && echo '127.0.0.1 social-graph' >> /etc/hosts && echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
+        // args    = ["-c", "echo '128.110.217.82 user-service.service.consul' >> /etc/hosts && echo '127.0.0.1 social-graph' >> /etc/hosts && echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -237,12 +246,16 @@ job "deathstarbench10" {
       port "http" {
         static = 9097
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
     task "post-storage-service" {
       driver = "docker"
 
       config {
         image = "stvdputten/social-network-microservices:nomad"
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         // command = "PostStorageService"
         command = "sh"
         args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && PostStorageService"]
@@ -302,6 +315,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9095
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     task "home-timeline-service" {
@@ -313,6 +329,7 @@ job "deathstarbench10" {
 
       config {
         image = "stvdputten/social-network-microservices:nomad"
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         // command = "HomeTimelineService"
         command = "sh"
         args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && HomeTimelineService"]
@@ -359,6 +376,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9093
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     task "user-timeline-service" {
@@ -369,6 +389,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
@@ -429,6 +450,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9100
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     task "url-shorten-service" {
@@ -439,6 +463,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UrlShortenService"
         command = "sh"
@@ -494,6 +519,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9090
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     task "user-service" {
@@ -504,6 +532,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserService"
         command = "sh"
@@ -554,6 +583,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9092
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     // service {
@@ -572,6 +604,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "MediaService"
         command = "sh"
@@ -626,6 +659,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9094
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     // service {
@@ -646,6 +682,7 @@ job "deathstarbench10" {
       config {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "ComposePostService"
+        // dns_servers = ["128.110.217.84", "128.110.156.4"]
         command = "sh"
         args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && ComposePostService"]
         mount {
@@ -668,6 +705,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9098
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     // service {
@@ -686,6 +726,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "TextService"
         command = "sh"
@@ -710,6 +751,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9096
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     // service {
@@ -728,6 +772,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image   = "stvdputten/social-network-microservices:nomad"
         command = "UserMentionService"
         mount {
@@ -751,6 +796,9 @@ job "deathstarbench10" {
       port "http" {
         static = 9099
       }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
+      }
     }
 
     // service {
@@ -769,6 +817,7 @@ job "deathstarbench10" {
       }
 
       config {
+        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UniqueIdService"
         command = "sh"
@@ -794,6 +843,9 @@ job "deathstarbench10" {
       port "media" {
         static = 8081
         to     = 8080
+      }
+      dns {    
+        servers = ["8.8.8.8", "128.110.217.84"]  
       }
     }
     // service {
