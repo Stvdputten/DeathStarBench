@@ -5,7 +5,6 @@ job "deathstarbench" {
     value = "true"
   }
 
-
   group "social-network" {
     constraint {
       attribute = "${attr.unique.hostname}"
@@ -617,8 +616,10 @@ job "deathstarbench" {
       driver = "docker"
 
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UniqueIdService"
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "UniqueIdService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.76  jaeger' >> /etc/hosts && UniqueIdService"]
         mount {
           type   = "bind"
           target = "/keys"
