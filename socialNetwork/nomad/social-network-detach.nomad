@@ -1,4 +1,4 @@
-job "deathstarbench3" {
+job "deathstarbench10" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -171,7 +171,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "SocialGraphService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
+        args    = ["-c", "echo '128.110.217.82 user-service.service.consul' >> /etc/hosts && echo '127.0.0.1 social-graph' >> /etc/hosts && echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -199,13 +199,12 @@ job "deathstarbench3" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
-
     }
 
     task "social-graph-redis" {
@@ -217,11 +216,11 @@ job "deathstarbench3" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
         command = "redis-server"
         args = [
           "--port",
@@ -246,7 +245,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "PostStorageService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && PostStorageService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && PostStorageService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -288,11 +287,11 @@ job "deathstarbench3" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
     }
   }
@@ -316,7 +315,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "HomeTimelineService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && HomeTimelineService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && HomeTimelineService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -339,11 +338,11 @@ job "deathstarbench3" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
         command = "redis-server"
         args = [
           "--port",
@@ -373,17 +372,17 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UserTimelineService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UserTimelineService"]
         mount {
           type   = "bind"
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
     }
 
@@ -397,6 +396,11 @@ job "deathstarbench3" {
           "--port",
           "27019"
         ]
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
     }
 
@@ -409,6 +413,11 @@ job "deathstarbench3" {
           "--port",
           "6381"
         ]
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
     }
 
@@ -433,7 +442,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UrlShortenService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UrlShortenService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UrlShortenService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -456,7 +465,6 @@ job "deathstarbench3" {
           "--port",
           "27022"
         ]
-
       }
     }
 
@@ -499,7 +507,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && UserService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UserService"]
 
         mount {
           type   = "bind"
@@ -567,7 +575,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "MediaService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && MediaService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && MediaService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -603,11 +611,11 @@ job "deathstarbench3" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        }
+        // mount {
+        //   type   = "bind"
+        //   target = "/social-network-microservices/config"
+        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+        // }
       }
     }
   }
@@ -639,7 +647,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "ComposePostService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger.service.consul' >> /etc/hosts && ComposePostService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && ComposePostService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -647,8 +655,8 @@ job "deathstarbench3" {
         }
         mount {
           type   = "bind"
-          target = "/usr/local/openresty/nginx/conf/nginx.conf"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }
@@ -681,7 +689,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "TextService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.111 jaeger' >> /etc/hosts && TextService"]
+        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && TextService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -689,8 +697,8 @@ job "deathstarbench3" {
         }
         mount {
           type   = "bind"
-          target = "/usr/local/openresty/nginx/conf/nginx.conf"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }
@@ -729,8 +737,8 @@ job "deathstarbench3" {
         }
         mount {
           type   = "bind"
-          target = "/usr/local/openresty/nginx/conf/nginx.conf"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }
@@ -764,7 +772,7 @@ job "deathstarbench3" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UniqueIdService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76  jaeger' >> /etc/hosts && UniqueIdService"]
+        args    = ["-c", "echo '128.110.217.76  jaeger.service.consul' >> /etc/hosts && UniqueIdService"]
         ports   = ["http"]
         mount {
           type   = "bind"
@@ -773,8 +781,8 @@ job "deathstarbench3" {
         }
         mount {
           type   = "bind"
-          target = "/usr/local/openresty/nginx/conf/nginx.conf"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+          target = "/social-network-microservices/config"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }
