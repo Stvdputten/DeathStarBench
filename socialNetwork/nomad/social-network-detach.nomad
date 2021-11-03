@@ -1,8 +1,15 @@
 job "deathstarbench" {
   datacenters = ["dc1"]
-
+  constraint {
+    operator = "distinct_hosts"
+    value    = "true"
+  }
 
   group "social-network" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value    = "node3.stvdp-109579.sched-serv-pg0.utah.cloudlab.us"
+    }
     network {
       mode = "bridge"
       port "http" {
@@ -10,6 +17,9 @@ job "deathstarbench" {
       }
       port "jaeger-ui" {
         static = 16686
+      }
+      port "jaeger-agent" {
+        static = 6831
       }
     }
 
@@ -534,18 +544,18 @@ job "deathstarbench" {
     network {
       mode = "bridge"
     }
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger-agent"
-              local_bind_port  = 6831
-            }
-          }
-        }
-      }
-    }
+    // service {
+    //   connect {
+    //     sidecar_service {
+    //       proxy {
+    //         upstreams {
+    //           destination_name = "jaeger-agent"
+    //           local_bind_port  = 6831
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     service {
       name = "unique-id-service"
@@ -559,17 +569,14 @@ job "deathstarbench" {
       driver = "docker"
 
       config {
-        image   = "stvdputten/social-network-microservices:nomad"
-        command = "UniqueIdService"
+        image = "stvdputten/social-network-microservices:nomad"
+        // command = "UniqueIdService"
+        command = "sh"
+        args    = ["-c", "echo '128.110.217.76  jaeger' >> /etc/hosts && UniqueIdService"]
         mount {
           type   = "bind"
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        mount {
-          type   = "bind"
-          target = "/social-network-microservices/config"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
       }
     }
