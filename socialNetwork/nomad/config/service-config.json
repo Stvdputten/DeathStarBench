@@ -44,7 +44,7 @@
     "timeout_ms": 10000
   },
   "social-graph-redis": {
-    "addr": "social-graph-redis.service.consul",
+    "addr": "127.0.0.1",
     "connections": 512,
     "keepalive_ms": 10000,
     "port": 6382,
