@@ -1,4 +1,4 @@
-job "deathstarbench" {
+job "deathstarbench3" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
