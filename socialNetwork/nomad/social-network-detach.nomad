@@ -1,11 +1,11 @@
-job "deathstarbench" {
+job "deathstarbenc" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
   //   value = "true"
   // }
 
-  group "social-network" {
+  group "nginx+jaeger" {
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "node3.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
@@ -164,7 +164,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "social-graph"
+        name = "social-graph-service"
       }
 
       config {
@@ -309,7 +309,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "home-timeline"
+        name = "home-timeline-service"
       }
 
       config {
@@ -366,7 +366,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "user-timeline"
+        name = "user-timeline-service"
       }
 
       config {
@@ -426,7 +426,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "url-shorten"
+        name = "url-shorten-service"
       }
 
       config {
@@ -492,7 +492,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "user"
+        name = "user-service"
       }
 
       config {
@@ -560,7 +560,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "media"
+        name = "media-service"
       }
 
       config {
@@ -632,7 +632,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "compose-post"
+        name = "compose-post-service"
       }
 
       config {
@@ -674,7 +674,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "text"
+        name = "text-service"
       }
 
       config {
@@ -716,7 +716,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "user-mention"
+        name = "user-mention-service"
       }
 
       config {
@@ -757,7 +757,7 @@ job "deathstarbench" {
       driver = "docker"
 
       service {
-        name = "unique-id"
+        name = "unique-id-service"
       }
 
       config {
@@ -804,7 +804,7 @@ job "deathstarbench" {
       }
 
       service {
-        name = "media-frontend"
+        name = "media-frontend-service"
       }
 
       config {
