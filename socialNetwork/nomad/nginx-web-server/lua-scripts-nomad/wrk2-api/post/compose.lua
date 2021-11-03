@@ -34,7 +34,7 @@ function _M.ComposePost()
   local status, ret
 
   local client = GenericObjectPool:connection(
-      ComposePostServiceClient, "127.0.0.1", 9094)
+      ComposePostServiceClient, "compose-post-service.service.consul", 9094)
 
   local span = tracer:start_span("compose_post_client",
       { ["references"] = { { "child_of", parent_span_context } } })
