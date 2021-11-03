@@ -1,4 +1,4 @@
-job "deathstarbenc" {
+job "deathstarbench" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -91,7 +91,7 @@ job "deathstarbenc" {
       }
 
       service {
-        name = "nginx-frontend"
+        name = "nginx-thrift"
       }
 
       config {
