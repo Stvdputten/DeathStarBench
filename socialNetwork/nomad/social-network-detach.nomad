@@ -1,9 +1,9 @@
 job "deathstarbench" {
   datacenters = ["dc1"]
-  constraint {
-    operator = "distinct_hosts"
-    value = "true"
-  }
+  // constraint {
+  //   operator = "distinct_hosts"
+  //   value = "true"
+  // }
 
   group "social-network" {
     constraint {
@@ -34,38 +34,38 @@ job "deathstarbench" {
               destination_name = "media-frontend"
               local_bind_port  = 8081
             }
-            upstreams {
-              destination_name = "user-service"
-              local_bind_port  = 9090
-            }
-            upstreams {
-              destination_name = "social-graph-service"
-              local_bind_port  = 9091
-            }
-            upstreams {
-              destination_name = "media-service"
-              local_bind_port  = 9092
-            }
-            upstreams {
-              destination_name = "user-timeline-service"
-              local_bind_port  = 9093
-            }
+            // upstreams {
+            //   destination_name = "user-service"
+            //   local_bind_port  = 9090
+            // }
+            // upstreams {
+            //   destination_name = "social-graph-service"
+            //   local_bind_port  = 9091
+            // }
+            // upstreams {
+            //   destination_name = "media-service"
+            //   local_bind_port  = 9092
+            // }
+            // upstreams {
+            //   destination_name = "user-timeline-service"
+            //   local_bind_port  = 9093
+            // }
             upstreams {
               destination_name = "compose-post-service"
               local_bind_port  = 9094
             }
-            upstreams {
-              destination_name = "home-timeline-service"
-              local_bind_port  = 9095
-            }
+            // upstreams {
+            //   destination_name = "home-timeline-service"
+            //   local_bind_port  = 9095
+            // }
             upstreams {
               destination_name = "user-mention-service"
               local_bind_port  = 9096
             }
-            upstreams {
-              destination_name = "post-storage-service"
-              local_bind_port  = 9097
-            }
+            // upstreams {
+            //   destination_name = "post-storage-service"
+            //   local_bind_port  = 9097
+            // }
             upstreams {
               destination_name = "text-service"
               local_bind_port  = 9098
@@ -74,10 +74,10 @@ job "deathstarbench" {
               destination_name = "unique-id-service"
               local_bind_port  = 9099
             }
-            upstreams {
-              destination_name = "url-shorten-service"
-              local_bind_port  = 9100
-            }
+            // upstreams {
+            //   destination_name = "url-shorten-service"
+            //   local_bind_port  = 9100
+            // }
           }
         }
       }
@@ -93,6 +93,8 @@ job "deathstarbench" {
       config {
         image = "stvdputten/openresty-thrift:latest"
         ports = ["http"]
+        command = "sh"
+        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
 
         mount {
           type   = "bind"
@@ -536,6 +538,11 @@ job "deathstarbench" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+        }
       }
     }
   }
@@ -566,6 +573,11 @@ job "deathstarbench" {
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
         }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
+        }
       }
     }
   }
@@ -593,6 +605,11 @@ job "deathstarbench" {
           type   = "bind"
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
         }
       }
     }
@@ -624,6 +641,11 @@ job "deathstarbench" {
           type   = "bind"
           target = "/keys"
           source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+        }
+        mount {
+          type   = "bind"
+          target = "/usr/local/openresty/nginx/conf/nginx.conf"
+          source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
         }
       }
     }
