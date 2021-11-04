@@ -49,7 +49,7 @@ function _M.WriteMovieInfo()
   end
 
 
-  local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service.service.consul", 9101)
+  local client = GenericObjectPool:connection(MovieInfoServiceClient, "movie-info-service", 9101)
   client:WriteMovieInfo(req_id, movie_info["movie_id"], movie_info["title"],
       casts, movie_info["plot_id"], movie_info["thumbnail_ids"],
       movie_info["photo_ids"], movie_info["video_ids"], tostring(movie_info["avg_rating"]),

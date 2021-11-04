@@ -1,11 +1,11 @@
 {
   "secret": "secret",
   "unique-id-service": {
-    "addr": "unique-id-service.service.consul",
+    "addr": "unique-id-service",
     "port": 9090
   },
   "movie-id-service": {
-    "addr": "movie-id-service.service.consul",
+    "addr": "movie-id-service",
     "port": 9091
   },
   "movie-id-mongodb": {
@@ -25,11 +25,11 @@
     "port": 11211
   },
   "text-service": {
-    "addr": "text-service.service.consul",
+    "addr": "text-service",
     "port": 9092
   },
   "rating-service": {
-    "addr": "rating-service.service.consul",
+    "addr": "rating-service",
     "port": 9093
   },
   "rating-redis": {
@@ -37,11 +37,11 @@
     "port": 6379
   },
   "user-service": {
-    "addr": "user-service.service.consul",
+    "addr": "user-service",
     "port": 9094
   },
   "compose-review-service": {
-    "addr": "compose-review-service.service.consul",
+    "addr": "compose-review-service",
     "port": 9095
   },
   "compose-review-memcached": {
@@ -49,7 +49,7 @@
     "port": 11211
   },
   "review-storage-service": {
-    "addr": "review-storage-service.service.consul",
+    "addr": "review-storage-service",
     "port": 9096
   },
   "review-storage-mongodb": {
@@ -61,7 +61,7 @@
     "port": 11211
   },
   "user-review-service": {
-    "addr": "user-review-service.service.consul",
+    "addr": "user-review-service",
     "port": 9097
   },
   "user-review-mongodb": {
@@ -73,7 +73,7 @@
     "port": 6379
   },
   "movie-review-service": {
-    "addr": "movie-review-service.service.consul",
+    "addr": "movie-review-service",
     "port": 9098
   },
   "movie-review-mongodb": {
@@ -85,7 +85,7 @@
     "port": 6379
   },
   "cast-info-service": {
-    "addr": "cast-info-service.service.consul",
+    "addr": "cast-info-service",
     "port": 9099
   },
   "cast-info-mongodb": {
@@ -97,7 +97,7 @@
     "port": 11211
   },
   "plot-service": {
-    "addr": "plot-service.service.consul",
+    "addr": "plot-service",
     "port": 9100
   },
   "plot-mongodb": {
@@ -109,7 +109,7 @@
     "port": 11211
   },
   "movie-info-service": {
-    "addr": "movie-info-service.service.consul",
+    "addr": "movie-info-service",
     "port": 9101
   },
   "movie-info-mongodb": {
@@ -121,7 +121,7 @@
     "port": 11211
   },
   "page-service": {
-    "addr": "page-service.service.consul",
+    "addr": "page-service",
     "port": 9090
   }
 }

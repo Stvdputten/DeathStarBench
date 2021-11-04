@@ -18,7 +18,7 @@ variable "dns" {
   default = "128.110.217.107"
 }
 
-job "media-microservices12" {
+job "media-microservices13" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
