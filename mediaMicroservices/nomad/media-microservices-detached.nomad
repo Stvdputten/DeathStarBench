@@ -18,7 +18,7 @@ variable "dns" {
   default = "128.110.217.107"
 }
 
-job "media-microservices10" {
+job "media-microservices12" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -42,8 +42,8 @@ job "media-microservices10" {
         static = 6831
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -55,7 +55,7 @@ job "media-microservices10" {
         // command = "/usr/local/openresty/bin/openresty"
         // args = ["-g", "daemon off;"]
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1 jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        args    = ["-c", "echo '${var.jaeger} jaeger.service.consul' >> /etc/hosts && echo '127.0.0.1 jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         // command = "sh"
         // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         mount {
@@ -110,8 +110,8 @@ job "media-microservices10" {
         static = 9090
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -138,8 +138,8 @@ job "media-microservices10" {
         static = 9091
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -193,8 +193,8 @@ job "media-microservices10" {
         static = 9092
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -222,8 +222,8 @@ job "media-microservices10" {
         static = 9093
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -264,8 +264,8 @@ job "media-microservices10" {
         static = 9094
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -319,8 +319,8 @@ job "media-microservices10" {
         static = 9095
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -361,8 +361,8 @@ job "media-microservices10" {
         static = 9096
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -414,8 +414,8 @@ job "media-microservices10" {
         static = 9097
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -468,8 +468,8 @@ job "media-microservices10" {
         static = 9098
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -522,8 +522,8 @@ job "media-microservices10" {
         static = 9099
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -575,8 +575,8 @@ job "media-microservices10" {
         static = 9100
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
@@ -628,8 +628,8 @@ job "media-microservices10" {
         static = 9101
       }
       dns {    
-        servers = ["8.8.8.8", "${var.dns}"]  
-        searches = ["service.consul"]
+        servers = ["${var.dns}", "8.8.8.8"]  
+        // searches = ["service.consul"]
       }
     }
 
