@@ -1,6 +1,6 @@
 {
   "service_name": "nginx",
-  "disabled": false,
+  "diabled": false,
   "reporter": {
     "logSpans": true,
     "localAgentHostPort": "jaeger.service.consul:6831"

@@ -5,7 +5,7 @@ variable "hostname" {
 
 variable "jaeger" {
   type    = string
-  // default = "127.0.0.1"
+  default = "128.110.217.86"
 }
 
 variable "compose" {
@@ -18,7 +18,7 @@ variable "dns" {
   default = "128.110.217.107"
 }
 
-job "media-microservices9" {
+job "media-microservices10" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -85,7 +85,7 @@ job "media-microservices9" {
     task "jaeger" {
       resources {
         cores = 4
-        memory = 300
+        memory = 1000
       }
       lifecycle {
         hook    = "prestart"
