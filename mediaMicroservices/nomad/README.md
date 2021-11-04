@@ -1,25 +1,6 @@
-# Overview of services and ports 
-/consul 8500 or 53 with ui on 8500
-/nginx-web-server 8080
-/movie-id 8081
-  /memcached-profile 11213
-  /mongodb-profile 27019:27017
-/search 8082
-/geo 8083
-  /mongodb-geo 27018:27017
-/rate 8084
-  /memcached-rate 11212
-  /mongodb-rate 27020:27017
-/recommendation 8085
-  /mongodb-recommendation 27021:27017
-/user 8086
-  /mongodb-user 27023:27017
-/reservation 8087
-  /memcached-reserve 11214:11211
-  /mongodb-reservation 27022:27017
+export NOMAD_VAR_jaeger="127.0.0.1"
 
-volumes
-geo profile rate recommendation reservation user
+# Overview of services and ports 
 
 # Overview of service names for dns
   "unique-id-service": {

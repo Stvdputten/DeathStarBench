@@ -3,12 +3,22 @@ variable "hostname" {
   default = "node1"
 }
 
-variable "jaeger-ip" {
+variable "jaeger" {
   type    = string
-  default = "127.0.0.1"
+  // default = "127.0.0.1"
 }
 
-job "media-microservices" {
+variable "compose" {
+  type    = string
+  default = "128.110.217.82"
+}
+
+variable "dns" {
+  type    = string
+  default = "128.110.217.107"
+}
+
+job "media-microservices9" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -16,6 +26,10 @@ job "media-microservices" {
   // }
 
   group "nginx-web-server" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value = "node3.stvdp-109700.sched-serv-pg0.utah.cloudlab.us"
+    }
     network {
       mode = "bridge"
       port "nginx" {
@@ -27,6 +41,10 @@ job "media-microservices" {
       port "jaeger" {
         static = 6831
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "nginx-web-server" {
@@ -37,9 +55,9 @@ job "media-microservices" {
         // command = "/usr/local/openresty/bin/openresty"
         // args = ["-g", "daemon off;"]
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip} jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        args    = ["-c", "echo '127.0.0.1 jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         // command = "sh"
-        // args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/lua-scripts"
@@ -63,11 +81,19 @@ job "media-microservices" {
       }
     }
 
-    service {
-      name = "jaeger"
-    }
 
     task "jaeger" {
+      resources {
+        cores = 4
+        memory = 300
+      }
+      lifecycle {
+        hook    = "prestart"
+        sidecar = true
+      }
+      service {
+        name = "jaeger"
+      }
       driver = "docker"
       config {
         image = "jaegertracing/all-in-one:latest"
@@ -83,6 +109,10 @@ job "media-microservices" {
       port "http" {
         static = 9090
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "unique-id-service" {
@@ -94,7 +124,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && UniqueIdService"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && UniqueIdService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && UniqueIdService"]
         ports   = ["http"]
       }
     }
@@ -105,6 +136,10 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9091
+      }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -122,8 +157,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        // args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
-        args  = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        // args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        args  = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
         ports = ["http"]
       }
     }
@@ -157,6 +192,10 @@ job "media-microservices" {
       port "http" {
         static = 9092
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
 
@@ -169,7 +208,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && TextService"]
+        // args    = ["-c", "echo '${var.compose} compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts && TextService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && TextService"]
         ports   = ["http"]
       }
     }
@@ -180,6 +220,10 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9093
+      }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -196,7 +240,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
         ports   = ["http"]
       }
     }
@@ -219,6 +263,10 @@ job "media-microservices" {
       port "http" {
         static = 9094
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
 
@@ -235,7 +283,8 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        // args    = ["-c", "echo '${var.compose}  compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
         ports   = ["http"]
       }
     }
@@ -269,6 +318,10 @@ job "media-microservices" {
       port "http" {
         static = 9095
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "compose-review-service" {
@@ -284,7 +337,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
         ports   = ["http"]
       }
     }
@@ -307,6 +360,10 @@ job "media-microservices" {
       port "http" {
         static = 9096
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "review-storage-service" {
@@ -322,7 +379,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
         ports   = ["http"]
       }
     }
@@ -356,6 +413,10 @@ job "media-microservices" {
       port "http" {
         static = 9097
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "user-review-service" {
@@ -371,7 +432,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
         ports   = ["http"]
       }
     }
@@ -406,6 +467,10 @@ job "media-microservices" {
       port "http" {
         static = 9098
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "movie-review-service" {
@@ -421,7 +486,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
         ports   = ["http"]
       }
     }
@@ -456,6 +521,10 @@ job "media-microservices" {
       port "http" {
         static = 9099
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "cast-info-service" {
@@ -471,7 +540,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
         ports   = ["http"]
       }
     }
@@ -505,6 +574,10 @@ job "media-microservices" {
       port "http" {
         static = 9100
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "plot-service" {
@@ -520,7 +593,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
         ports   = ["http"]
       }
     }
@@ -554,6 +627,10 @@ job "media-microservices" {
       port "http" {
         static = 9101
       }
+      dns {    
+        servers = ["8.8.8.8", "${var.dns}"]  
+        searches = ["service.consul"]
+      }
     }
 
     task "movie-info-service" {
@@ -569,7 +646,7 @@ job "media-microservices" {
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
+        args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
         ports   = ["http"]
       }
     }
