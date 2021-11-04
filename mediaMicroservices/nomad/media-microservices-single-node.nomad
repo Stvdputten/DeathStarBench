@@ -13,7 +13,7 @@ job "media-microservices" {
   // constraint {
   //   operator = "distinct_hosts"
   //   value    = "true"
-  // }jkj}}}
+  // }
 
   group "nginx-web-server" {
     network {
@@ -88,7 +88,7 @@ job "media-microservices" {
     task "unique-id-service" {
       service {
         name = "unique-id-service"
-        port = "9090"
+        // port = "9090"
       }
       driver = "docker"
       config {
@@ -116,14 +116,14 @@ job "media-microservices" {
       }
       service {
         name = "movie-id-service"
-        port = "9091"
+        // port = "9091"
       }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         // args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
-        args  = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        args  = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
         ports = ["http"]
       }
     }
@@ -132,7 +132,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-id-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -143,7 +143,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-id-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -164,12 +164,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "text-service"
-        port = "9092"
+        // port = "9092"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts  && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && TextService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts && TextService"]
         ports   = ["http"]
       }
     }
@@ -191,12 +191,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "rating-service"
-        port = "9093"
+        // port = "9093"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
         ports   = ["http"]
       }
     }
@@ -205,7 +205,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "rating-redis"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "redis:alpine3.13"
@@ -218,7 +218,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9094
-        to     = 9094
       }
     }
 
@@ -231,12 +230,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "user-service"
-        port = "9094"
+        // port = "9094"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
         ports   = ["http"]
       }
     }
@@ -245,7 +244,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "user-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -256,7 +255,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "user-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -269,7 +268,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9095
-        to     = 9095
       }
     }
 
@@ -281,12 +279,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "compose-review-service"
-        port = "9095"
+        // port = "9095"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  cast-info-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
         ports   = ["http"]
       }
     }
@@ -295,7 +293,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "compose-review-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -308,7 +306,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9096
-        to     = 9096
       }
     }
 
@@ -320,7 +317,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "review-storage-service"
-        port = "9096"
+        // port = "9096"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
@@ -334,7 +331,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "review-storage-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -345,7 +342,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "review-storage-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -358,7 +355,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9097
-        to     = 9097
       }
     }
 
@@ -370,12 +366,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "user-review-service"
-        port = "9097"
+        // port = "9097"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  unique-id-service' >> /etc/hosts  && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
         ports   = ["http"]
       }
     }
@@ -384,7 +380,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "user-review-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -395,7 +391,8 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "user-review-redis"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
+        address_mode = "driver"
       }
       config {
         image = "redis:alpine3.13"
@@ -408,7 +405,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9098
-        to     = 9098
       }
     }
 
@@ -420,12 +416,12 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "movie-review-service"
-        port = "9098"
+        // port = "9098"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+        args    = ["-c", "echo '${var.jaeger-ip}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
         ports   = ["http"]
       }
     }
@@ -434,7 +430,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-review-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -445,7 +441,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-review-redis"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "redis:alpine3.13"
@@ -459,7 +455,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9099
-        to     = 9099
       }
     }
 
@@ -471,7 +466,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "cast-info-service"
-        port = "9099"
+        // port = "9099"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
@@ -485,7 +480,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "cast-info-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -496,7 +491,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "cast-info-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -509,7 +504,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9100
-        to     = 9100
       }
     }
 
@@ -521,7 +515,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "plot-service"
-        port = "9100"
+        // port = "9100"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
@@ -535,7 +529,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "plot-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -546,7 +540,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "plot-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
@@ -559,7 +553,6 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9101
-        to     = 9101
       }
     }
 
@@ -571,7 +564,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name = "movie-info-service"
-        port = "9101"
+        port = "http"
       }
       config {
         image   = "stvdputten/media-microservices:nomad"
@@ -585,7 +578,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-info-mongodb"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/mongo"
@@ -596,7 +589,7 @@ job "media-microservices" {
       driver = "docker"
       service {
         name    = "movie-info-memcached"
-        address = "127.0.0.1"
+        // address = "127.0.0.1"
       }
       config {
         image = "stvdputten/memcached"
