@@ -1,4 +1,19 @@
-job "deathstarbench12" {
+variable "hostname" {
+  type    = string
+  default = "node3.stvdp-109788.sched-serv-pg0.utah.cloudlab.us"
+}
+
+variable "jaeger" {
+  type    = string
+  default = "128.110.217.69"
+}
+
+variable "dns" {
+  type    = string
+  default = "128.110.217.60"
+}
+
+job "deathstarbench" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"
@@ -8,7 +23,7 @@ job "deathstarbench12" {
   group "nginx+jaeger" {
     constraint {
       attribute = "${attr.unique.hostname}"
-      value     = "node3.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
+      value     = "${var.hostname}"
     }
 
     network {
@@ -22,69 +37,11 @@ job "deathstarbench12" {
       port "jaeger" {
         static = 6831
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "nginx-upstreams"
-
-    //   connect {
-    //     sidecar_service {
-    //       proxy {
-    //         upstreams {
-    //           destination_name = "media-frontend"
-    //           local_bind_port  = 8081
-    //         }
-    //         // upstreams {
-    //         //   destination_name = "user-service"
-    //         //   local_bind_port  = 9090
-    //         // }
-    //         // upstreams {
-    //         //   destination_name = "social-graph-service"
-    //         //   local_bind_port  = 9091
-    //         // }
-    //         // upstreams {
-    //         //   destination_name = "media-service"
-    //         //   local_bind_port  = 9092
-    //         // }
-    //         // upstreams {
-    //         //   destination_name = "user-timeline-service"
-    //         //   local_bind_port  = 9093
-    //         // }
-    //         upstreams {
-    //           destination_name = "compose-post-service"
-    //           local_bind_port  = 9094
-    //         }
-    //         // upstreams {
-    //         //   destination_name = "home-timeline-service"
-    //         //   local_bind_port  = 9095
-    //         // }
-    //         upstreams {
-    //           destination_name = "user-mention-service"
-    //           local_bind_port  = 9096
-    //         }
-    //         // upstreams {
-    //         //   destination_name = "post-storage-service"
-    //         //   local_bind_port  = 9097
-    //         // }
-    //         upstreams {
-    //           destination_name = "text-service"
-    //           local_bind_port  = 9098
-    //         }
-    //         upstreams {
-    //           destination_name = "unique-id-service"
-    //           local_bind_port  = 9099
-    //         }
-    //         // upstreams {
-    //         //   destination_name = "url-shorten-service"
-    //         //   local_bind_port  = 9100
-    //         // }
-    //       }
-    //     }
-    //   }
-    // }
 
     task "nginx-thrift" {
       driver = "docker"
@@ -102,7 +59,7 @@ job "deathstarbench12" {
         image   = "stvdputten/openresty-thrift:latest"
         ports   = ["http"]
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        args    = ["-c", "echo '127.0.0.1  jaeger.service.consul' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
 
         mount {
           type   = "bind"
@@ -142,9 +99,14 @@ job "deathstarbench12" {
       }
     }
 
-
     task "jaeger" {
       driver = "docker"
+
+    resources {
+      // requires more memory
+      cores  = 4
+      memory = 256 * 4
+    }
 
       service {
         name = "jaeger"
@@ -162,8 +124,9 @@ job "deathstarbench12" {
       port "http" {
         static = 9091
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
 
@@ -175,12 +138,11 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "SocialGraphService"
         command = "sh"
-        // args    = ["-c", "echo '128.110.217.82 user-service.service.consul' >> /etc/hosts && echo '127.0.0.1 social-graph' >> /etc/hosts && echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
+        args    = ["-c", "echo '127.0.0.1 social-graph-mongodb' >> /etc/hosts && echo '127.0.0.1 social-graph-redis' >> /etc/hosts && SocialGraphService"]
+        // args = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && SocialGraphService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -203,33 +165,13 @@ job "deathstarbench12" {
           "--port",
           "27020"
         ]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
       }
     }
 
     task "social-graph-redis" {
       driver = "docker"
       config {
-        image = "redis:alpine3.13"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
+        image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
           "--port",
@@ -237,7 +179,6 @@ job "deathstarbench12" {
         ]
       }
     }
-
   }
 
   group "post-storage" {
@@ -246,19 +187,20 @@ job "deathstarbench12" {
       port "http" {
         static = 9097
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
+
     task "post-storage-service" {
       driver = "docker"
 
       config {
         image = "stvdputten/social-network-microservices:nomad"
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         // command = "PostStorageService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && PostStorageService"]
+        args    = ["-c", "echo '127.0.0.1 post-storage-mongodb' >> /etc/hosts && echo '127.0.0.1 post-storage-memcached' >> /etc/hosts && PostStorageService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -295,16 +237,6 @@ job "deathstarbench12" {
           "--port",
           "27021"
         ]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
       }
     }
   }
@@ -315,8 +247,9 @@ job "deathstarbench12" {
       port "http" {
         static = 9095
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
 
@@ -329,10 +262,9 @@ job "deathstarbench12" {
 
       config {
         image = "stvdputten/social-network-microservices:nomad"
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         // command = "HomeTimelineService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && HomeTimelineService"]
+        args    = ["-c", "echo '127.0.0.1 home-timeline-redis' >> /etc/hosts && HomeTimelineService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -349,17 +281,7 @@ job "deathstarbench12" {
     task "home-timeline-redis" {
       driver = "docker"
       config {
-        image = "redis:alpine3.13"
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
+        image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
           "--port",
@@ -376,8 +298,9 @@ job "deathstarbench12" {
       port "http" {
         static = 9093
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
 
@@ -389,21 +312,10 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UserTimelineService"]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
+        args    = ["-c", "echo '127.0.0.1 user-timeline-redis' >> /etc/hosts && 127.0.0.1 user-timeline-mongodb' >> /etc/hosts && UserTimelineService"]
       }
     }
 
@@ -417,11 +329,6 @@ job "deathstarbench12" {
           "--port",
           "27019"
         ]
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
       }
     }
 
@@ -434,14 +341,8 @@ job "deathstarbench12" {
           "--port",
           "6381"
         ]
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
       }
     }
-
   }
 
   group "url-shorten" {
@@ -450,8 +351,9 @@ job "deathstarbench12" {
       port "http" {
         static = 9100
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
 
@@ -463,11 +365,10 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UrlShortenService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UrlShortenService"]
+        args    = ["-c", "echo '127.0.0.1 url-shorten-memcached' >> /etc/hosts && echo '127.0.0.1 url-shorten-mongodb' >> /etc/hosts && UrlShortenService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -503,24 +404,23 @@ job "deathstarbench12" {
           "11213"
         ]
       }
-
     }
-
   }
 
   group "user" {
-    constraint {
-      attribute = "${attr.unique.hostname}"
-      value     = "node4.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
-    }
+    // constraint {
+    //   attribute = "${attr.unique.hostname}"
+    //   value     = "node4.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
+    // }
 
     network {
       mode = "bridge"
       port "http" {
         static = 9090
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
 
@@ -532,12 +432,10 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && UserService"]
-
+        args    = ["-c", "echo '127.0.0.1 user-mongodb' >> /etc/hosts && echo '127.0.0.1 user-memcached' >> /etc/hosts && UserService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -560,7 +458,6 @@ job "deathstarbench12" {
           "-p",
           "11212"
         ]
-
       }
     }
 
@@ -583,18 +480,11 @@ job "deathstarbench12" {
       port "http" {
         static = 9092
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "media-service"
-    //   port = 9094
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "media-service" {
       driver = "docker"
@@ -604,11 +494,10 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
         // command = "MediaService"
         command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && MediaService"]
+        args    = ["-c", "echo '127.0.0.1 media-mongodb' >> /etc/hosts && echo '127.0.0.1 media-memcached' >> /etc/hosts && MediaService"]
         mount {
           type   = "bind"
           target = "/keys"
@@ -639,16 +528,6 @@ job "deathstarbench12" {
           "--port",
           "27017"
         ]
-        mount {
-          type   = "bind"
-          target = "/keys"
-          source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
-        }
-        // mount {
-        //   type   = "bind"
-        //   target = "/social-network-microservices/config"
-        //   source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
-        // }
       }
     }
   }
@@ -659,18 +538,11 @@ job "deathstarbench12" {
       port "http" {
         static = 9094
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "compose-post-service"
-    //   port = 9094
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "compose-post-service" {
       driver = "docker"
@@ -680,11 +552,8 @@ job "deathstarbench12" {
       }
 
       config {
-        image = "stvdputten/social-network-microservices:nomad"
-        // command = "ComposePostService"
-        // dns_servers = ["128.110.217.84", "128.110.156.4"]
-        command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && ComposePostService"]
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "ComposePostService"
         mount {
           type   = "bind"
           target = "/keys"
@@ -705,18 +574,11 @@ job "deathstarbench12" {
       port "http" {
         static = 9098
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "text-service"
-    //   port = 9098
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "text-service" {
       driver = "docker"
@@ -726,11 +588,8 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
-        image = "stvdputten/social-network-microservices:nomad"
-        // command = "TextService"
-        command = "sh"
-        args    = ["-c", "echo '128.110.217.76 jaeger.service.consul' >> /etc/hosts && TextService"]
+        image   = "stvdputten/social-network-microservices:nomad"
+        command = "TextService"
         mount {
           type   = "bind"
           target = "/keys"
@@ -751,18 +610,11 @@ job "deathstarbench12" {
       port "http" {
         static = 9096
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "user-mention-service"
-    //   port = 9096
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "user-mention-service" {
       driver = "docker"
@@ -772,7 +624,6 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image   = "stvdputten/social-network-microservices:nomad"
         command = "UserMentionService"
         mount {
@@ -796,18 +647,11 @@ job "deathstarbench12" {
       port "http" {
         static = 9099
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-
-    // service {
-    //   name = "unique-id-service"
-    //   port = "9099"
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "unique-id-service" {
       driver = "docker"
@@ -817,11 +661,8 @@ job "deathstarbench12" {
       }
 
       config {
-        // dns_servers = ["128.110.217.84", "8.8.8.8"]
         image = "stvdputten/social-network-microservices:nomad"
-        // command = "UniqueIdService"
-        command = "sh"
-        args    = ["-c", "echo '128.110.217.76  jaeger.service.consul' >> /etc/hosts && UniqueIdService"]
+        command = "UniqueIdService"
         ports   = ["http"]
         mount {
           type   = "bind"
@@ -844,17 +685,11 @@ job "deathstarbench12" {
         static = 8081
         to     = 8080
       }
-      dns {    
-        servers = ["8.8.8.8", "128.110.217.84"]  
+      dns {
+        servers  = ["${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
       }
     }
-    // service {
-    //   name = "media-frontend"
-    //   port = "8080"
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
 
     task "media-frontend" {
       driver = "docker"
