@@ -8,11 +8,6 @@ variable "jaeger" {
   default = "128.110.217.86"
 }
 
-variable "compose" {
-  type    = string
-  default = "128.110.217.82"
-}
-
 variable "dns" {
   type    = string
   default = "128.110.217.107"
@@ -28,7 +23,7 @@ job "media-microservices13" {
   group "nginx-web-server" {
     constraint {
       attribute = "${attr.unique.hostname}"
-      value = "node3.stvdp-109700.sched-serv-pg0.utah.cloudlab.us"
+      value = "${var.hostname}"
     }
     network {
       mode = "bridge"
