@@ -1,3 +1,18 @@
+variable "hostname" {
+  type    = string
+  default = "node3.stvdp-109788.sched-serv-pg0.utah.cloudlab.us"
+}
+
+variable "jaeger" {
+  type    = string
+  default = "128.110.217.69"
+}
+
+variable "dns" {
+  type    = string
+  default = "128.110.217.60"
+}
+
 job "media-microservices" {
   datacenters = ["dc1"]
   // constraint {
@@ -6,84 +21,24 @@ job "media-microservices" {
   // }
 
   group "nginx-web-server" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value = "${var.hostname}"
+    }
     network {
       mode = "bridge"
       port "nginx" {
         static = 8080
-        to     = 8080
       }
       port "jaeger-ui" {
         static = 16686
-        to     = 16686
       }
       port "jaeger" {
         static = 6831
-        to = 6831
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            // upstreams {
-            //   destination_name = "jaeger"
-            //   local_bind_port  = 6831
-            // }
-            // upstreams {
-            //   destination_name = "jaeger-zipkin"
-            //   local_bind_port  = 9411
-            // }
-            upstreams {
-              destination_name = "unique-id-service"
-              local_bind_port  = 9090
-            }
-            upstreams {
-              destination_name = "movie-id-service"
-              local_bind_port  = 9091
-            }
-            upstreams {
-              destination_name = "text-service"
-              local_bind_port  = 9092
-            }
-            upstreams {
-              destination_name = "rating-service"
-              local_bind_port  = 9093
-            }
-            upstreams {
-              destination_name = "user-service"
-              local_bind_port  = 9094
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-            upstreams {
-              destination_name = "review-storage-service"
-              local_bind_port  = 9096
-            }
-            upstreams {
-              destination_name = "user-review-service"
-              local_bind_port  = 9097
-            }
-            upstreams {
-              destination_name = "movie-review-service"
-              local_bind_port  = 9098
-            }
-            upstreams {
-              destination_name = "cast-info-service"
-              local_bind_port  = 9099
-            }
-            upstreams {
-              destination_name = "plot-service"
-              local_bind_port  = 9100
-            }
-            upstreams {
-              destination_name = "movie-info-service"
-              local_bind_port  = 9101
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -95,9 +50,9 @@ job "media-microservices" {
         // command = "/usr/local/openresty/bin/openresty"
         // args = ["-g", "daemon off;"]
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        args    = ["-c", "echo '127.0.0.1 jaeger.service.consul' >> /etc/hosts && echo '127.0.0.1 jaeger' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         // command = "sh"
-        // args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  movie-id-service' >> /etc/hosts && echo '127.0.0.1  text-service' >> /etc/hosts && echo '127.0.0.1  rating-id-service' >> /etc/hosts && echo '127.0.0.1  user-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  user-review-service' >> /etc/hosts &&  echo '127.0.0.1  movie-review-service' >> /etc/hosts && echo '127.0.0.1  movie-review-service' >> /etc/hosts &&  echo '127.0.0.1  cast-info-service' && echo '127.0.0.1  plot-service' >> /etc/hosts &&  echo '127.0.0.1  movie-info-service' >> /etc/hosts && /usr/local/openresty/bin/openresty -g 'daemon off;'"]
         mount {
           type   = "bind"
           target = "/usr/local/openresty/nginx/lua-scripts"
@@ -121,28 +76,20 @@ job "media-microservices" {
       }
     }
 
-    
-    service {
-      name = "jaeger"
-      port = "6831"
-      connect {
-        sidecar_service {}
-      }
-    }
-    // service {
-    //   name = "jaeger-ui"
-    //   port = "16686"
-    //   connect {
-    //     sidecar_service {}
-    //   }
-    // }
-
 
     task "jaeger" {
-      driver = "docker"
-      env {
-        COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
+      resources {
+        cores = 4
+        memory = 1000
       }
+      lifecycle {
+        hook    = "prestart"
+        sidecar = true
+      }
+      service {
+        name = "jaeger"
+      }
+      driver = "docker"
       config {
         image = "jaegertracing/all-in-one:latest"
         ports = ["jaeger", "jaeger-ui"]
@@ -156,41 +103,26 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9090
-        to     = 9090
       }
-    }
-    service {
-      name = "unique-id-service"
-      port = "9090"
-      connect {
-        sidecar_service {}
-      }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
     task "unique-id-service" {
+      service {
+        name = "unique-id-service"
+        // port = "9090"
+      }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
-        command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && UniqueIdService"]
-        ports = ["http"]
+        // command = "sh"
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  unique-id-service' >> /etc/hosts && echo '127.0.0.1  compose-review-service' >> /etc/hosts && UniqueIdService"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && UniqueIdService"]
+        command = "UniqueIdService"
+        ports   = ["http"]
       }
     }
   }
@@ -200,51 +132,40 @@ job "media-microservices" {
       mode = "bridge"
       port "http" {
         static = 9091
-        to     = 9091
+      }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
-    service {
-      name = "movie-id-service"
-      port = "9091"
-      connect {
-        sidecar_service {}
-      }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
-      }
-    }
 
     task "movie-id-service" {
       lifecycle {
         hook    = "poststart"
         sidecar = true
       }
+      service {
+        name = "movie-id-service"
+        // port = "9091"
+      }
       driver = "docker"
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        // args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        // args  = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
+        args  = ["-c", "echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
         ports = ["http"]
       }
     }
 
     task "movie-id-mongodb" {
       driver = "docker"
+      service {
+        name    = "movie-id-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -252,6 +173,10 @@ job "media-microservices" {
 
     task "movie-id-memcached" {
       driver = "docker"
+      service {
+        name    = "movie-id-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -259,79 +184,44 @@ job "media-microservices" {
   }
 
   group "text-service" {
-    service {
-      name = "text-service"
-      port = "9092"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9092
-        to     = 9092
+      }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
-      }
-    }
 
     task "text-service" {
       driver = "docker"
+      service {
+        name = "text-service"
+        // port = "9092"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
-        command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts  && echo '127.0.0.1  jaeger' >> /etc/hosts && TextService"]
-        ports = ["http"]
+        // command = "sh"
+        // args    = ["-c", "echo '${var.compose} compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts && TextService"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && TextService"]
+        command = "TextService"
+        ports   = ["http"]
       }
     }
   }
 
   group "rating-service" {
-    service {
-      name = "rating-service"
-      port = "9093"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9093
-        to     = 9093
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -341,16 +231,25 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "rating-service"
+        // port = "9093"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        args    = ["-c", "echo '127.0.0.1  rating-redis' >> /etc/hosts && RatingService"]
+        ports   = ["http"]
       }
     }
 
     task "rating-redis" {
       driver = "docker"
+      service {
+        name    = "rating-redis"
+        // address = "127.0.0.1"
+      }
       config {
         image = "redis:alpine3.13"
       }
@@ -358,37 +257,17 @@ job "media-microservices" {
   }
 
   group "user-service" {
-    service {
-      name = "user-service"
-      port = "9094"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9094
-        to     = 9094
+      }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
-      }
-    }
 
     task "user-service" {
       lifecycle {
@@ -396,16 +275,26 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "user-service"
+        // port = "9094"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.compose}  compose-review-service' >> /etc/hosts && echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        args    = ["-c", "echo '127.0.0.1  user-mongodb' >> /etc/hosts &&  echo '127.0.0.1  user-memcached' >> /etc/hosts && UserService"]
+        ports   = ["http"]
       }
     }
 
     task "user-mongodb" {
       driver = "docker"
+      service {
+        name    = "user-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -413,6 +302,10 @@ job "media-microservices" {
 
     task "user-memcached" {
       driver = "docker"
+      service {
+        name    = "user-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -420,35 +313,14 @@ job "media-microservices" {
   }
 
   group "compose-review-service" {
-    service {
-      name = "compose-review-service"
-      port = "9095"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9095
-        to     = 9095
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "cast-info-service"
-              local_bind_port  = 9099
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -458,16 +330,25 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "compose-review-service"
+        // port = "9095"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  cast-info-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        args    = ["-c", "echo '127.0.0.1  compose-review-memcached' >> /etc/hosts && ComposeReviewService"]
+        ports   = ["http"]
       }
     }
 
     task "compose-review-memcached" {
       driver = "docker"
+      service {
+        name    = "compose-review-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -475,31 +356,14 @@ job "media-microservices" {
   }
 
   group "review-storage-service" {
-    service {
-      name = "review-storage-service"
-      port = "9096"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9096
-        to     = 9096
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -509,16 +373,25 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "review-storage-service"
+        // port = "9096"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
+        args    = ["-c", "echo '127.0.0.1  review-storage-mongodb' >> /etc/hosts && echo '127.0.0.1  review-storage-memcached' >> /etc/hosts && ReviewStorageService"]
+        ports   = ["http"]
       }
     }
 
     task "review-storage-mongodb" {
       driver = "docker"
+      service {
+        name    = "review-storage-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -526,6 +399,10 @@ job "media-microservices" {
 
     task "review-storage-memcached" {
       driver = "docker"
+      service {
+        name    = "review-storage-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -533,39 +410,14 @@ job "media-microservices" {
   }
 
   group "user-review-service" {
-    service {
-      name = "user-review-service"
-      port = "9097"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9097
-        to     = 9097
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "unique-id-service"
-              local_bind_port  = 9090
-            }
-            upstreams {
-              destination_name = "compose-review-service"
-              local_bind_port  = 9095
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -575,16 +427,25 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "user-review-service"
+        // port = "9097"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  unique-id-service' >> /etc/hosts  && echo '127.0.0.1  compose-review-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts &&  echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        args    = ["-c", "echo '127.0.0.1  user-review-mongodb' >> /etc/hosts && echo '127.0.0.1  user-review-redis' >> /etc/hosts && UserReviewService"]
+        ports   = ["http"]
       }
     }
 
     task "user-review-mongodb" {
       driver = "docker"
+      service {
+        name    = "user-review-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -592,6 +453,11 @@ job "media-microservices" {
 
     task "user-review-redis" {
       driver = "docker"
+      service {
+        name    = "user-review-redis"
+        // address = "127.0.0.1"
+        address_mode = "driver"
+      }
       config {
         image = "redis:alpine3.13"
       }
@@ -599,35 +465,14 @@ job "media-microservices" {
   }
 
   group "movie-review-service" {
-    service {
-      name = "movie-review-service"
-      port = "9098"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9098
-        to     = 9098
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-            upstreams {
-              destination_name = "review-storage-service"
-              local_bind_port  = 9096
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -637,16 +482,24 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "movie-review-service"
+        // port = "9098"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  review-storage-service' >> /etc/hosts && echo '127.0.0.1  jaeger' >> /etc/hosts &&  echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
-        ports = ["http"]
+        args    = ["-c", "echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
+        ports   = ["http"]
       }
     }
 
     task "movie-review-mongodb" {
       driver = "docker"
+      service {
+        name    = "movie-review-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -654,6 +507,10 @@ job "media-microservices" {
 
     task "movie-review-redis" {
       driver = "docker"
+      service {
+        name    = "movie-review-redis"
+        // address = "127.0.0.1"
+      }
       config {
         image = "redis:alpine3.13"
       }
@@ -662,31 +519,14 @@ job "media-microservices" {
 
 
   group "cast-info-service" {
-    service {
-      name = "cast-info-service"
-      port = "9099"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9099
-        to     = 9099
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -696,16 +536,24 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "cast-info-service"
+        // port = "9099"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
-        ports = ["http"]
+        args    = ["-c", "echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
+        ports   = ["http"]
       }
     }
 
     task "cast-info-mongodb" {
       driver = "docker"
+      service {
+        name    = "cast-info-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -713,6 +561,10 @@ job "media-microservices" {
 
     task "cast-info-memcached" {
       driver = "docker"
+      service {
+        name    = "cast-info-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -720,31 +572,14 @@ job "media-microservices" {
   }
 
   group "plot-service" {
-    service {
-      name = "plot-service"
-      port = "9100"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9100
-        to     = 9100
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -754,16 +589,24 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "plot-service"
+        // port = "9100"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
-        ports = ["http"]
+        args    = ["-c", "echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
+        ports   = ["http"]
       }
     }
 
     task "plot-mongodb" {
       driver = "docker"
+      service {
+        name    = "plot-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -771,6 +614,10 @@ job "media-microservices" {
 
     task "plot-memcached" {
       driver = "docker"
+      service {
+        name    = "plot-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
@@ -778,31 +625,14 @@ job "media-microservices" {
   }
 
   group "movie-info-service" {
-    service {
-      name = "movie-info-service"
-      port = "9101"
-      connect {
-        sidecar_service {}
-      }
-    }
     network {
       mode = "bridge"
       port "http" {
         static = 9101
-        to     = 9101
       }
-    }
-
-    service {
-      connect {
-        sidecar_service {
-          proxy {
-            upstreams {
-              destination_name = "jaeger"
-              local_bind_port  = 6831
-            }
-          }
-        }
+      dns {    
+        servers = ["${var.dns}", "8.8.8.8"]  
+        searches = ["service.consul"]
       }
     }
 
@@ -812,16 +642,25 @@ job "media-microservices" {
         sidecar = true
       }
       driver = "docker"
+      service {
+        name = "movie-info-service"
+        port = "http"
+      }
       config {
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
-        ports = ["http"]
+        // args    = ["-c", "echo '${var.jaeger}  jaeger' >> /etc/hosts && echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
+        args    = ["-c", "echo '127.0.0.1  movie-info-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-info-memcached' >> /etc/hosts && MovieInfoService"]
+        ports   = ["http"]
       }
     }
 
     task "movie-info-mongodb" {
       driver = "docker"
+      service {
+        name    = "movie-info-mongodb"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/mongo"
       }
@@ -829,57 +668,13 @@ job "media-microservices" {
 
     task "movie-info-memcached" {
       driver = "docker"
+      service {
+        name    = "movie-info-memcached"
+        // address = "127.0.0.1"
+      }
       config {
         image = "stvdputten/memcached"
       }
     }
   }
-
-  // group "jaeger" {
-  //   network {
-  //     mode = "bridge"
-  //     port "jaeger-ui" {
-  //       static = 16686
-  //       to     = 16686
-  //     }
-  //     port "jaeger" {
-  //       static = 6831
-  //       to = 6831
-  //     }
-  //   }
-  //   service {
-  //     name = "jaeger"
-  //     port = "6831"
-  //     connect {
-  //       sidecar_service {}
-  //     }
-  //   }
-  //   service {
-  //     name = "jaeger-ui"
-  //     port = "16686"
-  //     connect {
-  //       sidecar_service {}
-  //     }
-  //   }
-  //   service {
-  //     name = "jaeger-zipkin"
-  //     port = "9411"
-  //     connect {
-  //       sidecar_service {}
-  //     }
-  //   }
-
-
-  //   task "jaeger" {
-  //     driver = "docker"
-  //     env {
-  //       COLLECTOR_ZIPKIN_HTTP_PORT = "9411"
-  //     }
-  //     config {
-  //       image = "jaegertracing/all-in-one:latest"
-  //       ports = ["jaeger", "jaeger-ui"]
-  //     }
-  //   }
-  // }
-
 }
