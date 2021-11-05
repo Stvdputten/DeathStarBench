@@ -1,16 +1,16 @@
 variable "hostname" {
   type    = string
-  default = "node1"
+  default = "node3.stvdp-109788.sched-serv-pg0.utah.cloudlab.us"
 }
 
 variable "jaeger" {
   type    = string
-  default = "128.110.217.86"
+  default = "128.110.217.69"
 }
 
 variable "dns" {
   type    = string
-  default = "128.110.217.107"
+  default = "128.110.217.60"
 }
 
 job "media-microservices13" {
