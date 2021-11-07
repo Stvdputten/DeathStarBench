@@ -7,7 +7,7 @@ EXEC=docker
 
 USER="stvdputten"
 
-TAG="nomad"
+TAG="swarm"
 
 # ENTER THE ROOT FOLDER
 cd ../
