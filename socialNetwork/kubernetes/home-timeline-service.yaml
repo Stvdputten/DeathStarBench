@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
       - name: home-timeline-service
-        image: stvdputten/social-network-microservices:latest
+        image: stvdputten/social-network-microservices:kubernetes
         command: ["HomeTimelineService"]
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
