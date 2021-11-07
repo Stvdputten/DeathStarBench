@@ -1,16 +1,16 @@
 variable "hostname" {
   type    = string
-  default = "node3.stvdp-109788.sched-serv-pg0.utah.cloudlab.us"
+  default = "node3.stvdp-109953.sched-serv-pg0.utah.cloudlab.us"
 }
 
 variable "jaeger" {
   type    = string
-  default = "128.110.217.69"
+  default = "128.110.217.144"
 }
 
 variable "dns" {
   type    = string
-  default = "128.110.217.60"
+  default = "128.110.217.140"
 }
 
 job "deathstarbench" {
@@ -315,7 +315,7 @@ job "deathstarbench" {
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
-        args    = ["-c", "echo '127.0.0.1 user-timeline-redis' >> /etc/hosts && 127.0.0.1 user-timeline-mongodb' >> /etc/hosts && UserTimelineService"]
+        args    = ["-c", "echo '127.0.0.1 user-timeline-redis' >> /etc/hosts && echo '127.0.0.1 user-timeline-mongodb' >> /etc/hosts && UserTimelineService"]
       }
     }
 
