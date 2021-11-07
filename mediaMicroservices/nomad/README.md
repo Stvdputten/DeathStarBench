@@ -1,6 +1,40 @@
 export NOMAD_VAR_jaeger="127.0.0.1"
 
 # Overview of services and ports 
+dns-media 
+unique-id-service /   
+movie-id-service / 
+  movie-id-memcached
+  movie-id-mongodb
+text-service / 
+rating-service / 
+  rating-redis
+user-service / 
+  user-mongodb 
+compose-review-service /
+  compose-review-memcached
+review-storage-service / 
+  review-storage-memcached
+  review-storage-mongodb
+user-review-service / 
+  user-review-mongodb 
+  user-review-redis 
+movie-review-service / 
+  movie-review-redis
+  movie-review-mongodb
+nginx-web-server
+cast-info-service /
+  cast-info-mongodb
+  cast-info-memcached
+plot-service / 
+  plot-memcached
+  plot-mongodb
+movie-info-service /
+  movie-info-memcached
+  movie-info-mongodb
+
+jaeger
+
 
 # Overview of service names for dns
   "unique-id-service": {

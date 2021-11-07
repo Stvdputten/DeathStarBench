@@ -1,0 +1,490 @@
+version: "3"
+services:
+#   Enables resolving container hostnames from host machine
+  dns-media:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: defreitas/dns-proxy-server:2.19.0
+    volumes:
+      # - /opt/dns-proxy-server/conf:/app/conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/resolv.conf:/etc/resolv.conf
+
+  unique-id-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: unique-id-service
+    # ports:
+    #   - 10001:9090
+    entrypoint: UniqueIdService
+
+  movie-id-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-id-service
+    # ports:
+    #   - 10002:9090
+    entrypoint: MovieIdService
+
+  movie-id-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: movie-id-mongodb
+    ports:
+      - 27018:27017
+
+  movie-id-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: movie-id-memcached
+#    ports:
+#      - 11212:11211
+
+  text-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: text-service
+#    ports:
+#      - 10003:9090
+    entrypoint: TextService
+
+  rating-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: rating-service
+#    ports:
+#      - 10004:9090
+    entrypoint: RatingService
+
+  rating-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: rating-redis
+#    ports:
+#      - 6382:6379
+
+  user-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: user-service
+#    ports:
+#      - 10005:9090
+    entrypoint: UserService
+
+  user-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: user-mongodb
+    ports:
+      - 27019:27017
+
+  user-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: user-memcached
+#    ports:
+#      - 11213:11211
+
+  compose-review-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: compose-review-service
+#    ports:
+#      - 10006:9090
+    entrypoint: ComposeReviewService
+
+  compose-review-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: compose-review-memcached
+#    ports:
+#      - 11214:11211
+
+  review-storage-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: review-storage-service
+#    ports:
+#      - 10007:9090
+    entrypoint: ReviewStorageService
+
+  review-storage-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: review-storage-mongodb
+    ports:
+      - 27020:27017
+
+  review-storage-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: review-storage-memcached
+#    ports:
+#      - 11215:11211
+
+  user-review-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: user-review-service
+#    ports:
+#      - 10008:9090
+    entrypoint: UserReviewService
+
+  user-review-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: user-review-mongodb
+    ports:
+      - 27021:27017
+
+  user-review-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: user-review-redis
+#    ports:
+#      - 6381:6379
+
+  movie-review-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-review-service
+#    ports:
+#      - 10009:9090
+    entrypoint: MovieReviewService
+
+  movie-review-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: movie-review-mongodb
+    ports:
+      - 27022:27017
+
+  movie-review-redis:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: movie-review-redis
+#    ports:
+#      - 6380:6379
+
+  nginx-web-server:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: yg397/openresty-thrift:xenial
+    hostname: nginx-thrift
+    ports:
+      - 8080:8080
+    volumes:
+      - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
+      - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./nginx-web-server/jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
+      - ./gen-lua:/gen-lua
+
+  cast-info-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: cast-info-service
+#    ports:
+#      - 10010:9090
+    entrypoint: CastInfoService
+
+  cast-info-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: cast-info-mongodb
+    ports:
+      - 27024:27017
+
+  cast-info-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: cast-info-memcached
+#    ports:
+#      - 11219:11211
+
+  plot-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: plot-service
+#    ports:
+#      - 10011:9090
+    entrypoint: PlotService
+
+  plot-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: plot-mongodb
+    ports:
+      - 27025:27017
+
+  plot-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: plot-memcached
+#    ports:
+#      - 11220:11211
+
+  movie-info-service:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-info-service
+#    ports:
+#      - 10012:9090
+    entrypoint: MovieInfoService
+
+  movie-info-mongodb:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: movie-info-mongodb
+    ports:
+      - 27026:27017
+
+  movie-info-memcached:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    hostname: movie-info-memcached
+#    ports:
+#      - 11221:11211
+
+  jaeger:
+    deploy:
+      replicas: 1
+      # mode: global
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: jaegertracing/all-in-one:latest
+    hostname: jaeger
+    ports:
+#      - 5775:5775/udp
+    #  - 6831:6831/udp
+#      - 6832:6832/udp
+#      - 5778:5778
+      - 16686:16686
+#      - 14268:14268
+#      - 9411:9411
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
