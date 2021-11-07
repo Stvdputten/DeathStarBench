@@ -23,7 +23,7 @@
   "ReserveMemcAddress": "memcached-reserve:11211",
   "SearchIP": "search",
   "SearchPort": "8082",
-  "UserIP": "8086",
+  "UserIP": "user",
   "UserPort": "8086",
   "UserMongoAddress": "mongodb-user:27017",
   "Orchestrator": "none"
