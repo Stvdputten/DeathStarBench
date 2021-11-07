@@ -41,7 +41,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_frontend_single_node
+    image: hotel_reserv_frontend_single_node
     entrypoint: frontend
     # networks:
     #   - consul
@@ -64,7 +64,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_profile_single_node
+    image: hotel_reserv_profile_single_node
     entrypoint: profile
     # container_name: 'hotel_reserv_profile'
     # networks:
@@ -87,7 +87,7 @@ services:
       restart_policy:
         condition: any
     # build: .
-    image: stvdputten/hotel_reserv_search_single_node
+    image: hotel_reserv_search_single_node
     entrypoint: search
     # networks:
     #   - consul
@@ -116,7 +116,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_geo_single_node
+    image: hotel_reserv_geo_single_node
     # networks:
     #   - consul
     entrypoint: geo
@@ -140,7 +140,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_rate_single_node
+    image: hotel_reserv_rate_single_node
     entrypoint: rate
     # container_name: 'hotel_reserv_rate'
     # networks:
@@ -165,7 +165,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_recommend_single_node
+    image: hotel_reserv_recommend_single_node
     # networks:
     #   - consul
     entrypoint: recommendation
@@ -189,7 +189,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_user_single_node
+    image: hotel_reserv_user_single_node
     entrypoint: user
     # networks:
     #   - consul
@@ -213,7 +213,7 @@ services:
     environment:
       - TLS
     # build: .
-    image: stvdputten/hotel_reserv_rsv_single_node
+    image: hotel_reserv_rsv_single_node
     entrypoint: reservation
     # container_name: 'hotel_reserv_reservation'
     # networks:
