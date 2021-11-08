@@ -28,7 +28,7 @@ spec:
           value: "128"
         - name: MEMCACHED_THREADS
           value: "2"
-        image: memcached
+        image: memcached:1.6.9
         name: hotel-reserv-profile-mmc
         ports:
         - containerPort: 11211

@@ -29,7 +29,7 @@ spec:
         - name: DLOG
           value: DEBUG
         # image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_recommend_single_node
-        image: khv129/hotel_reserv_recommend_single_node:latest
+        image: stvdputten/hotel_reserv_recommendation_single_node:kubernetes
         name: hotel-reserv-recommendation
         ports:
         - containerPort: 8085

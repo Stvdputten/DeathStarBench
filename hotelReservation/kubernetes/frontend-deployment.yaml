@@ -28,8 +28,7 @@ spec:
         env:
         - name: DLOG
           value: DEBUG
-        # image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_frontend_single_node
-        image: khv129/hotel_reserv_frontend_single_node:latest
+        image: stvdputten/hotel_reserv_frontend_single_node:kubernetes
         name: hotel-reserv-frontend
         ports:
         - containerPort: 5000

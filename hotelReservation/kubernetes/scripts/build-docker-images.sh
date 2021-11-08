@@ -5,9 +5,9 @@ cd $(dirname $0)/..
 
 EXEC=docker
 
-USER="salehsedghpour"
+USER="stvdputten"
 
-TAG="latest"
+TAG="kubernetes"
 
 # ENTER THE ROOT FOLDER
 cd ../
