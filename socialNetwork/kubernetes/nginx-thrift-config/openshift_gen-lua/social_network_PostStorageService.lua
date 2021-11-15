@@ -9,27 +9,27 @@
 require 'Thrift'
 require 'social_network_ttypes'
 
-UrlShortenServiceClient = __TObject.new(__TClient, {
-  __type = 'UrlShortenServiceClient'
+PostStorageServiceClient = __TObject.new(__TClient, {
+  __type = 'PostStorageServiceClient'
 })
 
-function UrlShortenServiceClient:ComposeUrls(req_id, urls, carrier)
-  self:send_ComposeUrls(req_id, urls, carrier)
-  return self:recv_ComposeUrls(req_id, urls, carrier)
+function PostStorageServiceClient:StorePost(req_id, post, carrier)
+  self:send_StorePost(req_id, post, carrier)
+  self:recv_StorePost(req_id, post, carrier)
 end
 
-function UrlShortenServiceClient:send_ComposeUrls(req_id, urls, carrier)
-  self.oprot:writeMessageBegin('ComposeUrls', TMessageType.CALL, self._seqid)
-  local args = ComposeUrls_args:new{}
+function PostStorageServiceClient:send_StorePost(req_id, post, carrier)
+  self.oprot:writeMessageBegin('StorePost', TMessageType.CALL, self._seqid)
+  local args = StorePost_args:new{}
   args.req_id = req_id
-  args.urls = urls
+  args.post = post
   args.carrier = carrier
   args:write(self.oprot)
   self.oprot:writeMessageEnd()
   self.oprot.trans:flush()
 end
 
-function UrlShortenServiceClient:recv_ComposeUrls(req_id, urls, carrier)
+function PostStorageServiceClient:recv_StorePost(req_id, post, carrier)
   local fname, mtype, rseqid = self.iprot:readMessageBegin()
   if mtype == TMessageType.EXCEPTION then
     local x = TApplicationException:new{}
@@ -37,7 +37,36 @@ function UrlShortenServiceClient:recv_ComposeUrls(req_id, urls, carrier)
     self.iprot:readMessageEnd()
     error(x)
   end
-  local result = ComposeUrls_result:new{}
+  local result = StorePost_result:new{}
+  result:read(self.iprot)
+  self.iprot:readMessageEnd()
+end
+
+function PostStorageServiceClient:ReadPost(req_id, post_id, carrier)
+  self:send_ReadPost(req_id, post_id, carrier)
+  return self:recv_ReadPost(req_id, post_id, carrier)
+end
+
+function PostStorageServiceClient:send_ReadPost(req_id, post_id, carrier)
+  self.oprot:writeMessageBegin('ReadPost', TMessageType.CALL, self._seqid)
+  local args = ReadPost_args:new{}
+  args.req_id = req_id
+  args.post_id = post_id
+  args.carrier = carrier
+  args:write(self.oprot)
+  self.oprot:writeMessageEnd()
+  self.oprot.trans:flush()
+end
+
+function PostStorageServiceClient:recv_ReadPost(req_id, post_id, carrier)
+  local fname, mtype, rseqid = self.iprot:readMessageBegin()
+  if mtype == TMessageType.EXCEPTION then
+    local x = TApplicationException:new{}
+    x:read(self.iprot)
+    self.iprot:readMessageEnd()
+    error(x)
+  end
+  local result = ReadPost_result:new{}
   result:read(self.iprot)
   self.iprot:readMessageEnd()
   if result.success ~= nil then
@@ -47,52 +76,17 @@ function UrlShortenServiceClient:recv_ComposeUrls(req_id, urls, carrier)
   end
   error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
 end
-
-function UrlShortenServiceClient:GetExtendedUrls(req_id, shortened_urls, carrier)
-  self:send_GetExtendedUrls(req_id, shortened_urls, carrier)
-  return self:recv_GetExtendedUrls(req_id, shortened_urls, carrier)
-end
-
-function UrlShortenServiceClient:send_GetExtendedUrls(req_id, shortened_urls, carrier)
-  self.oprot:writeMessageBegin('GetExtendedUrls', TMessageType.CALL, self._seqid)
-  local args = GetExtendedUrls_args:new{}
-  args.req_id = req_id
-  args.shortened_urls = shortened_urls
-  args.carrier = carrier
-  args:write(self.oprot)
-  self.oprot:writeMessageEnd()
-  self.oprot.trans:flush()
-end
-
-function UrlShortenServiceClient:recv_GetExtendedUrls(req_id, shortened_urls, carrier)
-  local fname, mtype, rseqid = self.iprot:readMessageBegin()
-  if mtype == TMessageType.EXCEPTION then
-    local x = TApplicationException:new{}
-    x:read(self.iprot)
-    self.iprot:readMessageEnd()
-    error(x)
-  end
-  local result = GetExtendedUrls_result:new{}
-  result:read(self.iprot)
-  self.iprot:readMessageEnd()
-  if result.success ~= nil then
-    return result.success
-  elseif result.se then
-    error(result.se)
-  end
-  error(TApplicationException:new{errorCode = TApplicationException.MISSING_RESULT})
-end
-UrlShortenServiceIface = __TObject:new{
-  __type = 'UrlShortenServiceIface'
+PostStorageServiceIface = __TObject:new{
+  __type = 'PostStorageServiceIface'
 }
 
 
-UrlShortenServiceProcessor = __TObject.new(__TProcessor
+PostStorageServiceProcessor = __TObject.new(__TProcessor
 , {
- __type = 'UrlShortenServiceProcessor'
+ __type = 'PostStorageServiceProcessor'
 })
 
-function UrlShortenServiceProcessor:process(iprot, oprot, server_ctx)
+function PostStorageServiceProcessor:process(iprot, oprot, server_ctx)
   local name, mtype, seqid = iprot:readMessageBegin()
   local func_name = 'process_' .. name
   if not self[func_name] or ttype(self[func_name]) ~= 'function' then
@@ -110,13 +104,13 @@ function UrlShortenServiceProcessor:process(iprot, oprot, server_ctx)
   end
 end
 
-function UrlShortenServiceProcessor:process_ComposeUrls(seqid, iprot, oprot, server_ctx)
-  local args = ComposeUrls_args:new{}
+function PostStorageServiceProcessor:process_StorePost(seqid, iprot, oprot, server_ctx)
+  local args = StorePost_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = ComposeUrls_result:new{}
-  local status, res = pcall(self.handler.ComposeUrls, self.handler, args.req_id, args.urls, args.carrier)
+  local result = StorePost_result:new{}
+  local status, res = pcall(self.handler.StorePost, self.handler, args.req_id, args.post, args.carrier)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -125,19 +119,19 @@ function UrlShortenServiceProcessor:process_ComposeUrls(seqid, iprot, oprot, ser
   else
     result.success = res
   end
-  oprot:writeMessageBegin('ComposeUrls', reply_type, seqid)
+  oprot:writeMessageBegin('StorePost', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
 end
 
-function UrlShortenServiceProcessor:process_GetExtendedUrls(seqid, iprot, oprot, server_ctx)
-  local args = GetExtendedUrls_args:new{}
+function PostStorageServiceProcessor:process_ReadPost(seqid, iprot, oprot, server_ctx)
+  local args = ReadPost_args:new{}
   local reply_type = TMessageType.REPLY
   args:read(iprot)
   iprot:readMessageEnd()
-  local result = GetExtendedUrls_result:new{}
-  local status, res = pcall(self.handler.GetExtendedUrls, self.handler, args.req_id, args.shortened_urls, args.carrier)
+  local result = ReadPost_result:new{}
+  local status, res = pcall(self.handler.ReadPost, self.handler, args.req_id, args.post_id, args.carrier)
   if not status then
     reply_type = TMessageType.EXCEPTION
     result = TApplicationException:new{message = res}
@@ -146,7 +140,7 @@ function UrlShortenServiceProcessor:process_GetExtendedUrls(seqid, iprot, oprot,
   else
     result.success = res
   end
-  oprot:writeMessageBegin('GetExtendedUrls', reply_type, seqid)
+  oprot:writeMessageBegin('ReadPost', reply_type, seqid)
   result:write(oprot)
   oprot:writeMessageEnd()
   oprot.trans:flush()
@@ -154,13 +148,13 @@ end
 
 -- HELPER FUNCTIONS AND STRUCTURES
 
-ComposeUrls_args = __TObject:new{
+StorePost_args = __TObject:new{
   req_id,
-  urls,
+  post,
   carrier
 }
 
-function ComposeUrls_args:read(iprot)
+function StorePost_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -173,25 +167,20 @@ function ComposeUrls_args:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.LIST then
-        self.urls = {}
-        local _etype283, _size280 = iprot:readListBegin()
-        for _i=1,_size280 do
-          local _elem284 = iprot:readString()
-          table.insert(self.urls, _elem284)
-        end
-        iprot:readListEnd()
+      if ftype == TType.STRUCT then
+        self.post = Post:new{}
+        self.post:read(iprot)
       else
         iprot:skip(ftype)
       end
     elseif fid == 3 then
       if ftype == TType.MAP then
         self.carrier = {}
-        local _ktype286, _vtype287, _size285 = iprot:readMapBegin() 
-        for _i=1,_size285 do
-          local _key289 = iprot:readString()
-          local _val290 = iprot:readString()
-          self.carrier[_key289] = _val290
+        local _ktype141, _vtype142, _size140 = iprot:readMapBegin() 
+        for _i=1,_size140 do
+          local _key144 = iprot:readString()
+          local _val145 = iprot:readString()
+          self.carrier[_key144] = _val145
         end
         iprot:readMapEnd()
       else
@@ -205,28 +194,24 @@ function ComposeUrls_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function ComposeUrls_args:write(oprot)
-  oprot:writeStructBegin('ComposeUrls_args')
+function StorePost_args:write(oprot)
+  oprot:writeStructBegin('StorePost_args')
   if self.req_id ~= nil then
     oprot:writeFieldBegin('req_id', TType.I64, 1)
     oprot:writeI64(self.req_id)
     oprot:writeFieldEnd()
   end
-  if self.urls ~= nil then
-    oprot:writeFieldBegin('urls', TType.LIST, 2)
-    oprot:writeListBegin(TType.STRING, #self.urls)
-    for _,iter291 in ipairs(self.urls) do
-      oprot:writeString(iter291)
-    end
-    oprot:writeListEnd()
+  if self.post ~= nil then
+    oprot:writeFieldBegin('post', TType.STRUCT, 2)
+    self.post:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.carrier ~= nil then
     oprot:writeFieldBegin('carrier', TType.MAP, 3)
     oprot:writeMapBegin(TType.STRING, TType.STRING, ttable_size(self.carrier))
-    for kiter292,viter293 in pairs(self.carrier) do
-      oprot:writeString(kiter292)
-      oprot:writeString(viter293)
+    for kiter146,viter147 in pairs(self.carrier) do
+      oprot:writeString(kiter146)
+      oprot:writeString(viter147)
     end
     oprot:writeMapEnd()
     oprot:writeFieldEnd()
@@ -235,30 +220,16 @@ function ComposeUrls_args:write(oprot)
   oprot:writeStructEnd()
 end
 
-ComposeUrls_result = __TObject:new{
-  success,
+StorePost_result = __TObject:new{
   se
 }
 
-function ComposeUrls_result:read(iprot)
+function StorePost_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
-    elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype297, _size294 = iprot:readListBegin()
-        for _i=1,_size294 do
-          local _elem298 = Url:new{}
-          _elem298:read(iprot)
-          table.insert(self.success, _elem298)
-        end
-        iprot:readListEnd()
-      else
-        iprot:skip(ftype)
-      end
     elseif fid == 1 then
       if ftype == TType.STRUCT then
         self.se = ServiceException:new{}
@@ -274,17 +245,8 @@ function ComposeUrls_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function ComposeUrls_result:write(oprot)
-  oprot:writeStructBegin('ComposeUrls_result')
-  if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRUCT, #self.success)
-    for _,iter299 in ipairs(self.success) do
-      iter299:write(oprot)
-    end
-    oprot:writeListEnd()
-    oprot:writeFieldEnd()
-  end
+function StorePost_result:write(oprot)
+  oprot:writeStructBegin('StorePost_result')
   if self.se ~= nil then
     oprot:writeFieldBegin('se', TType.STRUCT, 1)
     self.se:write(oprot)
@@ -294,13 +256,13 @@ function ComposeUrls_result:write(oprot)
   oprot:writeStructEnd()
 end
 
-GetExtendedUrls_args = __TObject:new{
+ReadPost_args = __TObject:new{
   req_id,
-  shortened_urls,
+  post_id,
   carrier
 }
 
-function GetExtendedUrls_args:read(iprot)
+function ReadPost_args:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -313,25 +275,19 @@ function GetExtendedUrls_args:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.LIST then
-        self.shortened_urls = {}
-        local _etype303, _size300 = iprot:readListBegin()
-        for _i=1,_size300 do
-          local _elem304 = iprot:readString()
-          table.insert(self.shortened_urls, _elem304)
-        end
-        iprot:readListEnd()
+      if ftype == TType.I64 then
+        self.post_id = iprot:readI64()
       else
         iprot:skip(ftype)
       end
     elseif fid == 3 then
       if ftype == TType.MAP then
         self.carrier = {}
-        local _ktype306, _vtype307, _size305 = iprot:readMapBegin() 
-        for _i=1,_size305 do
-          local _key309 = iprot:readString()
-          local _val310 = iprot:readString()
-          self.carrier[_key309] = _val310
+        local _ktype149, _vtype150, _size148 = iprot:readMapBegin() 
+        for _i=1,_size148 do
+          local _key152 = iprot:readString()
+          local _val153 = iprot:readString()
+          self.carrier[_key152] = _val153
         end
         iprot:readMapEnd()
       else
@@ -345,28 +301,24 @@ function GetExtendedUrls_args:read(iprot)
   iprot:readStructEnd()
 end
 
-function GetExtendedUrls_args:write(oprot)
-  oprot:writeStructBegin('GetExtendedUrls_args')
+function ReadPost_args:write(oprot)
+  oprot:writeStructBegin('ReadPost_args')
   if self.req_id ~= nil then
     oprot:writeFieldBegin('req_id', TType.I64, 1)
     oprot:writeI64(self.req_id)
     oprot:writeFieldEnd()
   end
-  if self.shortened_urls ~= nil then
-    oprot:writeFieldBegin('shortened_urls', TType.LIST, 2)
-    oprot:writeListBegin(TType.STRING, #self.shortened_urls)
-    for _,iter311 in ipairs(self.shortened_urls) do
-      oprot:writeString(iter311)
-    end
-    oprot:writeListEnd()
+  if self.post_id ~= nil then
+    oprot:writeFieldBegin('post_id', TType.I64, 2)
+    oprot:writeI64(self.post_id)
     oprot:writeFieldEnd()
   end
   if self.carrier ~= nil then
     oprot:writeFieldBegin('carrier', TType.MAP, 3)
     oprot:writeMapBegin(TType.STRING, TType.STRING, ttable_size(self.carrier))
-    for kiter312,viter313 in pairs(self.carrier) do
-      oprot:writeString(kiter312)
-      oprot:writeString(viter313)
+    for kiter154,viter155 in pairs(self.carrier) do
+      oprot:writeString(kiter154)
+      oprot:writeString(viter155)
     end
     oprot:writeMapEnd()
     oprot:writeFieldEnd()
@@ -375,26 +327,21 @@ function GetExtendedUrls_args:write(oprot)
   oprot:writeStructEnd()
 end
 
-GetExtendedUrls_result = __TObject:new{
+ReadPost_result = __TObject:new{
   success,
   se
 }
 
-function GetExtendedUrls_result:read(iprot)
+function ReadPost_result:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
     if ftype == TType.STOP then
       break
     elseif fid == 0 then
-      if ftype == TType.LIST then
-        self.success = {}
-        local _etype317, _size314 = iprot:readListBegin()
-        for _i=1,_size314 do
-          local _elem318 = iprot:readString()
-          table.insert(self.success, _elem318)
-        end
-        iprot:readListEnd()
+      if ftype == TType.STRUCT then
+        self.success = Post:new{}
+        self.success:read(iprot)
       else
         iprot:skip(ftype)
       end
@@ -413,15 +360,11 @@ function GetExtendedUrls_result:read(iprot)
   iprot:readStructEnd()
 end
 
-function GetExtendedUrls_result:write(oprot)
-  oprot:writeStructBegin('GetExtendedUrls_result')
+function ReadPost_result:write(oprot)
+  oprot:writeStructBegin('ReadPost_result')
   if self.success ~= nil then
-    oprot:writeFieldBegin('success', TType.LIST, 0)
-    oprot:writeListBegin(TType.STRING, #self.success)
-    for _,iter319 in ipairs(self.success) do
-      oprot:writeString(iter319)
-    end
-    oprot:writeListEnd()
+    oprot:writeFieldBegin('success', TType.STRUCT, 0)
+    self.success:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.se ~= nil then
