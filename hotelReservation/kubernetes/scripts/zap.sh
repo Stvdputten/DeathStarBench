@@ -42,10 +42,10 @@ do
 done
 wait
 
-for c in configmap-config-json
-do
-        kubectl delete cm ${c} -n ${NS}
-done
+# for c in configmap-config-json
+# do
+#         kubectl delete cm ${c} -n ${NS}
+# done
 
 # echo finally deleting namespace ${NS}
 # kubectl delete namespace/${NS}

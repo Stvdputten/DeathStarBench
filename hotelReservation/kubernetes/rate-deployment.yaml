@@ -1,48 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: rate
-  namespace: hotel-res
+    io.kompose.service: rate
   name: rate
 spec:
   replicas: 1
   selector:
     matchLabels:
-      death-star-project: hotel-res
-      app-name: rate
+      io.kompose.service: rate
   strategy: {}
   template:
     metadata:
-      name: rate
-      labels:
-        death-star-project: hotel-res
-        app-name: rate
       annotations:
-        sidecar.istio.io/inject: "true"
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rate
     spec:
       containers:
-      - command:
-        - rate
-        env:
-        - name: DLOG
-          value: DEBUG
-        image: stvdputten/hotel_reserv_rate_single_node:kubernetes
-        name: hotel-reserv-rate
-        ports:
-        - containerPort: 8084
-        resources: {}
-        volumeMounts:
-        - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
-          subPath: config.json
-          name: config-json
+        - command:
+            - rate
+          image: stvdputten/hotel_reserv_rate_single_node:kubernetes
+          name: rate
+          ports:
+            - containerPort: 8084
+          resources: {}
       restartPolicy: Always
-      volumes:
-      - name: config-json
-        configMap:
-          name: configmap-config-json
-          items:
-          - key: config.json
-            path: config.json
 status: {}

@@ -1,18 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: reservation
-  namespace: hotel-res
+    io.kompose.service: reservation
   name: reservation
 spec:
   ports:
-  - name: "8087"
-    port: 8087
-    targetPort: 8087
+    - name: "8087"
+      port: 8087
+      targetPort: 8087
   selector:
-    death-star-project: hotel-res
-    app-name: reservation
+    io.kompose.service: reservation
 status:
   loadBalancer: {}

@@ -1,41 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: mongodb-rate
-  namespace: hotel-res
+    io.kompose.service: mongodb-rate
   name: mongodb-rate
 spec:
   replicas: 1
   selector:
     matchLabels:
-      death-star-project: hotel-res
-      app-name: mongodb-rate
-  strategy:
-    type: Recreate
+      io.kompose.service: mongodb-rate
+  strategy: {}
   template:
     metadata:
-      name: mongodb-rate
-      labels:
-        death-star-project: hotel-res
-        app-name: mongodb-rate
       annotations:
-        sidecar.istio.io/inject: "true"
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongodb-rate
     spec:
       containers:
-      - image: mongo:4.4.6
-        name: hotel-reserv-rate-mongo
-        ports:
-        - containerPort: 27017
-        resources: {}
-        volumeMounts:
-        - mountPath: /data/db
-          name: rate
-      hostname: rate-db
+        - image: mongo:4.4.6
+          name: mongodb-rate
+          ports:
+            - containerPort: 27017
+          resources: {}
       restartPolicy: Always
-      volumes:
-      - name: rate
-        persistentVolumeClaim:
-          claimName: rate
 status: {}

@@ -1,49 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: recommendation
-  namespace: hotel-res
+    io.kompose.service: recommendation
   name: recommendation
 spec:
   replicas: 1
   selector:
     matchLabels:
-      death-star-project: hotel-res
-      app-name: recommendation
+      io.kompose.service: recommendation
   strategy: {}
   template:
     metadata:
-      name: recommendation
-      labels:
-        death-star-project: hotel-res
-        app-name: recommendation
       annotations:
-        sidecar.istio.io/inject: "true"
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: recommendation
     spec:
       containers:
-      - command:
-        - recommendation
-        env:
-        - name: DLOG
-          value: DEBUG
-        # image: image-registry.openshift-image-registry.svc:5000/hotel-res/hotel_reserv_recommend_single_node
-        image: stvdputten/hotel_reserv_recommendation_single_node:kubernetes
-        name: hotel-reserv-recommendation
-        ports:
-        - containerPort: 8085
-        resources: {}
-        volumeMounts:
-        - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
-          subPath: config.json
-          name: config-json
+        - command:
+            - recommendation
+          image: stvdputten/hotel_reserv_recommendation_single_node:kubernetes
+          name: recommendation
+          ports:
+            - containerPort: 8085
+          resources: {}
       restartPolicy: Always
-      volumes:
-      - name: config-json
-        configMap:
-          name: configmap-config-json
-          items:
-          - key: config.json
-            path: config.json
 status: {}

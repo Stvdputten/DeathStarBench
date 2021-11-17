@@ -1,18 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: mongodb-profile
-  namespace: hotel-res
+    io.kompose.service: mongodb-profile
   name: mongodb-profile
 spec:
   ports:
-  - name: "27019"
-    port: 27019
-    targetPort: 27017
+    - name: "27019"
+      port: 27019
+      targetPort: 27017
   selector:
-    death-star-project: hotel-res
-    app-name: mongodb-profile
+    io.kompose.service: mongodb-profile
 status:
   loadBalancer: {}

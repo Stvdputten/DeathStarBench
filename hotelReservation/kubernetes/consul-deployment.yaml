@@ -1,36 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: consul
+    io.kompose.service: consul
   name: consul
-  namespace: hotel-res
 spec:
   replicas: 1
   selector:
     matchLabels:
-      death-star-project: hotel-res
-      app-name: consul
+      io.kompose.service: consul
   strategy: {}
   template:
     metadata:
-      name: consul
-      labels:
-        death-star-project: hotel-res
-        app-name: consul
       annotations:
-        sidecar.istio.io/inject: "true"
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: consul
     spec:
       containers:
-      - image: consul:latest
-        name: consul
-        ports:
-        - containerPort: 8300
-        - containerPort: 8400
-        - containerPort: 8500
-        - containerPort: 53
-          protocol: UDP
-        resources: {}
+        - image: consul:1.9.6
+          name: consul
+          ports:
+            - containerPort: 8300
+            - containerPort: 8400
+            - containerPort: 8500
+            - containerPort: 53
+              protocol: UDP
+          resources: {}
       restartPolicy: Always
 status: {}

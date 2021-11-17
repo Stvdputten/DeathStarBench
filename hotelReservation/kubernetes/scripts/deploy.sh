@@ -16,7 +16,7 @@ kubectl create namespace ${NS} 2>/dev/null
 # kubectl policy add-role-to-user registry-viewer kube:admin -n hotel-res
 # kubectl policy add-role-to-user registry-editor kube:admin -n hotel-res
 
-./scripts/create-configmaps.sh
+# ./scripts/create-configmaps.sh
 for i in *.yaml
 do
   kubectl apply -f ${i} -n ${NS} &

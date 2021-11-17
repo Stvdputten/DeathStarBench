@@ -1,41 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: mongodb-user
-  namespace: hotel-res
+    io.kompose.service: mongodb-user
   name: mongodb-user
 spec:
   replicas: 1
   selector:
     matchLabels:
-      death-star-project: hotel-res
-      app-name: mongodb-user
-  strategy:
-    type: Recreate
+      io.kompose.service: mongodb-user
+  strategy: {}
   template:
     metadata:
-      name: mongodb-user
-      labels:
-        death-star-project: hotel-res
-        app-name: mongodb-user
       annotations:
-        sidecar.istio.io/inject: "true"
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongodb-user
     spec:
       containers:
-      - image: mongo:4.4.6
-        name: hotel-reserv-user-mongo
-        ports:
-        - containerPort: 27017
-        resources: {}
-        volumeMounts:
-        - mountPath: /data/db
-          name: user
-      hostname: user-db
+        - image: mongo:4.4.6
+          name: mongodb-user
+          ports:
+            - containerPort: 27017
+          resources: {}
       restartPolicy: Always
-      volumes:
-      - name: user
-        persistentVolumeClaim:
-          claimName: user
 status: {}

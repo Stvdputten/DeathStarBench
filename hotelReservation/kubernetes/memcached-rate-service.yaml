@@ -1,18 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
   labels:
-    death-star-project: hotel-res
-    app-name: memcached-rate
-  namespace: hotel-res
+    io.kompose.service: memcached-rate
   name: memcached-rate
 spec:
   ports:
-  - name: "11212"
-    port: 11212
-    targetPort: 11211
+    - name: "11212"
+      port: 11212
+      targetPort: 11211
   selector:
-    death-star-project: hotel-res
-    app-name: memcached-rate
+    io.kompose.service: memcached-rate
 status:
   loadBalancer: {}
