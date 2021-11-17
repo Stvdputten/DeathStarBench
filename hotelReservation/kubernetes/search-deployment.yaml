@@ -31,5 +31,16 @@ spec:
           ports:
             - containerPort: 8082
           resources: {}
+          volumeMounts:
+          - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
+            subPath: config.json
+            name: config-json
       restartPolicy: Always
+      volumes :
+      - name: config-json
+        configMap:
+          name: configmap-config-json
+          items:
+          - key: config.json
+            path: config.json
 status: {}

@@ -6,7 +6,7 @@ work="consul frontend geo jaeger memcached-profile memcached-rate memcached-rese
 
 for d in ${work}
 do
-	kubectl logs deployment/${d} --all-containers -n ${NS} > ${d}.log
+	kubectl logs deployment/${d} --all-containers -n ${NS} > ./logs/${d}.log
 done
 
 

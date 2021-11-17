@@ -42,10 +42,16 @@ do
 done
 wait
 
-# for c in configmap-config-json
-# do
-#         kubectl delete cm ${c} -n ${NS}
-# done
+for i in geo profile rate recommendation reservation user
+do
+	kubectl delete pv $i-pv -n ${NS} &
+done
+wait
+
+for c in configmap-config-json
+do
+        kubectl delete cm ${c} -n ${NS}
+done
 
 # echo finally deleting namespace ${NS}
 # kubectl delete namespace/${NS}

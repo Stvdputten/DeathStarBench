@@ -133,49 +133,49 @@ services:
     image: mongo:4.4.6
     ports:
       - "27018:27017"
-    # volumes:
-    #   - geo:/data/db  
+    volumes:
+      - geo:/data/db  
 
   mongodb-profile:
     image: mongo:4.4.6
     ports:
       - "27019:27017"
-    # volumes:
-    #   - profile:/data/db    
+    volumes:
+      - profile:/data/db    
 
   mongodb-rate:
     image: mongo:4.4.6
     ports:
       - "27020:27017"
-    # volumes:
-    #   - rate:/data/db   
+    volumes:
+      - rate:/data/db   
 
   mongodb-recommendation:
     image: mongo:4.4.6
     ports:
       - "27021:27017"
-    # volumes:
-    #   - recommendation:/data/db
+    volumes:
+      - recommendation:/data/db
     
   mongodb-reservation:
     image: mongo:4.4.6
     ports:
       - "27022:27017"
-    # volumes:
-    #   - reservation:/data/db 
+    volumes:
+      - reservation:/data/db 
 
   mongodb-user:
     image: mongo:4.4.6
     ports:
       - "27023:27017"
-    # volumes:
-    #   - user:/data/db
+    volumes:
+      - user:/data/db
     
-# volumes:
-#   geo:
-#   profile:
-#   rate:
-#   recommendation:
-#   reservation:
-#   user:
+volumes:
+  geo:
+  profile:
+  rate:
+  recommendation:
+  reservation:
+  user:
 

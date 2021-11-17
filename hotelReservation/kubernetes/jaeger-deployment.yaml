@@ -24,7 +24,7 @@ spec:
         io.kompose.service: jaeger
     spec:
       containers:
-        - image: jaegertracing/all-in-one:1.23.0
+        - image: jaegertracing/all-in-one:latest
           name: jaeger
           ports:
             - containerPort: 14269
