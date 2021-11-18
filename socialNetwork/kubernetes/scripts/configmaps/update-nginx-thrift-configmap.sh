@@ -23,4 +23,4 @@ kubectl create cm nginx-thrift        --from-file=nginx-thrift-config/nginx.conf
 
 # nginx-thrift has a dependency on the ConfigMap nginx-thrift-jaeger, which
 # is created by the script `create-jaeger-configmap.sh` 
-# kubectl create cm nginx-thrift-jaeger --from-file=nginx-thrift-config/jaeger-config.json --dry-run --save-config -o yaml | kubectl apply -f -
+# oc create cm nginx-thrift-jaeger --from-file=nginx-thrift-config/jaeger-config.json --dry-run --save-config -o yaml | oc apply -f -

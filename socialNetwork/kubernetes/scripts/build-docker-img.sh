@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # ##### TROUBLESHOOTING ERRORS ######
 # Make sure you are connected to your OpenShift docker REGISTRY. You can verify which node it is running with the following command:
 # oc get pods -n default -o wide | grep -v console | grep registry
@@ -29,56 +29,71 @@
 
 #####
 EXEC=docker
-TAG="kubernetes"
+if [[ $(podman -v | grep version | wc -l) -gt 0 ]]; then
+  EXEC=podman
+else
+  echo "Using docker, but we recommend to use podman"
+fi
+
+
+TAG="openshift"
 PROJECT="social-network"
-USER="stvdputten"
 
 cd $(dirname $0)/..
+
+# LOGIN IN THE $EXEC REGISTRY FOR OPENSHIFT
+REGISTRY=$(oc get route -n default | grep registry | grep -v console | awk '{print $2}')
+TOKEN=$(oc whoami -t)
+USER=$(oc whoami)
+oc project $PROJECT
+oc registry login \
+  --insecure=true --skip-check -z default --token=$TOKEN $REGISTRY 
+$EXEC login -u $USER -p $TOKEN $REGISTRY
 
 # ENTER IN THE SOCIAL-NETWORK ROOT FOLDER
 cd ../
 ROOT_FOLDER=$(pwd)
 
 # BUILD MEDIA FRONTEND IMAGE
-# SERVICE="media-frontend"
-# if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
-#   cd docker/media-frontend/
-#   $EXEC build -t "$USER"/"$SERVICE":"$TAG" -f xenial/Dockerfile .
-#   cd $ROOT_FOLDER
-# else
-#   echo "$SERVICE image already exist"
-# fi
-# $EXEC push "$USER"/"$SERVICE":"$TAG"
+SERVICE="media-frontend"
+if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
+  cd docker/media-frontend/
+  $EXEC build -t "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG" -f xenial/Dockerfile .
+  cd $ROOT_FOLDER
+else
+  echo "$SERVICE image already exist"
+fi
+$EXEC push "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG"
 
 # BUILD OPENRESTY-THRIFT
-# SERVICE="openresty-thrift"
-# if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
-#   cd docker/openresty-thrift/
-#   $EXEC build -t "$USER"/"$SERVICE":"$TAG" -f xenial/Dockerfile .
-#   cd $ROOT_FOLDER
-# else
-#   echo "$SERVICE image already exist"
-# fi
-# $EXEC push "$USER"/"$SERVICE":"$TAG"
+SERVICE="openresty-thrift"
+if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
+  cd docker/openresty-thrift/
+  $EXEC build -t "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG" -f xenial/Dockerfile .
+  cd $ROOT_FOLDER
+else
+  echo "$SERVICE image already exist"
+fi
+$EXEC push "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG"
 
 # BUILD SOCIAL-NETWORK MICROSERVICE DEPS
-# SERVICE="thrift-microservice-deps"
-# if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
-#   cd docker/thrift-microservice-deps
-#   $EXEC build -t "$USER"/"$SERVICE":"$TAG" -f cpp/Dockerfile .
-# else
-#   echo "$SERVICE image already exist"
-# fi
+SERVICE="thrift-microservice-deps"
+if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
+  cd docker/thrift-microservice-deps
+  $EXEC build -t "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG" -f cpp/Dockerfile .
+else
+  echo "$SERVICE image already exist"
+fi
 
 # BUILD SOCIAL-NETWORK MICROSERVICE
 SERVICE="social-network-microservices"
 if [[ $($EXEC images | grep $SERVICE | wc -l) -le 0 ]]; then
   cd $ROOT_FOLDER
-  $EXEC build -t "$USER"/"$SERVICE":"$TAG" .
+  $EXEC build -t "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG" .
 else
   echo "$SERVICE image already exist"
 fi
-$EXEC push "$USER"/"$SERVICE":"$TAG"
+$EXEC push "$REGISTRY"/"$PROJECT"/"$SERVICE":"$TAG"
 
 echo "Images:"
 $EXEC images | grep "$TAG"

@@ -37,5 +37,5 @@ spec:
     spec:
       containers:
       - name: home-timeline-redis
-        image: redis:alpine3.13
+        image: redis
       restartPolicy: Always

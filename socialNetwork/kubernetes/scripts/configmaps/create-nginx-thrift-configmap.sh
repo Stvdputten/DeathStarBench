@@ -7,9 +7,9 @@ cd $(dirname $0)/../..
 # directories
 
 kubectl create cm nginx-thrift-genlua --from-file=nginx-thrift-config/gen-lua -n ${NS}
-kubectl create cm nginx-thrift-pages --from-file=nginx-thrift-config/pages -n ${NS}
-kubectl create cm nginx-thrift-pages-javascript --from-file=nginx-thrift-config/pages/javascript -n ${NS}
-kubectl create cm nginx-thrift-pages-style --from-file=nginx-thrift-config/pages/style -n ${NS}
+kubectl create cm nginx-thrift-pages  --from-file=nginx-thrift-config/pages -n ${NS}
+kubectl create cm nginx-thrift-pages-javascript  --from-file=nginx-thrift-config/pages/javascript -n ${NS}
+kubectl create cm nginx-thrift-pages-style  --from-file=nginx-thrift-config/pages/style -n ${NS}
 kubectl create cm nginx-thrift-luascripts --from-file=nginx-thrift-config/lua-scripts -n ${NS}
 kubectl create cm nginx-thrift-luascripts-api-home-timeline --from-file=nginx-thrift-config/lua-scripts/api/home-timeline -n ${NS}
 kubectl create cm nginx-thrift-luascripts-api-post --from-file=nginx-thrift-config/lua-scripts/api/post -n ${NS}
