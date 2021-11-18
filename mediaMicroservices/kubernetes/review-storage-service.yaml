@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: review-storage-service
-        image: stvdputten/media-microservices
+        image: yg397/media-microservices
         command: ["ReviewStorageService"]
       restartPolicy: Always

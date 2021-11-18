@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: movie-review-service
-        image: stvdputten/media-microservices
+        image: yg397/media-microservices
         command: ["MovieReviewService"]
       restartPolicy: Always

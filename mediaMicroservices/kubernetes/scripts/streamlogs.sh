@@ -20,9 +20,9 @@ for d in ${work}
 do
 	if [[ ${NOTS} -eq 1 ]]
 	then
-		kubectl logs -f deployment/${d} --all-containers -n ${NS} &
+		oc logs -f deployment/${d} --all-containers -n ${NS} &
 	else
-		kubectl logs -f deployment/${d} --all-containers -n ${NS} | ts "${d}: " &
+		oc logs -f deployment/${d} --all-containers -n ${NS} | ts "${d}: " &
 	fi
 done
 

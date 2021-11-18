@@ -39,5 +39,5 @@ spec:
     spec:
       containers:
       - name: movie-id-memcached
-        image: memcached:1.6.9
+        image: memcached
       restartPolicy: Always

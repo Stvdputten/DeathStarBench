@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: plot-service
-        image: stvdputten/media-microservices
+        image: yg397/media-microservices
         command: ["PlotService"]
       restartPolicy: Always

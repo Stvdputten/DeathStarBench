@@ -39,6 +39,6 @@ spec:
     spec:
       containers:
       - name: text-service
-        image: stvdputten/media-microservices
+        image: yg397/media-microservices
         command: ["TextService"]
       restartPolicy: Always
