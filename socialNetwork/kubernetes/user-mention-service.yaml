@@ -39,6 +39,7 @@ spec:
       - name: user-mention-service
         image: stvdputten/social-network-microservices:kubernetes
         command: ["UserMentionService"]
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml

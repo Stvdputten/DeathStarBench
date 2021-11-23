@@ -40,6 +40,7 @@ spec:
       containers:
       - name: compose-post-service
         image: stvdputten/social-network-microservices:kubernetes
+        imagePullPolicy: Always
         command: ["ComposePostService"]
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml

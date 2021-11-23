@@ -39,6 +39,7 @@ spec:
       - name: text-service
         image: stvdputten/social-network-microservices:kubernetes
         command: ["TextService"]
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml

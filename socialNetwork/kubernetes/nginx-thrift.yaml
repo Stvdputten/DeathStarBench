@@ -39,7 +39,9 @@ spec:
     spec:
       containers:
       - name: nginx-thrift
-        image: stvdputten/openresty-thrift:latest
+        image: yg397/openresty-thrift:xenial
+        # image: stvdputten/openresty-thrift:xenial
+        # imagePullPolicy: Always
         ports: 
         - containerPort: 8080
         volumeMounts:

@@ -39,6 +39,7 @@ spec:
       - name: home-timeline-service
         image: stvdputten/social-network-microservices:kubernetes
         command: ["HomeTimelineService"]
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml

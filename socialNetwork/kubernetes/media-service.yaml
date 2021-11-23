@@ -39,6 +39,9 @@ spec:
       - name: media-service
         image: stvdputten/social-network-microservices:kubernetes
         command: ["MediaService"]
+        # command: ["sleep"]
+        # args: ["365d"]
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml

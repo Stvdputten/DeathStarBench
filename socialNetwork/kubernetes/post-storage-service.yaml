@@ -39,6 +39,7 @@ spec:
       - name: post-storage-service
         image: stvdputten/social-network-microservices:kubernetes
         command: ["PostStorageService"]
+        imagePullPolicy: Always
         ports: 
         - containerPort: 9090
         volumeMounts:
