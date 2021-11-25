@@ -37,7 +37,8 @@ spec:
     spec:
       containers:
       - name: post-storage-service
-        image: stvdputten/social-network-microservices:kubernetes
+        # image: stvdputten/social-network-microservices:kubernetes
+        image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["PostStorageService"]
         imagePullPolicy: Always
         ports: 

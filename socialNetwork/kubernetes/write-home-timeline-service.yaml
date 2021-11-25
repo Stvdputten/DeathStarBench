@@ -39,12 +39,17 @@ spec:
     spec:
       containers:
       - name: write-home-timeline-service
-        image: stvdputten/social-network-microservices:kubernetes
+        # image: poanpan/rabbitmq:v1
+        image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["WriteHomeTimelineService"]
         volumeMounts:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml
             name: jaeger-conf-yaml
+      initContainers:
+        - name: wait-write-home-timeline-rabbitmq
+          image: busybox:1.28
+          command: ['sh', '-c', "until nslookup write-home-timeline-rabbitmq.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
       restartPolicy: Always
       volumes:
         - name: jaeger-conf-yaml

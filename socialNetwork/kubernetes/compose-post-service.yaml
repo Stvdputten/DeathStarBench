@@ -39,7 +39,8 @@ spec:
     spec:
       containers:
       - name: compose-post-service
-        image: stvdputten/social-network-microservices:kubernetes
+        # image: stvdputten/social-network-microservices:kubernetes
+        image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         imagePullPolicy: Always
         command: ["ComposePostService"]
         volumeMounts:

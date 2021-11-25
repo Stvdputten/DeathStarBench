@@ -14,8 +14,8 @@ for service in *.yaml ;  do
   kubectl apply -f $service -n ${NS}
 done
 
-kubectl expose service nginx-thrift -n ${NS}
-kubectl expose service jaeger-out -n ${NS}
+# kubectl expose service nginx-thrift -n ${NS}
+# kubectl expose service jaeger-out -n ${NS}
 
 echo "After all pods are running (oc get pods):"
 echo "Follow the instructions in openshift/README.md to configure and run init_social_graph.py to load the dataset."

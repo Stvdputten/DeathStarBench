@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
       - name: write-home-timeline-rabbitmq
-        image: rabbitmq
+        image: poanpan/rabbitmq:v1
         env:
         - name: RABBITMQ_ERLANG_COOKIE
           value: "WRITE-HOME-TIMELINE-RABBITMQ"

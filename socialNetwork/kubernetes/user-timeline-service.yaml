@@ -37,7 +37,8 @@ spec:
     spec:
       containers:
       - name: user-timeline-service
-        image: stvdputten/social-network-microservices:kubernetes
+        # image: stvdputten/social-network-microservices:kubernetes
+        image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["UserTimelineService"]
         imagePullPolicy: Always
         volumeMounts:
