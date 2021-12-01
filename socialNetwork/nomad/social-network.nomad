@@ -321,6 +321,16 @@ job "deathstarbench" {
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 user-timeline-redis' >> /etc/hosts && echo '127.0.0.1 user-timeline-mongodb' >> /etc/hosts && UserTimelineService"]
       }
+      mount {
+        type   = "bind"
+        target = "/keys"
+        source = "/users/stvdp/DeathStarBench/socialNetwork/keys"
+      }
+      mount {
+        type   = "bind"
+        target = "/social-network-microservices/config"
+        source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
+      }
     }
 
     task "user-timeline-mongodb" {
