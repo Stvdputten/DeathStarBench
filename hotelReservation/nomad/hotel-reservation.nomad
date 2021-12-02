@@ -78,7 +78,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
       volumes = [
           "local/resolv.conf:/etc/resolv.conf"
@@ -111,7 +111,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
         volumes = [
             "local/resolv.conf:/etc/resolv.conf"
@@ -173,7 +173,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
         volumes = [
             "local/resolv.conf:/etc/resolv.conf"
@@ -219,7 +219,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
         volumes = [
             "local/resolv.conf:/etc/resolv.conf"
@@ -281,7 +281,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
       volumes = [
           "local/resolv.conf:/etc/resolv.conf"
@@ -326,7 +326,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
       volumes = [
           "local/resolv.conf:/etc/resolv.conf"
@@ -371,7 +371,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
         volumes = [
             "local/resolv.conf:/etc/resolv.conf"
@@ -432,7 +432,7 @@ EOF
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/configmaps/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
         volumes = [
             "local/resolv.conf:/etc/resolv.conf"
