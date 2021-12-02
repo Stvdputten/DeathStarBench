@@ -80,7 +80,7 @@ job "media-microservices" {
     task "jaeger" {
       resources {
         cores = 4
-        memory = 1000
+        memory = 2000
       }
       lifecycle {
         hook    = "prestart"
