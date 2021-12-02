@@ -13,7 +13,7 @@ variable "dns" {
   default = "128.110.217.140"
 }
 
-job "deathstarbench" {
+job "social-network" {
   datacenters = ["dc1"]
   // constraint {
   //   operator = "distinct_hosts"

@@ -22,7 +22,7 @@ spec:
         io.kompose.service: mongodb-reservation
     spec:
       containers:
-        - image: mongo:4.4.6
+        - image: stvdputten/mongo
           name: mongodb-reservation
           ports:
             - containerPort: 27017

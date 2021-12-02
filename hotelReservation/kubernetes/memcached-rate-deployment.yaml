@@ -29,7 +29,7 @@ spec:
               value: "128"
             - name: MEMCACHED_THREADS
               value: "2"
-          image: memcached:1.6.9
+          image: stvdputten/memcached
           name: memcached-rate
           ports:
             - containerPort: 11211

@@ -23,7 +23,7 @@ spec:
         io.kompose.service: mongodb-geo
     spec:
       containers:
-        - image: mongo:4.4.6
+        - image: stvdputten/mongo
           name: mongodb-geo
           ports:
           - containerPort: 27017
