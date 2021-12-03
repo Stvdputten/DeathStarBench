@@ -139,6 +139,9 @@ job "hotel-reservation" {
       port "memcached-profile" {
         static = 11213
       }
+      port "mongodb-profile" {
+        static = 27019
+      }
       dns {
         servers  = ["${var.dns}", "8.8.8.8"]
         searches = ["service.consul"]
