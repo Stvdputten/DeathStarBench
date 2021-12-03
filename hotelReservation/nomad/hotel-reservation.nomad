@@ -1,59 +1,59 @@
 variable "hostname" {
   type    = string
-  default = "node3.stvdp-112596.sched-serv-pg0.utah.cloudlab.us"
+  default = "node3.stvdp-112600.sched-serv-pg0.utah.cloudlab.us"
 }
 
 variable "jaeger" {
   type    = string
-  default = "128.110.219.66"
+  default = "128.110.219.109"
 }
 
 variable "dns" {
   type    = string
-  default = "128.110.219.81"
+  default = "128.110.219.105"
 }
 
 job "hotel-reservation" {
   datacenters = ["dc1"]
 
-  // group "frontend" {
-  //   constraint {
-  //     attribute = "${attr.unique.hostname}"
-  //     value     = "${var.hostname}"
-  //   }
-  //   network {
-  //     mode = "bridge"
-  //     port "frontend" {
-  //       static = 5000
-  //     }
-  //     dns {
-  //       servers  = ["${var.jaeger}", "${var.dns}", "8.8.8.8"]
-  //       searches = ["service.consul"]
-  //     }
-  //   }
+  group "frontend" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value     = "${var.hostname}"
+    }
+    network {
+      // mode = "bridge"
+      port "frontend" {
+        static = 5000
+      }
+      dns {
+        servers  = ["${var.jaeger}", "${var.dns}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
 
-  //   task "frontend" {
-  //     driver = "docker"
-  //     lifecycle {
-  //       hook    = "poststart"
-  //       sidecar = true
-  //     }
+    task "frontend" {
+      driver = "docker"
+      // lifecycle {
+      //   hook    = "poststart"
+      //   sidecar = true
+      // }
 
-  //     config {
-  //       image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
-  //       command = "sh"
-  //       args = ["-c",
-  //         "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' http://${var.jaeger}:4000/v1/agent/service/register && frontend"
-  //       ]
-  //       ports = ["frontend"]
-  //       mount {
-  //         type   = "bind"
-  //         target = "/go/src/github.com/harlow/go-micro-services/config.json"
-  //         source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-  //       }
-  //     }
-  //   }
-  // }
+      config {
+        image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
+        command = "sh"
+        args = ["-c",
+          "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' ${var.jaeger}:4000/v1/agent/service/register && frontend"
+        ]
+        ports = ["frontend"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+    }
+  }
 
   group "dns" {
     constraint {
@@ -75,10 +75,6 @@ job "hotel-reservation" {
         static = 4000
         to     = 8500
       }
-      // dns {
-      //   servers  = ["${var.jaeger}", "${var.dns}", "8.8.8.8"]
-      //   searches = ["service.consul"]
-      // }
     }
 
     task "consul" {
@@ -116,7 +112,6 @@ job "hotel-reservation" {
         }
       }
     }
-
 
     task "jaeger" {
       driver = "docker"
@@ -159,12 +154,15 @@ job "hotel-reservation" {
     network {
       mode = "bridge"
       port "profile" {
+        to = 8081
         static = 8081
       }
       port "memcached-profile" {
+        to     = 11213
         static = 11213
       }
       port "mongodb-profile" {
+        to     = 27019
         static = 27019
       }
       dns {
@@ -182,10 +180,14 @@ job "hotel-reservation" {
 
       config {
         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
-        command = "sh"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}' ${var.jaeger}:4000/v1/agent/service/register && profile"
-        ]
+        command = "profile"
+        // command = "sleep"
+        // args = ["365d"]
+        
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}' ${var.jaeger}:4000/v1/agent/service/register && profile"
+        // ]
         ports = ["profile"]
         mount {
           type   = "bind"
@@ -193,7 +195,19 @@ job "hotel-reservation" {
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
       }
+      service {
+        name = "profile"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
     }
+
     task "memcached-profile" {
       driver = "docker"
 
@@ -202,11 +216,22 @@ job "hotel-reservation" {
         MEMCACHED_THREADS    = "2"
       }
       config {
-        command = "sh"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11213}'  ${var.jaeger}:4000/v1/agent/service/register && memcached -p 11213"
-        ]
+        command = "memcached"
+        args    = ["-p", "11213"]
+        // "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11213}'  ${var.jaeger}:4000/v1/agent/service/register && memcached -p 11213"
         image = "stvdputten/memcached"
+        ports = ["memcached-profile"]
+      }
+      service {
+        name = "mem-profile"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11213}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
       }
     }
 
@@ -214,11 +239,21 @@ job "hotel-reservation" {
       driver = "docker"
 
       config {
-        command = "sh"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"mongodb-profile-hotel\", \"address\":\"${attr.unique.network.ip-address}\",\"Port\":27019}' ${var.jaeger}:4000/v1/agent/service/register && mongod --port 27019"
-        ]
-        image = "stvdputten/mongo"
+        command = "mongod"
+        args    = ["--port", "27019"]
+        image   = "stvdputten/mongo"
+        ports   = ["mongodb-profile"]
+      }
+      service {
+        name = "mongo-profile"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27019}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
       }
     }
 
