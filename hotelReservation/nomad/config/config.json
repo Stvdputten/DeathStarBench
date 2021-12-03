@@ -1,5 +1,5 @@
 {
-  "consulAddress": "consul:53",
+  "consulAddress": "consul:8500",
   "jaegerAddress": "jaeger-hotel:6831",
   "FrontendIP": "frontend-hotel",
   "FrontendPort": "5000",

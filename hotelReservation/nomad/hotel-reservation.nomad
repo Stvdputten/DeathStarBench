@@ -22,7 +22,7 @@ job "hotel-reservation" {
       value     = "${var.hostname}"
     }
     network {
-      mode = "host"
+      mode = "bridge"
       port "frontend" {
         static = 5000
       }
@@ -33,7 +33,6 @@ job "hotel-reservation" {
         static = 6831
       }
       port "consul" {
-        to     = 53
         static = 53
       }
       port "dns-ui" {
@@ -57,7 +56,7 @@ job "hotel-reservation" {
         image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
         command = "sh"
         args = ["-c",
-          "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' http://${var.jaeger}:4000/v1/agent/service/register && frontend"
+          "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' http://localhost:8500/v1/agent/service/register && frontend"
         ]
         ports = ["frontend"]
         mount {
@@ -124,7 +123,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"jaeger-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":6831}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"jaeger-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":6831}", "http://localhost:8500/v1/agent/service/register"]
         }
       }
     }
@@ -132,7 +131,7 @@ job "hotel-reservation" {
 
   group "profile" {
     network {
-      mode = "host"
+      mode = "bridge"
       port "profile" {
         static = 8081
       }
