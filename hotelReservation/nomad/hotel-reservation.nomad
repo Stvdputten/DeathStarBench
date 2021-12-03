@@ -40,7 +40,7 @@ job "hotel-reservation" {
         to     = 8500
       }
       dns {
-        servers  = ["${var.dns}", "8.8.8.8"]
+        servers  = ["${var.jaeger}", "${var.dns}","8.8.8.8"]
         searches = ["service.consul"]
       }
     }
