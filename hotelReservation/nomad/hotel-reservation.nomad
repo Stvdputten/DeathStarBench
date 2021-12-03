@@ -143,7 +143,7 @@ job "hotel-reservation" {
         static = 27019
       }
       dns {
-        servers  = ["${var.dns}", "8.8.8.8"]
+        servers  = ["${var.jaeger}", "8.8.8.8"]
         searches = ["service.consul"]
       }
     }
@@ -159,7 +159,7 @@ job "hotel-reservation" {
         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
         command = "sh"
         args = ["-c",
-          "curl -X PUT -d '{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.networking.ip-address}\", \"Port\":8081}' ${var.jaeger}:8500/v1/agent/service/register && profile"
+          "curl -X PUT -d '{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}' ${var.jaeger}:4000/v1/agent/service/register && profile"
         ]
         ports = ["profile"]
         mount {
@@ -167,9 +167,9 @@ job "hotel-reservation" {
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
-        volumes = [
-          "local/resolv.conf:/etc/resolv.conf"
-        ]
+        // volumes = [
+        //   "local/resolv.conf:/etc/resolv.conf"
+        // ]
       }
     }
     task "memcached-profile" {
@@ -182,7 +182,7 @@ job "hotel-reservation" {
       config {
         command = "sh"
         args = ["-c",
-          "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11213}' localhost:8500/v1/agent/service/register && memcached -p 11213"
+          "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11213}'  ${var.jaeger}:4000/v1/agent/service/register && memcached -p 11213"
         ]
         image = "stvdputten/memcached"
         ports = ["mem-profile"]
@@ -195,7 +195,7 @@ job "hotel-reservation" {
       config {
         command = "sh"
         args = ["-c",
-          "curl -X PUT -d '{\"name\":\"mongodb-profile-hotel\", \"address\":\"${attr.unique.network.ip-address}\",\"Port\":27019}' localhost:8500/v1/agent/service/register && mongod --port 27019"
+          "curl -X PUT -d '{\"name\":\"mongodb-profile-hotel\", \"address\":\"${attr.unique.network.ip-address}\",\"Port\":27019}' ${var.jaeger}:4000/v1/agent/service/register && mongod --port 27019"
         ]
         image = "stvdputten/mongo"
         ports = ["mongo-profile"]
