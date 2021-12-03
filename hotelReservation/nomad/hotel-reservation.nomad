@@ -185,7 +185,6 @@ job "hotel-reservation" {
           "curl -X PUT -d '{\"name\":\"memcached-profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11213}'  ${var.jaeger}:4000/v1/agent/service/register && memcached -p 11213"
         ]
         image = "stvdputten/memcached"
-        ports = ["mem-profile"]
       }
     }
 
@@ -198,7 +197,6 @@ job "hotel-reservation" {
           "curl -X PUT -d '{\"name\":\"mongodb-profile-hotel\", \"address\":\"${attr.unique.network.ip-address}\",\"Port\":27019}' ${var.jaeger}:4000/v1/agent/service/register && mongod --port 27019"
         ]
         image = "stvdputten/mongo"
-        ports = ["mongo-profile"]
       }
     }
 
