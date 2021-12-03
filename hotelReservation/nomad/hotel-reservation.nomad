@@ -16,16 +16,52 @@ variable "dns" {
 job "hotel-reservation" {
   datacenters = ["dc1"]
 
-  group "frontend" {
+  // group "frontend" {
+  //   constraint {
+  //     attribute = "${attr.unique.hostname}"
+  //     value     = "${var.hostname}"
+  //   }
+  //   network {
+  //     mode = "bridge"
+  //     port "frontend" {
+  //       static = 5000
+  //     }
+  //     dns {
+  //       servers  = ["${var.jaeger}", "${var.dns}", "8.8.8.8"]
+  //       searches = ["service.consul"]
+  //     }
+  //   }
+
+  //   task "frontend" {
+  //     driver = "docker"
+  //     lifecycle {
+  //       hook    = "poststart"
+  //       sidecar = true
+  //     }
+
+  //     config {
+  //       image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
+  //       command = "sh"
+  //       args = ["-c",
+  //         "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' http://${var.jaeger}:4000/v1/agent/service/register && frontend"
+  //       ]
+  //       ports = ["frontend"]
+  //       mount {
+  //         type   = "bind"
+  //         target = "/go/src/github.com/harlow/go-micro-services/config.json"
+  //         source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+  //       }
+  //     }
+  //   }
+  // }
+
+  group "dns" {
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
     }
     network {
       mode = "bridge"
-      port "frontend" {
-        static = 5000
-      }
       port "jaeger-ui" {
         static = 16686
       }
@@ -39,33 +75,12 @@ job "hotel-reservation" {
         static = 4000
         to     = 8500
       }
-      dns {
-        servers  = ["${var.jaeger}", "${var.dns}","8.8.8.8"]
-        searches = ["service.consul"]
-      }
+      // dns {
+      //   servers  = ["${var.jaeger}", "${var.dns}", "8.8.8.8"]
+      //   searches = ["service.consul"]
+      // }
     }
 
-    task "frontend" {
-      driver = "docker"
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
-      }
-
-      config {
-        image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
-        command = "sh"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"frontend-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":5000}' http://localhost:8500/v1/agent/service/register && frontend"
-        ]
-        ports = ["frontend"]
-        mount {
-          type   = "bind"
-          target = "/go/src/github.com/harlow/go-micro-services/config.json"
-          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-        }
-      }
-    }
     task "consul" {
       driver = "docker"
       lifecycle {
@@ -88,6 +103,17 @@ job "hotel-reservation" {
           "-dns-port",
           "53"
         ]
+      }
+      service {
+        name = "consul-fix"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"consul\",  \"address\":\"${var.jaeger}\", \"Port\":53}", "http://localhost:8500/v1/agent/service/register"]
+        }
       }
     }
 
@@ -166,9 +192,6 @@ job "hotel-reservation" {
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
-        // volumes = [
-        //   "local/resolv.conf:/etc/resolv.conf"
-        // ]
       }
     }
     task "memcached-profile" {
