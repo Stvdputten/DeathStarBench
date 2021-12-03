@@ -52,14 +52,6 @@ job "hotel-reservation" {
         hook    = "poststart"
         sidecar = true
       }
-      //         template {
-      //           destination = "local/resolv.conf"
-      //           data        = <<EOF
-      // nameserver 127.0.0.1
-      // nameserver 128.110.156.4
-      // search service.consul
-      // EOF
-      //         }
 
       config {
         image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
@@ -73,9 +65,6 @@ job "hotel-reservation" {
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
         }
-        // volumes = [
-        //   "local/resolv.conf:/etc/resolv.conf"
-        // ]
       }
     }
     task "consul" {
@@ -127,7 +116,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Test var"
           command  = "echo"
-          args     = ["${var.jaeger}"]
+          args     = ["${attr.unique.network.ip-address}"]
         }
         check {
           type     = "script"
