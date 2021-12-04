@@ -535,7 +535,7 @@ job "hotel-reservation" {
       driver = "docker"
       config {
         image   = "stvdputten/hotel_reserv_user_single_node:nomad"
-        command = "rate"
+        command = "user"
         // command = "sh"
         // args = ["-c",
         //   "curl -X PUT -d '{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}' localhost:8500/v1/agent/service/register && user"
