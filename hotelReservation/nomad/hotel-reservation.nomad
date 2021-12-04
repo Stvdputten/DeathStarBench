@@ -108,7 +108,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"consul\",  \"address\":\"${var.jaeger}\", \"Port\":53}", "http://localhost:8500/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"consul-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":53}", "http://localhost:8500/v1/agent/service/register"]
         }
       }
     }
