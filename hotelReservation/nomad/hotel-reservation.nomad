@@ -698,10 +698,10 @@ job "hotel-reservation" {
 
     task "search" {
       driver = "docker"
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
-      }
+      // lifecycle {
+      //   hook    = "poststart"
+      //   sidecar = true
+      // }
 
       config {
         image   = "stvdputten/hotel_reserv_search_single_node:nomad"
@@ -730,5 +730,4 @@ job "hotel-reservation" {
       }
     }
   }
-
 }
