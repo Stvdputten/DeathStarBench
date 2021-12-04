@@ -24,6 +24,7 @@ job "hotel-reservation" {
     network {
       // mode = "bridge"
       port "frontend" {
+        to = 5000
         static = 5000
       }
       dns {
@@ -386,7 +387,7 @@ job "hotel-reservation" {
       }
       config {
         command = "memcached"
-        args    = ["p", "11212"]
+        args    = ["-p", "11212"]
         // args = ["-c",
         //   "curl -X PUT -d '{\"name\":\"memcached-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11212}' localhost:8500/v1/agent/service/register && memcached -p 11212"
         // ]
