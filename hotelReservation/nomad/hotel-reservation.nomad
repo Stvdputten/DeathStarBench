@@ -410,7 +410,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       config {
-        command = "mongodb"
+        command = "mongod"
         args    = ["--port", "27020"]
         // args = ["-c",
         //   "curl -X PUT -d '{\"name\":\"mongodb-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27020}' localhost:8500/v1/agent/service/register && mongod --port 27020"
@@ -487,7 +487,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       config {
-        command = "mongodb"
+        command = "mongod"
         args    = ["--port", "27021"]
         // command = "sh"
         // args = ["-c",
@@ -564,7 +564,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       config {
-        command = "mongodb"
+        command = "mongod"
         args    = ["--port", "27023"]
         image   = "stvdputten/mongo"
         ports   = ["mongodb-user"]
@@ -662,7 +662,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       config {
-        command = "mongodb"
+        command = "mongod"
         args    = ["--port", "27022"]
         // args = ["-c",
         //   "curl -X PUT -d '{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27022}' localhost:8500/v1/agent/service/register && mongod --port 27022"
