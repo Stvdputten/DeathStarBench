@@ -685,7 +685,7 @@ job "hotel-reservation" {
 
   group "search" {
     network {
-      mode = "bridge"
+      // mode = "bridge"
       port "search" {
         to     = 8082
         static = 8082
