@@ -307,8 +307,8 @@ job "hotel-reservation" {
         // ]
         command = "mongod"
         args    = ["--port", "27018"]
-        image = "stvdputten/mongo"
-        ports = ["mongodb-geo"]
+        image   = "stvdputten/mongo"
+        ports   = ["mongodb-geo"]
       }
       service {
         name = "mongo-profile"
@@ -323,260 +323,412 @@ job "hotel-reservation" {
       }
     }
   }
+
+  group "rate" {
+    network {
+      mode = "bridge"
+      port "rate" {
+        to     = 8084
+        static = 8084
+      }
+      port "memcached-rate" {
+        to     = 11212
+        static = 11212
+      }
+      port "mongodb-rate" {
+        to     = 27020
+        static = 27020
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "rate" {
+      driver = "docker"
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      config {
+        image   = "stvdputten/hotel_reserv_rate_single_node:nomad"
+        command = "rate"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}' localhost:8500/v1/agent/service/register && rate"
+        // ]
+        ports = ["rate"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "rate"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "memcached-rate" {
+      driver = "docker"
+
+      env {
+        MEMCACHED_CACHE_SIZE = "128"
+        MEMCACHED_THREADS    = "2"
+      }
+      config {
+        command = "memcached"
+        args    = ["p", "11212"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"memcached-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11212}' localhost:8500/v1/agent/service/register && memcached -p 11212"
+        // ]
+        image = "stvdputten/memcached"
+        ports = ["memcached-rate"]
+      }
+      service {
+        name = "mem-rate"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11212}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "mongodb-rate" {
+      driver = "docker"
+
+      config {
+        command = "mongodb"
+        args    = ["--port", "27020"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27020}' localhost:8500/v1/agent/service/register && mongod --port 27020"
+        // ]
+        image = "stvdputten/mongo"
+        ports = ["mongodb-rate"]
+      }
+      service {
+        name = "mongodb-rate"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+  }
+
+  group "recommendation" {
+    network {
+      mode = "bridge"
+      port "recommendation" {
+        to     = 8085
+        static = 8085
+      }
+      port "mongodb-recommendation" {
+        to     = 27020
+        static = 27020
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "recommendation" {
+      driver = "docker"
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+
+      config {
+        image   = "stvdputten/hotel_reserv_recommendation_single_node:nomad"
+        command = "recommendation"
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}' localhost:8500/v1/agent/service/register && recommendation"
+        // ]
+        ports = ["recommendation"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "recommendation"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "mongodb-recommendation" {
+      driver = "docker"
+
+      config {
+        command = "mongodb"
+        args    = ["--port", "27021"]
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27021}' localhost:8500/v1/agent/service/register && mongod --port 27021"
+        // ]
+        image = "stvdputten/mongo"
+        ports = ["mongodb-recommendation"]
+      }
+      service {
+        name = "mongo-recommendation"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27021}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+  }
+
+  group "user" {
+    network {
+      mode = "bridge"
+      port "user" {
+        to     = 8086
+        static = 8086
+      }
+      port "mongodb-user" {
+        to     = 27023
+        static = 27023
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "user" {
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      driver = "docker"
+      config {
+        image   = "stvdputten/hotel_reserv_user_single_node:nomad"
+        command = "rate"
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}' localhost:8500/v1/agent/service/register && user"
+        // ]
+        ports = ["user"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "user"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "mongodb-user" {
+      driver = "docker"
+
+      config {
+        command = "mongodb"
+        args    = ["--port", "27023"]
+        image   = "stvdputten/mongo"
+        ports   = ["mongodb-user"]
+      }
+      service {
+        name = "mongo-user"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-user-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27023}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+  }
+
+  group "reservation" {
+    network {
+      mode = "bridge"
+      port "reservation" {
+        to     = 8087
+        static = 8087
+      }
+      port "mongodb-reservation" {
+        to     = 27022
+        static = 27022
+      }
+      port "memcached-reservation" {
+        to     = 11214
+        static = 11214
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "reservation" {
+      driver = "docker"
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+      config {
+        image   = "stvdputten/hotel_reserv_reserve_single_node:nomad"
+        command = "reservation"
+        ports = ["reservation"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "reservation"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8087}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "memcached-reserve" {
+      driver = "docker"
+
+      env {
+        MEMCACHED_CACHE_SIZE = "128"
+        MEMCACHED_THREADS    = "2"
+      }
+      config {
+        command = "memcached"
+        args = ["-p", "11214"]
+        image = "stvdputten/memcached"
+      }
+      service {
+        name = "mem-reserve"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11214}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "mongodb-reserve" {
+      driver = "docker"
+
+      config {
+        command = "mongodb"
+        args    = ["--port", "27022"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27022}' localhost:8500/v1/agent/service/register && mongod --port 27022"
+        // ]
+        image = "stvdputten/mongo"
+      }
+      service {
+        name = "mongodb-reserve"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+  }
+
+  group "search" {
+    network {
+      mode = "bridge"
+      port "search" {
+        to     = 8082
+        static = 8082
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "search" {
+      driver = "docker"
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+
+      config {
+        image   = "stvdputten/hotel_reserv_search_single_node:nomad"
+        command = "search"
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"search-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8082}' localhost:8500/v1/agent/service/register && search"
+        // ]
+        ports = ["search"]
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "search"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"search-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8082}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+  }
+
 }
-
-//   group "hotel-reservation" {
-
-
-
-
-
-//     task "rate" {
-//       driver = "docker"
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver 127.0.0.1
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_rate_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}' localhost:8500/v1/agent/service/register && rate"
-//         ]
-//         ports = ["rate"]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-//     task "memcached-rate" {
-//       driver = "docker"
-
-//       env {
-//         MEMCACHED_CACHE_SIZE = "128"
-//         MEMCACHED_THREADS    = "2"
-//       }
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"memcached-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11212}' localhost:8500/v1/agent/service/register && memcached -p 11212"
-//         ]
-//         image = "stvdputten/memcached"
-//         ports = ["mem-rate"]
-//       }
-//     }
-
-//     task "mongodb-rate" {
-//       driver = "docker"
-
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"mongodb-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27020}' localhost:8500/v1/agent/service/register && mongod --port 27020"
-//         ]
-//         image = "stvdputten/mongo"
-//       }
-//     }
-
-//     task "recommendation" {
-//       driver = "docker"
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver 127.0.0.1
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_recommendation_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}' localhost:8500/v1/agent/service/register && recommendation"
-//         ]
-//         ports = ["recommendation"]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-//     task "mongodb-recommendation" {
-//       driver = "docker"
-
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27021}' localhost:8500/v1/agent/service/register && mongod --port 27021"
-//         ]
-//         image = "stvdputten/mongo"
-//       }
-//     }
-
-//     task "user" {
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver ${attr.unique.network.ip-address}
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-//       driver = "docker"
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_user_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}' localhost:8500/v1/agent/service/register && user"
-//         ]
-//         ports = ["user"]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-//     task "mongodb-user" {
-//       driver = "docker"
-
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"mongodb-user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27023}' localhost:8500/v1/agent/service/register && mongod --port 27023"
-//         ]
-//         image = "stvdputten/mongo"
-//       }
-//     }
-
-//     task "reservation" {
-//       driver = "docker"
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver 127.0.0.1
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_reserve_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8087}' localhost:8500/v1/agent/service/register && reservation"
-//         ]
-//         ports = ["reservation"]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-//     task "memcached-reserve" {
-//       driver = "docker"
-
-//       env {
-//         MEMCACHED_CACHE_SIZE = "128"
-//         MEMCACHED_THREADS    = "2"
-//       }
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"memcached-reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11214}' localhost:8500/v1/agent/service/register && memcached -p 11214"
-//         ]
-//         image = "stvdputten/memcached"
-//       }
-//     }
-
-//     task "mongodb-reserve" {
-//       driver = "docker"
-
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27022}' localhost:8500/v1/agent/service/register && mongod --port 27022"
-//         ]
-//         image = "stvdputten/mongo"
-//       }
-//     }
-
-//     task "search" {
-//       driver = "docker"
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver 127.0.0.1
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_search_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"search-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8082}' localhost:8500/v1/agent/service/register && search"
-//         ]
-//         ports = ["search"]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-
-//   }
-// }
