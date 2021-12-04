@@ -104,7 +104,7 @@ job "hotel-reservation" {
         name = "consul-fix"
         check {
           type     = "script"
-          interval = "10s"
+          interval = "5s"
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
@@ -154,7 +154,7 @@ job "hotel-reservation" {
     network {
       mode = "bridge"
       port "profile" {
-        to = 8081
+        to     = 8081
         static = 8081
       }
       port "memcached-profile" {
@@ -181,14 +181,7 @@ job "hotel-reservation" {
       config {
         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
         command = "profile"
-        // command = "sleep"
-        // args = ["365d"]
-        
-        // command = "sh"
-        // args = ["-c",
-        //   "curl -X PUT -d '{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}' ${var.jaeger}:4000/v1/agent/service/register && profile"
-        // ]
-        ports = ["profile"]
+        ports   = ["profile"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
@@ -256,7 +249,79 @@ job "hotel-reservation" {
         }
       }
     }
+  }
 
+  group "geo" {
+    network {
+      mode = "bridge"
+      port "geo" {
+        to     = 8083
+        static = 8083
+      }
+      port "mongodb-geo" {
+        to     = 27018
+        static = 27018
+      }
+      dns {
+        servers  = ["${var.jaeger}", "8.8.8.8"]
+        searches = ["service.consul"]
+      }
+    }
+
+    task "geo" {
+      driver = "docker"
+      lifecycle {
+        hook    = "poststart"
+        sidecar = true
+      }
+
+      config {
+        image   = "stvdputten/hotel_reserv_geo_single_node:nomad"
+        command = "geo"
+        mount {
+          type   = "bind"
+          target = "/go/src/github.com/harlow/go-micro-services/config.json"
+          source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
+        }
+      }
+      service {
+        name = "geo"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8083}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
+
+    task "mongodb-geo" {
+      driver = "docker"
+
+      config {
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27018}' localhost:8500/v1/agent/service/register && mongod --port 27018"
+        // ]
+        command = "mongod"
+        args    = ["--port", "27018"]
+        image = "stvdputten/mongo"
+        ports = ["mongodb-geo"]
+      }
+      service {
+        name = "mongo-profile"
+        check {
+          type     = "script"
+          interval = "10s"
+          timeout  = "2s"
+          name     = "Service registration through http"
+          command  = "curl"
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-geo-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27018}", "http://${var.jaeger}:4000/v1/agent/service/register"]
+        }
+      }
+    }
   }
 }
 
@@ -264,49 +329,6 @@ job "hotel-reservation" {
 
 
 
-//     task "geo" {
-//       driver = "docker"
-//       template {
-//         destination = "local/resolv.conf"
-//         data        = <<EOF
-// nameserver 127.0.0.1
-// nameserver 128.110.156.4
-// search service.consul
-// EOF
-//       }
-//       lifecycle {
-//         hook    = "poststart"
-//         sidecar = true
-//       }
-
-//       config {
-//         image   = "stvdputten/hotel_reserv_geo_single_node:nomad"
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8083}' localhost:8500/v1/agent/service/register && geo"
-//         ]
-//         mount {
-//           type   = "bind"
-//           target = "/go/src/github.com/harlow/go-micro-services/config.json"
-//           source = "/users/stvdp/DeathStarBench/hotelReservation/nomad/config/config.json"
-//         }
-//         volumes = [
-//           "local/resolv.conf:/etc/resolv.conf"
-//         ]
-//       }
-//     }
-
-//     task "mongodb-geo" {
-//       driver = "docker"
-
-//       config {
-//         command = "sh"
-//         args = ["-c",
-//           "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27018}' localhost:8500/v1/agent/service/register && mongod --port 27018"
-//         ]
-//         image = "stvdputten/mongo"
-//       }
-//     }
 
 
 //     task "rate" {
