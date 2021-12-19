@@ -18,7 +18,7 @@ then
   else 
       echo "No argument supplied nginx"
       echo "using  args: threads=$threads and connections=$connections and duration=$duration and requests=$requests"
-      ./wrk -D exp -t $threads -c $connections -d "$duration"s -L -s ./wrk2_lua_scripts/mixed-workload_type_1.lua http://localhost:5000 -R requests
+      ./wrk -D exp -t $threads -c $connections -d "$duration"s -L -s ./wrk2_lua_scripts/mixed-workload_type_1.lua http://localhost:5000 -R $requests
   fi
 else
   if [ -z "$threads" ] || [ -z "$connections" ] || [ -z "$duration" ] || [ -z "$requests" ]
