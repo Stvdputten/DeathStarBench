@@ -10,7 +10,7 @@ do
 done
 if [ -z "$nginx_ip" ]
 then
-  if [ -z "$threads" || -z "$connections" || -z "$duration" || -z "$requests" ]
+  if [ -z "$threads" ] || [ -z "$connections" ] || [ -z "$duration" ] || [ -z "$requests" ]
     then
       echo "No argument supplied nginx"
       echo "using default args"
@@ -21,7 +21,7 @@ then
       ./wrk -D exp -t $threads -c $connections -d "$duration"s -L -s ./scripts/media-microservices/compose-review.lua http://localhost:8080/wrk2-api/user-timeline/read -R $requests
   fi
 else
-  if [ -z "$threads" || -z "$connections" || -z "$duration" || -z "$requests" ]
+  if [ -z "$threads" ] || [ -z "$connections" ] || [ -z "$duration" ] || [ -z "$requests" ]
     then
       echo "Using argument nginx"
       echo "using default args"
