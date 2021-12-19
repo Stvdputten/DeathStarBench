@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-while getopts u:a:f: flag
+while getopts t:c:d:R: flag
 do
     case "${flag}" in
         t) threads=${OPTARG};;
