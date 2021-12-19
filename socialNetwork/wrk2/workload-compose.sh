@@ -22,12 +22,12 @@ then
       ./wrk -D exp -t $threads -c $connections -d "$duration"s -L -s ./scripts/social-network/compose-post.lua http://localhost:8080/wrk2-api/post/compose -R $requests
   fi
 else
-  if [ -z "$threads" || -z "$connections" || -z "$duration" || -z "$requests" ]
+  if [ -z "$threads" ] || [ -z "$connections" ] || [ -z "$duration" ] || [ -z "$requests" ]
     then
       echo "Using argument nginx"
       echo "using default args"
       ./wrk -D exp -t 4 -c 8 -d 30s -L -s ./scripts/social-network/compose-post.lua http://$nginx_ip:8080/wrk2-api/post/compose -R 200
-    else
+  else
       echo "Using argument nginx"
       echo "using  args: threads=$threads and connections=$connections and duration=$duration and requests=$requests"
       ./wrk -D exp -t $threads -c $connections -d "$duration"s  -L -s ./scripts/social-network/compose-post.lua http://$nginx_ip:8080/wrk2-api/post/compose -R $requests

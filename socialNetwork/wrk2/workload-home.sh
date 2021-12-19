@@ -27,8 +27,7 @@ else
       echo "Using argument nginx"
       echo "using default args"
       ./wrk -D exp -t 4 -c 8 -d 30s -L -s ./scripts/social-network/read-home-timeline.lua http://$nginx_ip:8080/wrk2-api/home-timeline/read -R 200
-    else 
-    else
+  else
       echo "Using argument nginx"
       echo "using  args: threads=$threads and connections=$connections and duration=$duration and requests=$requests"
       ./wrk -D exp -t $threads -c $connections -d "$duration"s -L -s ./scripts/social-network/read-home-timeline.lua http://$nginx_ip:8080/wrk2-api/home-timeline/read -R $requests
