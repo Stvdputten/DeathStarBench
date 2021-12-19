@@ -11,7 +11,7 @@ done
 
 if [ -z "$nginx_ip" ]
 then
-  if [ -z "$threads" || -z "$connections" || -z "$duration" || -z "$requests" ]
+  if [ -z "$threads" ] || [ -z "$connections" ] || [ -z "$duration" ] || [ -z "$requests" ]
     then
       echo "No argument supplied nginx"
       echo "using default args"
