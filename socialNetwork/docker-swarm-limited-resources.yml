@@ -1,0 +1,536 @@
+version: "3"
+networks:
+  default:
+    driver: overlay
+
+services:
+  social-graph-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: social-graph-service
+    depends_on:
+      - jaeger
+      - social-graph-mongodb
+    entrypoint: SocialGraphService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  social-graph-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: social-graph-mongodb
+    command: --config /social-network-microservices/config/mongod.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 200M
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  social-graph-redis:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13 
+    hostname: social-graph-redis
+    command: /social-network-microservices/config/redis.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 9G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  home-timeline-redis:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13 
+    hostname: home-timeline-redis
+    command: /social-network-microservices/config/redis.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 9G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  compose-post-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: compose-post-service
+    depends_on:
+            - jaeger
+    entrypoint: ComposePostService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  post-storage-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: post-storage-service
+    depends_on:
+      - jaeger
+      - post-storage-mongodb
+    entrypoint: PostStorageService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  post-storage-memcached:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+    hostname: post-storage-memcached
+                    
+  post-storage-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: post-storage-mongodb
+    command: --config /social-network-microservices/config/mongod.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 0.2G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-timeline-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: user-timeline-service
+    depends_on:
+     - jaeger
+      - user-timeline-mongodb
+    entrypoint: UserTimelineService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-timeline-redis:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: user-timeline-redis
+    command: /social-network-microservices/config/redis.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 9G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-timeline-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: user-timeline-mongodb
+    command: --config /social-network-microservices/config/mongod.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 0.2G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  url-shorten-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: url-shorten-service
+    entrypoint: UrlShortenService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    depends_on:
+      - jaeger
+      - url-shorten-mongodb
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  url-shorten-memcached:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+    hostname: url-shorten-memcached
+                    
+  url-shorten-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: url-shorten-mongodb
+    command: --config /social-network-microservices/config/mongod.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 0.2G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: user-service
+    depends_on:
+      - jaeger
+      - user-mongodb
+    entrypoint: UserService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-memcached:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+    hostname: user-memcached
+                    
+  user-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: user-mongodb
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 0.2G
+    command: --config /social-network-microservices/config/mongod.conf
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  media-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: media-service
+    depends_on:
+      - jaeger
+      - media-mongodb
+    entrypoint: MediaService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  media-memcached:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: memcached:1.6.9
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+    hostname: media-memcached
+                    
+  media-mongodb:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: mongo:4.4.6
+    hostname: media-mongodb
+    command: --config /social-network-microservices/config/mongod.conf
+    resources:
+        limits:
+          cpus: '1.0'
+          memory: 0.2G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  text-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: text-service
+    depends_on:
+      - jaeger
+    entrypoint: TextService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  unique-id-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: unique-id-service
+    depends_on:
+            - jaeger
+    entrypoint: UniqueIdService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  user-mention-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: user-mention-service
+    depends_on:
+            - jaeger
+    entrypoint: UserMentionService
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  home-timeline-service:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/social-network-microservices:latest
+    hostname: home-timeline-service
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    depends_on:
+            - jaeger
+    entrypoint: HomeTimelineService
+    volumes:
+      - ./config:/social-network-microservices/config
+      - ./keys:/keys
+
+  nginx-thrift:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/openresty-thrift:latest
+    hostname: nginx-thrift
+    resources:
+        limits:
+          cpus: '16.0'
+          memory: 4G
+    ports:
+      - 8080:8080
+    depends_on:
+            - jaeger
+    volumes:
+      - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
+      - ./nginx-web-server/pages:/usr/local/openresty/nginx/pages
+      - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./nginx-web-server/jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
+            - ./gen-lua:/gen-lua
+      - ./docker/openresty-thrift/lua-thrift:/usr/local/openresty/lualib/thrift
+      - ./keys:/keys
+
+  media-frontend:
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: yg397/media-frontend:xenial
+    hostname: media-frontend
+    resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    ports:
+      - 8081:8080
+    depends_on:
+            - jaeger
+    volumes:
+      - ./media-frontend/lua-scripts:/usr/local/openresty/nginx/lua-scripts
+      - ./media-frontend/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+
+  jaeger:
+    deploy:
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: jaegertracing/all-in-one:1.23.0
+    hostname: jaeger-agent
+    ports:
+      - 16686:16686
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
