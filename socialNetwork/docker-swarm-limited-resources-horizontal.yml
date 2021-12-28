@@ -10,7 +10,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -32,7 +32,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -51,7 +51,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -70,7 +70,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -89,7 +89,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -110,7 +110,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -132,7 +132,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -147,7 +147,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -166,7 +166,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -188,7 +188,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -207,7 +207,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -226,7 +226,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -248,7 +248,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -263,7 +263,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -282,7 +282,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -304,7 +304,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -319,7 +319,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -338,7 +338,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -360,7 +360,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -375,7 +375,7 @@ services:
           limits:
             cpus: '1.0'
             memory: 0.2G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -394,7 +394,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -415,7 +415,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -436,7 +436,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -457,7 +457,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -478,7 +478,7 @@ services:
           limits:
             cpus: '16.0'
             memory: 4G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
@@ -506,7 +506,7 @@ services:
           limits:
             cpus: '4.0'
             memory: 1G
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role==worker
