@@ -6,6 +6,10 @@ networks:
 services:
   social-graph-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -18,16 +22,16 @@ services:
       - jaeger
       - social-graph-mongodb
     entrypoint: SocialGraphService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   social-graph-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 200M
       replicas: 1
       placement:
         constraints:
@@ -37,16 +41,16 @@ services:
     image: mongo:4.4.6
     hostname: social-graph-mongodb
     command: --config /social-network-microservices/config/mongod.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 200M
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   social-graph-redis:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 9G
       replicas: 1
       placement:
         constraints:
@@ -56,16 +60,16 @@ services:
     image: redis:alpine3.13 
     hostname: social-graph-redis
     command: /social-network-microservices/config/redis.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 9G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   home-timeline-redis:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 9G
       replicas: 1
       placement:
         constraints:
@@ -75,16 +79,16 @@ services:
     image: redis:alpine3.13 
     hostname: home-timeline-redis
     command: /social-network-microservices/config/redis.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 9G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   compose-post-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -96,16 +100,16 @@ services:
     depends_on:
             - jaeger
     entrypoint: ComposePostService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   post-storage-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -118,16 +122,16 @@ services:
       - jaeger
       - post-storage-mongodb
     entrypoint: PostStorageService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   post-storage-memcached:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 3G
       replicas: 1
       placement:
         constraints:
@@ -135,14 +139,14 @@ services:
       restart_policy:
         condition: any
     image: memcached:1.6.9
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 3G
     hostname: post-storage-memcached
                     
   post-storage-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 0.2G
       replicas: 1
       placement:
         constraints:
@@ -152,16 +156,16 @@ services:
     image: mongo:4.4.6
     hostname: post-storage-mongodb
     command: --config /social-network-microservices/config/mongod.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 0.2G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-timeline-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -174,16 +178,16 @@ services:
      - jaeger
       - user-timeline-mongodb
     entrypoint: UserTimelineService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-timeline-redis:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 9G
       replicas: 1
       placement:
         constraints:
@@ -193,16 +197,16 @@ services:
     image: redis:alpine3.13
     hostname: user-timeline-redis
     command: /social-network-microservices/config/redis.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 9G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-timeline-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 0.2G
       replicas: 1
       placement:
         constraints:
@@ -212,16 +216,16 @@ services:
     image: mongo:4.4.6
     hostname: user-timeline-mongodb
     command: --config /social-network-microservices/config/mongod.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 0.2G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   url-shorten-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -231,10 +235,6 @@ services:
     image: stvdputten/social-network-microservices:latest
     hostname: url-shorten-service
     entrypoint: UrlShortenService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     depends_on:
       - jaeger
       - url-shorten-mongodb
@@ -244,6 +244,10 @@ services:
 
   url-shorten-memcached:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 3G
       replicas: 1
       placement:
         constraints:
@@ -251,14 +255,14 @@ services:
       restart_policy:
         condition: any
     image: memcached:1.6.9
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 3G
     hostname: url-shorten-memcached
                     
   url-shorten-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 0.2G
       replicas: 1
       placement:
         constraints:
@@ -268,16 +272,16 @@ services:
     image: mongo:4.4.6
     hostname: url-shorten-mongodb
     command: --config /social-network-microservices/config/mongod.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 0.2G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -290,16 +294,16 @@ services:
       - jaeger
       - user-mongodb
     entrypoint: UserService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-memcached:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 3G
       replicas: 1
       placement:
         constraints:
@@ -307,14 +311,14 @@ services:
       restart_policy:
         condition: any
     image: memcached:1.6.9
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 3G
     hostname: user-memcached
                     
   user-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 0.2G
       replicas: 1
       placement:
         constraints:
@@ -323,10 +327,6 @@ services:
         condition: any
     image: mongo:4.4.6
     hostname: user-mongodb
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 0.2G
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
       - ./config:/social-network-microservices/config
@@ -334,6 +334,10 @@ services:
 
   media-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -346,16 +350,16 @@ services:
       - jaeger
       - media-mongodb
     entrypoint: MediaService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   media-memcached:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 3G
       replicas: 1
       placement:
         constraints:
@@ -363,14 +367,14 @@ services:
       restart_policy:
         condition: any
     image: memcached:1.6.9
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 3G
     hostname: media-memcached
                     
   media-mongodb:
     deploy:
+      resources:
+          limits:
+            cpus: '1.0'
+            memory: 0.2G
       replicas: 1
       placement:
         constraints:
@@ -380,16 +384,16 @@ services:
     image: mongo:4.4.6
     hostname: media-mongodb
     command: --config /social-network-microservices/config/mongod.conf
-    resources:
-        limits:
-          cpus: '1.0'
-          memory: 0.2G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   text-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -401,16 +405,16 @@ services:
     depends_on:
       - jaeger
     entrypoint: TextService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   unique-id-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -422,16 +426,16 @@ services:
     depends_on:
             - jaeger
     entrypoint: UniqueIdService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   user-mention-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -443,16 +447,16 @@ services:
     depends_on:
             - jaeger
     entrypoint: UserMentionService
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     volumes:
       - ./config:/social-network-microservices/config
       - ./keys:/keys
 
   home-timeline-service:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -461,10 +465,6 @@ services:
         condition: any
     image: stvdputten/social-network-microservices:latest
     hostname: home-timeline-service
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     depends_on:
             - jaeger
     entrypoint: HomeTimelineService
@@ -474,6 +474,10 @@ services:
 
   nginx-thrift:
     deploy:
+      resources:
+          limits:
+            cpus: '16.0'
+            memory: 4G
       replicas: 1
       placement:
         constraints:
@@ -482,10 +486,6 @@ services:
         condition: any
     image: stvdputten/openresty-thrift:latest
     hostname: nginx-thrift
-    resources:
-        limits:
-          cpus: '16.0'
-          memory: 4G
     ports:
       - 8080:8080
     depends_on:
@@ -495,12 +495,17 @@ services:
       - ./nginx-web-server/pages:/usr/local/openresty/nginx/pages
       - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
       - ./nginx-web-server/jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
-            - ./gen-lua:/gen-lua
+      # - ./jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
+      - ./gen-lua:/gen-lua
       - ./docker/openresty-thrift/lua-thrift:/usr/local/openresty/lualib/thrift
       - ./keys:/keys
 
   media-frontend:
     deploy:
+      resources:
+          limits:
+            cpus: '4.0'
+            memory: 8G
       replicas: 1
       placement:
         constraints:
@@ -509,10 +514,6 @@ services:
         condition: any
     image: yg397/media-frontend:xenial
     hostname: media-frontend
-    resources:
-        limits:
-          cpus: '4.0'
-          memory: 8G
     ports:
       - 8081:8080
     depends_on:
