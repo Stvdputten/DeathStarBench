@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  labels:
+    io.kompose.service: geo
+  name: geo-pv
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  storageClassName: geo-storage
+  hostPath:
+    path: /proj/sched-serv-PG0/exp/stvdp-111011/tmp/geo   # Where all the hard drives are mounted
+    type: Directory

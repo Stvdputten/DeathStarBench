@@ -17,6 +17,7 @@
 /reservation 8087
   /memcached-reserve 11214:11211
   /mongodb-reservation 27022:27017
+  Jaeger
 
 volumes
 geo profile rate recommendation reservation user

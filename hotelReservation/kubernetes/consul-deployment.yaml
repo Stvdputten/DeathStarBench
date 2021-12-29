@@ -32,6 +32,9 @@ spec:
             - containerPort: 8500
             - containerPort: 53
               protocol: UDP
-          resources: {}
+          resources:
+            limits:
+              cpu: "1.0"
+              memory: "0.1G"
       restartPolicy: Always
 status: {}

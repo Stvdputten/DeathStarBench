@@ -1,0 +1,4 @@
+2021/11/17 09:48:51 TLS disabled
+geo db ip addr = mongodb-geo.hotel-res.svc.cluster.local:27018
+geo ip = geo.hotel-res.svc.cluster.local, port = 8083
+newGeoIndex len(points) = 80

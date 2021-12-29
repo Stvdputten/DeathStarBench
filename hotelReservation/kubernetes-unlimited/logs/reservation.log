@@ -1,0 +1,4 @@
+2021/11/17 09:47:46 TLS disabled
+reservation db ip addr = mongodb-reservation.hotel-res.svc.cluster.local:27022
+reservation memc addr port = memcached-reserve.hotel-res.svc.cluster.local:11214
+reservation ip = reservation.hotel-res.svc.cluster.local, port = 8087

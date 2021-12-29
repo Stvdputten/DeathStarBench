@@ -24,14 +24,14 @@ spec:
       containers:
         - command:
             - reservation
-          #   - sleep
-          # args:
-          #   - "365d"
           image: stvdputten/hotel_reserv_reserve_single_node:kubernetes
           name: reservation
           ports:
             - containerPort: 8087
-          resources: {}
+          resources: 
+            limits:
+              cpu: "4"
+              memory: "1Gi"
           volumeMounts:
           - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
             subPath: config.json

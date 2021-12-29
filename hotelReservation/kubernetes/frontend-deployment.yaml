@@ -30,7 +30,10 @@ spec:
           name: frontend
           ports:
             - containerPort: 5000
-          resources: {}
+          resources:
+            limits:
+              cpu: "12"
+              memory: "1Gi"
           volumeMounts:
           - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
             subPath: config.json
