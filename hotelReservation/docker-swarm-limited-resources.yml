@@ -231,7 +231,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     ports:
      - 11212:11211
     environment:
@@ -253,7 +253,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     ports:
      - 11213:11211
     environment:
@@ -275,7 +275,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     ports:
      - 11214:11211
     environment:
@@ -297,7 +297,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27018:27017"
     volumes:
@@ -315,7 +315,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27019:27017"
     volumes:
@@ -333,7 +333,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27020:27017"
     volumes:
@@ -351,7 +351,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27021:27017"
     volumes:
@@ -369,7 +369,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27022:27017"
     volumes:
@@ -387,7 +387,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     ports:
       - "27023:27017"
     volumes:

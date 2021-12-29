@@ -259,7 +259,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     # hostname: user-memcached
     # container_name: 'hotel_reserv_rate_mmc'
     # networks:
@@ -283,7 +283,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     # hostname: user-memcached
     # container_name: 'hotel_reserv_profile_mmc'
     # networks:
@@ -307,7 +307,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     # hostname: user-memcached
     # container_name: 'hotel_reserv_reservation_mmc'
     # networks:
@@ -331,7 +331,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # container_name: 'hotel_reserv_geo_mongo'
     # networks:
     #   - consul
@@ -351,7 +351,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # container_name: 'hotel_reserv_profile_mongo'
     # hostname: profile-db
     # networks:
@@ -371,7 +371,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # container_name: 'hotel_reserv_rate_mongo'
     # hostname: rate-db
     # networks:
@@ -391,7 +391,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # hostname: recommendation-db
     # container_name: 'hotel_reserv_recommendation_mongo'
     # networks:
@@ -411,7 +411,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # container_name: 'hotel_reserv_reservation_mongo'
     # hostname: reservation-db
     # networks:
@@ -431,7 +431,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     # container_name: 'hotel_reserv_user_mongo'
     # hostname: user-db
     # networks:
