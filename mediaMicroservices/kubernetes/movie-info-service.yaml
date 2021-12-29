@@ -40,5 +40,9 @@ spec:
       containers:
       - name: movie-info-service
         image: yg397/media-microservices
+        resources:
+          limits:
+            cpu: "1.0"
+            memory: "0.1G"
         command: ["MovieInfoService"]
       restartPolicy: Always

@@ -39,5 +39,9 @@ spec:
     spec:
       containers:
       - name: movie-info-memcached
-        image: memcached
+        image: memcached:1.6.9
+        resources:
+          limits:
+            cpu: "1"
+            memory: 100M
       restartPolicy: Always

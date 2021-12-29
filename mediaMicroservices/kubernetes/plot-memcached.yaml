@@ -39,5 +39,9 @@ spec:
     spec:
       containers:
       - name: plot-memcached
-        image: memcached
+        image: memcached:1.6.9
+        resources:
+          limits:
+            cpu: "1"
+            memory: 0.1G
       restartPolicy: Always

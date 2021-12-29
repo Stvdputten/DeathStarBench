@@ -40,6 +40,10 @@ spec:
     spec:
       containers:
       - name: nginx-web-server
+        resources:
+          limits:
+            cpu: "4"
+            memory: 4G
         image: yg397/openresty-thrift:xenial
         command: ["/bin/sh", "-c"]
         args:

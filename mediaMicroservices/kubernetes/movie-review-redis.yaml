@@ -40,4 +40,8 @@ spec:
       containers:
       - name: movie-review-redis
         image: redis
+        resources:
+          limits:
+            cpu: "1"
+            memory: 100M
       restartPolicy: Always

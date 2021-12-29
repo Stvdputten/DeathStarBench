@@ -40,5 +40,9 @@ spec:
       containers:
       - name: user-review-service
         image: yg397/media-microservices
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: "1G"
         command: ["UserReviewService"]
       restartPolicy: Always

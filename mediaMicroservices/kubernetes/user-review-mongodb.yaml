@@ -39,7 +39,11 @@ spec:
     spec:
       containers:
       - name: user-review-mongodb
-        image: mongo
+        image: mongo:4.4.6
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: "0.3G"
         volumeMounts:
           - name: my-data
             mountPath: "/data/db"

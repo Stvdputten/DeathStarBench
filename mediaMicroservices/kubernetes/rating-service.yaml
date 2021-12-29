@@ -39,6 +39,10 @@ spec:
     spec:
       containers:
       - name: rating-service
+        resources:
+          limits:
+            cpu: "4"
+            memory: 1G
         image: yg397/media-microservices
         command: ["RatingService"]
       restartPolicy: Always

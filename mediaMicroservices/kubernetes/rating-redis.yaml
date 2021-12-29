@@ -39,5 +39,9 @@ spec:
     spec:
       containers:
       - name: rating-redis
-        image: redis
+        resources:
+          limits:
+            cpu: "4"
+            memory: 1G
+        image: redis:alpine3.13
       restartPolicy: Always

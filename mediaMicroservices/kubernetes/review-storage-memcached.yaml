@@ -39,5 +39,9 @@ spec:
     spec:
       containers:
       - name: review-storage-memcached
-        image: memcached
+        resources:
+          limits:
+            cpu: "1"
+            memory: 0.1G
+        image: memcached:1.6.9
       restartPolicy: Always

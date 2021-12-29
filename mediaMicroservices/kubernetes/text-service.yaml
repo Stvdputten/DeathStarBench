@@ -39,6 +39,10 @@ spec:
     spec:
       containers:
       - name: text-service
+        resources:
+          limits:
+            cpu: "4"
+            memory: 1G
         image: yg397/media-microservices
         command: ["TextService"]
       restartPolicy: Always

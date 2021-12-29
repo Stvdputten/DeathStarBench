@@ -39,6 +39,10 @@ spec:
     spec:
       containers:
       - name: user-service
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: "1G"
         image: yg397/media-microservices
         command: ["UserService"]
       restartPolicy: Always
