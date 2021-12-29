@@ -55,7 +55,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: movie-id-mongodb
     ports:
       - 27018:27017
@@ -69,7 +69,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: movie-id-memcached
 #    ports:
 #      - 11212:11211
@@ -142,7 +142,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: user-mongodb
     ports:
       - 27019:27017
@@ -156,7 +156,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: user-memcached
 #    ports:
 #      - 11213:11211
@@ -185,7 +185,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: compose-review-memcached
 #    ports:
 #      - 11214:11211
@@ -214,7 +214,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: review-storage-mongodb
     ports:
       - 27020:27017
@@ -228,7 +228,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: review-storage-memcached
 #    ports:
 #      - 11215:11211
@@ -257,7 +257,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: user-review-mongodb
     ports:
       - 27021:27017
@@ -300,7 +300,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: movie-review-mongodb
     ports:
       - 27022:27017
@@ -362,7 +362,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: cast-info-mongodb
     ports:
       - 27024:27017
@@ -376,7 +376,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: cast-info-memcached
 #    ports:
 #      - 11219:11211
@@ -405,7 +405,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: plot-mongodb
     ports:
       - 27025:27017
@@ -419,7 +419,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: plot-memcached
 #    ports:
 #      - 11220:11211
@@ -448,7 +448,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: movie-info-mongodb
     ports:
       - 27026:27017
@@ -462,7 +462,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: movie-info-memcached
 #    ports:
 #      - 11221:11211

@@ -61,7 +61,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: movie-id-mongodb
       ports:
         - 27018:27017
@@ -78,7 +78,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: movie-id-memcached
 
     text-service:
@@ -156,7 +156,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: user-mongodb
       ports:
         - 27019:27017
@@ -173,7 +173,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: user-memcached
 
     compose-review-service:
@@ -204,7 +204,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: compose-review-memcached
 
     review-storage-service:
@@ -235,7 +235,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: review-storage-mongodb
       ports:
         - 27020:27017
@@ -252,7 +252,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: review-storage-memcached
 
     user-review-service:
@@ -283,7 +283,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: user-review-mongodb
       ports:
         - 27021:27017
@@ -331,7 +331,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: movie-review-mongodb
       ports:
         - 27022:27017
@@ -401,7 +401,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: cast-info-mongodb
       ports:
         - 27024:27017
@@ -418,7 +418,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: cast-info-memcached
 
     plot-service:
@@ -449,7 +449,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: plot-mongodb
       ports:
         - 27025:27017
@@ -466,7 +466,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: plot-memcached
 
     movie-info-service:
@@ -497,7 +497,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: mongo:4.4.6
+      image: stvdputten/mongo
       hostname: movie-info-mongodb
       ports:
         - 27026:27017
@@ -514,7 +514,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: memcached:1.6.9
+      image: stvdputten/memcached
       hostname: movie-info-memcached
 
     jaeger:
@@ -525,7 +525,7 @@ services:
             - node.role==worker
         restart_policy:
           condition: any
-      image: jaegertracing/all-in-one:latest
+      image: jaegertracing/all-in-one:1.23.0
       hostname: jaeger
       ports:
         - 16686:16686
