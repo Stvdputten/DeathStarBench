@@ -38,6 +38,10 @@ spec:
       containers:
       - name: user-service
         # image: stvdputten/social-network-microservices:kubernetes
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: 1G
         image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["UserService"]
         imagePullPolicy: Always

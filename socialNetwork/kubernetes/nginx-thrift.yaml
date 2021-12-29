@@ -40,6 +40,10 @@ spec:
       containers:
       - name: nginx-thrift
         image: yg397/openresty-thrift:xenial
+        resources:  
+          limits:
+            cpu: "16.0"
+            memory: 4G
         # image: stvdputten/openresty-thrift:xenial
         # imagePullPolicy: Always
         ports: 

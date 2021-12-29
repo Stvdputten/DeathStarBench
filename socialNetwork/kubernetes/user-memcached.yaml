@@ -37,5 +37,9 @@ spec:
     spec:
       containers:
       - name: user-memcached
-        image: memcached
+        image: stvdputten/memcached
+        resources:
+          limits:
+            cpu: "1"
+            memory: 0.1G
       restartPolicy: Always

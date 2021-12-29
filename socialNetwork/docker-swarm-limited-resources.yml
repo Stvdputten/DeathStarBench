@@ -38,7 +38,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: social-graph-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
@@ -138,7 +138,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: post-storage-memcached
                     
   post-storage-mongodb:
@@ -153,7 +153,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: post-storage-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
@@ -213,7 +213,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: user-timeline-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
@@ -254,7 +254,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: url-shorten-memcached
                     
   url-shorten-mongodb:
@@ -269,7 +269,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: url-shorten-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
@@ -310,7 +310,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: user-memcached
                     
   user-mongodb:
@@ -325,7 +325,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: user-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:
@@ -366,7 +366,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: memcached:1.6.9
+    image: stvdputten/memcached
     hostname: media-memcached
                     
   media-mongodb:
@@ -381,7 +381,7 @@ services:
           - node.role==worker
       restart_policy:
         condition: any
-    image: mongo:4.4.6
+    image: stvdputten/mongo
     hostname: media-mongodb
     command: --config /social-network-microservices/config/mongod.conf
     volumes:

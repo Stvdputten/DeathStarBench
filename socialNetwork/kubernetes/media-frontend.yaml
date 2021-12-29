@@ -40,7 +40,6 @@ spec:
       containers:
       - name: media-frontend
         image: yg397/media-frontend:xenial
-        # imagePullPolicy: Always
         ports: 
         - containerPort: 8080
         volumeMounts:
@@ -52,6 +51,10 @@ spec:
         - mountPath: /usr/local/openresty/nginx/conf/jaeger-config.yml
           subPath: jaeger-config.yml
           name: jaeger-conf
+        resources:
+          limits:
+            cpu: "4"
+            memory: 1G
       restartPolicy: Always
       volumes:
       - name: nginx-conf

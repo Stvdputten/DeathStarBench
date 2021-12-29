@@ -37,7 +37,11 @@ spec:
     spec:
       containers:
       - name: url-shorten-mongodb
-        image: mongo:4.4.6
+        image: stvdputten/mongo
+        resources:  
+          limits:
+            cpu: "4.0"
+            memory: 1G
         volumeMounts:
           - name: my-data
             mountPath: "/data/db"

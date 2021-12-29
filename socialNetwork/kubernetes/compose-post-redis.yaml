@@ -37,5 +37,9 @@ spec:
     spec:
       containers:
       - name: compose-post-redis
-        image: redis
+        image: redis:alpine3.13
+        resources:
+          limits:
+            cpu: "1"
+            memory: 100Mi
       restartPolicy: Always

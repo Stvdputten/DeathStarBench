@@ -37,6 +37,10 @@ spec:
     spec:
       containers:
       - name: user-timeline-mongodb
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: 1G
         image: mongo
         volumeMounts:
           - name: my-data

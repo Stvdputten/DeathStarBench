@@ -37,5 +37,9 @@ spec:
     spec:
       containers:
       - name: home-timeline-redis
-        image: redis
+        image: redis:alpine3.13
+        resources:
+          limits:
+            cpu: "1"
+            memory: 0.2G
       restartPolicy: Always

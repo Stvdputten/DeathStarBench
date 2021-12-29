@@ -37,5 +37,9 @@ spec:
     spec:
       containers:
       - name: url-shorten-memcached
-        image: memcached
+        image: stvdputten/memcached
+        resources:  
+          limits:
+            cpu: "4.0"
+            memory: 1G
       restartPolicy: Always

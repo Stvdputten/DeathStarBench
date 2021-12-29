@@ -45,6 +45,10 @@ spec:
           - mountPath: /social-network-microservices/config/jaeger-config.yml
             subPath: jaeger-config.yml
             name: jaeger-conf-yaml
+        resources:
+          limits:
+            cpu: "4.0"
+            memory: 1G
       restartPolicy: Always
       volumes:
         - name: jaeger-conf-yaml

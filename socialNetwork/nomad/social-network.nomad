@@ -159,7 +159,7 @@ job "social-network" {
     task "social-graph-mongodb" {
       driver = "docker"
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
@@ -222,7 +222,7 @@ job "social-network" {
       driver = "docker"
 
       config {
-        image   = "memcached:1.6.9"
+        image   = "stvdputten/memcached"
         command = "memcached"
         args = [
           "-p",
@@ -235,7 +235,7 @@ job "social-network" {
       driver = "docker"
 
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
@@ -337,7 +337,7 @@ job "social-network" {
       driver = "docker"
 
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
@@ -399,7 +399,7 @@ job "social-network" {
     task "url-shorten-mongodb" {
       driver = "docker"
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
@@ -478,7 +478,7 @@ job "social-network" {
     task "user-mongodb" {
       driver = "docker"
       config {
-        image   = "mongo:4.4.6"
+        image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",

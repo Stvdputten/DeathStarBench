@@ -40,6 +40,10 @@ spec:
         # image: stvdputten/social-network-microservices:kubernetes
         image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["MediaService"]
+        resources:  
+          limits:
+            cpu: "4.0"
+            memory: 1G
         # command: ["sleep"]
         # args: ["365d"]
         imagePullPolicy: Always
