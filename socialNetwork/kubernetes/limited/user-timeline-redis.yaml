@@ -40,6 +40,6 @@ spec:
         image: redis:alpine3.13
         resources:  
           limits:
-            cpu: "4.0"
+            cpu: "1.0"
             memory: 1G
       restartPolicy: Always
