@@ -1,4 +1,0 @@
-2021/11/17 09:47:45 TLS disabled
-user db ip addr = mongodb-user.hotel-res.svc.cluster.local:27023
-user ip = user.hotel-res.svc.cluster.local, port = 8086
-Done load users
