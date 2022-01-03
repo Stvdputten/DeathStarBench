@@ -42,7 +42,7 @@ spec:
         image: yg397/openresty-thrift:xenial
         resources:  
           limits:
-            cpu: "14.0"
+            cpu: "8.0"
             memory: 4G
         # image: stvdputten/openresty-thrift:xenial
         # imagePullPolicy: Always
