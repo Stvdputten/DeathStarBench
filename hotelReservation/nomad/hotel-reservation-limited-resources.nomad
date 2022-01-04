@@ -22,9 +22,8 @@ job "hotel-reservation" {
       value     = "${var.hostname}"
     }
     network {
-      mode = "bridge"
       port "frontend" {
-        to     = 5000
+        to = 5000
         static = 5000
       }
       dns {
@@ -35,14 +34,9 @@ job "hotel-reservation" {
 
     task "frontend" {
       driver = "docker"
-
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
-      }
-
+      
       resources {
-        cores    = "12"
+        cores    = 8
         memory = "1000"
       }
 
@@ -86,14 +80,15 @@ job "hotel-reservation" {
 
     task "consul" {
       driver = "docker"
+
+      resources {
+        cores    = 1
+        memory = "100"
+      }
+
       lifecycle {
         hook    = "prestart"
         sidecar = true
-      }
-
-      resources {
-        cores    = "1"
-        memory = "100"
       }
 
       config {
@@ -113,6 +108,7 @@ job "hotel-reservation" {
           "53"
         ]
       }
+
       service {
         name = "consul-fix"
         check {
@@ -121,13 +117,18 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"consul-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":53}", "http:localhost:8500/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"consul-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":53}", "http://localhost:8500/v1/agent/service/register"]
         }
       }
     }
 
     task "jaeger" {
       driver = "docker"
+
+      resources {
+        cores  = 4
+        memory = 2000
+      }
 
       config {
         image = "jaegertracing/all-in-one:1.23.0"
@@ -158,13 +159,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"jaeger-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":6831}", "http:localhost:8500/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"jaeger-hotel\",  \"address\":\"${var.jaeger}\", \"Port\":6831}", "http://localhost:8500/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "profile" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
       mode = "bridge"
       port "profile" {
@@ -186,17 +193,19 @@ job "hotel-reservation" {
     }
 
     task "profile" {
+      driver = "docker"
+
       lifecycle {
         hook    = "poststart"
         sidecar = true
       }
-      
+
+
       resources {
-        cores    = "8"
+        cores    = 4
         memory = "1000"
       }
-      
-      driver = "docker"
+
       config {
         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
         command = "profile"
@@ -215,7 +224,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"profile-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8081}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
@@ -224,7 +233,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "100"
       }
 
@@ -246,7 +255,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11213}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11213}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
@@ -255,7 +264,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "200"
       }
 
@@ -273,13 +282,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27019}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-profile-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27019}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "geo" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
       mode = "bridge"
       port "geo" {
@@ -298,15 +313,13 @@ job "hotel-reservation" {
 
     task "geo" {
       driver = "docker"
-
+      resources {
+        cores    = 4
+        memory = "1000"
+      }
       lifecycle {
         hook    = "poststart"
         sidecar = true
-      }
-
-      resources {
-        cores    = "1"
-        memory = "1000"
       }
 
       config {
@@ -326,24 +339,25 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8083}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8083}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "mongodb-geo" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "200"
       }
 
       config {
-        command = "sh"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27018}' localhost:8500/v1/agent/service/register && mongod --port 27018"
-        ]
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27018}' localhost:8500/v1/agent/service/register && mongod --port 27018"
+        // ]
+        command = "mongod"
+        args    = ["--port", "27018"]
         image   = "stvdputten/mongo"
         ports   = ["mongodb-geo"]
       }
@@ -355,13 +369,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-geo-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27018}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-geo-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27018}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "rate" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
       mode = "bridge"
       port "rate" {
@@ -384,12 +404,10 @@ job "hotel-reservation" {
 
     task "rate" {
       driver = "docker"
-
       resources {
-        cores    = "4"
+        cores    = 4
         memory = "1000"
       }
-
       lifecycle {
         hook    = "poststart"
         sidecar = true
@@ -397,9 +415,9 @@ job "hotel-reservation" {
       config {
         image   = "stvdputten/hotel_reserv_rate_single_node:nomad"
         command = "rate"
-        args = ["-c",
-          "curl -X PUT -d '{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}' localhost:8500/v1/agent/service/register && rate"
-        ]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}' localhost:8500/v1/agent/service/register && rate"
+        // ]
         ports = ["rate"]
         mount {
           type   = "bind"
@@ -415,16 +433,15 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8084}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "memcached-rate" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "100"
       }
 
@@ -435,6 +452,9 @@ job "hotel-reservation" {
       config {
         command = "memcached"
         args    = ["-p", "11212"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"memcached-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\",\"Port\":11212}' localhost:8500/v1/agent/service/register && memcached -p 11212"
+        // ]
         image = "stvdputten/memcached"
         ports = ["memcached-rate"]
       }
@@ -446,22 +466,24 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11212}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11212}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "mongodb-rate" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "100"
       }
 
       config {
         command = "mongod"
         args    = ["--port", "27020"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-rate-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27020}' localhost:8500/v1/agent/service/register && mongod --port 27020"
+        // ]
         image = "stvdputten/mongo"
         ports = ["mongodb-rate"]
       }
@@ -473,13 +495,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-rate-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "recommendation" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
       mode = "bridge"
       port "recommendation" {
@@ -498,12 +526,10 @@ job "hotel-reservation" {
 
     task "recommendation" {
       driver = "docker"
-
       resources {
-        cores    = "4"
+        cores    = 4
         memory = "1000"
       }
-
       lifecycle {
         hook    = "poststart"
         sidecar = true
@@ -512,6 +538,10 @@ job "hotel-reservation" {
       config {
         image   = "stvdputten/hotel_reserv_recommendation_single_node:nomad"
         command = "recommendation"
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}' localhost:8500/v1/agent/service/register && recommendation"
+        // ]
         ports = ["recommendation"]
         mount {
           type   = "bind"
@@ -527,22 +557,25 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8085}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "mongodb-recommendation" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "200"
       }
 
       config {
         command = "mongod"
         args    = ["--port", "27021"]
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27021}' localhost:8500/v1/agent/service/register && mongod --port 27021"
+        // ]
         image = "stvdputten/mongo"
         ports = ["mongodb-recommendation"]
       }
@@ -554,13 +587,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27021}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-recommendation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27021}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "user" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
       mode = "bridge"
       port "user" {
@@ -582,16 +621,18 @@ job "hotel-reservation" {
         hook    = "poststart"
         sidecar = true
       }
-
       resources {
-        cores    = "4"
+        cores    = 4
         memory = "1000"
       }
-
       driver = "docker"
       config {
         image   = "stvdputten/hotel_reserv_user_single_node:nomad"
         command = "user"
+        // command = "sh"
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}' localhost:8500/v1/agent/service/register && user"
+        // ]
         ports = ["user"]
         mount {
           type   = "bind"
@@ -607,16 +648,15 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"user-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8086}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "mongodb-user" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "200"
       }
 
@@ -634,13 +674,19 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-user-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27023}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-user-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27023}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "reservation" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+    
     network {
       mode = "bridge"
       port "reservation" {
@@ -665,7 +711,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = "4"
+        cores    = 4
         memory = "1000"
       }
 
@@ -676,7 +722,7 @@ job "hotel-reservation" {
       config {
         image   = "stvdputten/hotel_reserv_reserve_single_node:nomad"
         command = "reservation"
-        ports   = ["reservation"]
+        ports = ["reservation"]
         mount {
           type   = "bind"
           target = "/go/src/github.com/harlow/go-micro-services/config.json"
@@ -691,7 +737,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8087}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8087}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
@@ -700,7 +746,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = "3"
+        cores    = 2
         memory = "100"
       }
 
@@ -710,8 +756,8 @@ job "hotel-reservation" {
       }
       config {
         command = "memcached"
-        args    = ["-p", "11214"]
-        image   = "stvdputten/memcached"
+        args = ["-p", "11214"]
+        image = "stvdputten/memcached"
       }
       service {
         name = "mem-reserve"
@@ -721,24 +767,25 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11214}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"memcached-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":11214}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
 
     task "mongodb-reserve" {
       driver = "docker"
-
       resources {
-        cores    = "1"
+        cores    = 1
         memory = "200"
       }
 
       config {
         command = "mongod"
         args    = ["--port", "27022"]
+        // args = ["-c",
+        //   "curl -X PUT -d '{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27022}' localhost:8500/v1/agent/service/register && mongod --port 27022"
+        // ]
         image = "stvdputten/mongo"
-
       }
       service {
         name = "mongodb-reserve"
@@ -748,15 +795,21 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"mongodb-reservation-hotel\",  \"address\":\"127.0.0.1\", \"Port\":27020}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
   }
 
   group "search" {
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      operator = "!="
+      value     = "${var.hostname}"
+    }
+
     network {
-      mode = "bridge"
+      // mode = "bridge"
       port "search" {
         to     = 8082
         static = 8082
@@ -771,13 +824,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = "8"
+        cores    = 4
         memory = "1000"
-      }
-
-      lifecycle {
-        hook    = "poststart"
-        sidecar = true
       }
 
       config {
@@ -798,7 +846,7 @@ job "hotel-reservation" {
           timeout  = "2s"
           name     = "Service registration through http"
           command  = "curl"
-          args     = ["-X", "PUT", "-d", "{\"name\":\"search-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8082}", "http:${var.jaeger}:4000/v1/agent/service/register"]
+          args     = ["-X", "PUT", "-d", "{\"name\":\"search-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":8082}", "http://${var.jaeger}:4000/v1/agent/service/register"]
         }
       }
     }
