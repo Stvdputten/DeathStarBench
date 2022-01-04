@@ -42,7 +42,7 @@ job "hotel-reservation" {
       }
 
       resources {
-        cpu    = "1200"
+        cores    = "12"
         memory = "1000"
       }
 
@@ -92,7 +92,7 @@ job "hotel-reservation" {
       }
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "100"
       }
 
@@ -192,7 +192,7 @@ job "hotel-reservation" {
       }
       
       resources {
-        cpu    = "800"
+        cores    = "8"
         memory = "1000"
       }
       
@@ -224,7 +224,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "100"
       }
 
@@ -255,7 +255,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "200"
       }
 
@@ -305,7 +305,7 @@ job "hotel-reservation" {
       }
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "1000"
       }
 
@@ -335,7 +335,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "200"
       }
 
@@ -386,7 +386,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "400"
+        cores    = "4"
         memory = "1000"
       }
 
@@ -424,7 +424,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "100"
       }
 
@@ -455,7 +455,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "100"
       }
 
@@ -500,7 +500,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "400"
+        cores    = "4"
         memory = "1000"
       }
 
@@ -536,7 +536,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "200"
       }
 
@@ -584,7 +584,7 @@ job "hotel-reservation" {
       }
 
       resources {
-        cpu    = "400"
+        cores    = "4"
         memory = "1000"
       }
 
@@ -616,7 +616,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "200"
       }
 
@@ -665,7 +665,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "400"
+        cores    = "4"
         memory = "1000"
       }
 
@@ -700,7 +700,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "300"
+        cores    = "3"
         memory = "100"
       }
 
@@ -730,7 +730,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "100"
+        cores    = "1"
         memory = "200"
       }
 
@@ -771,7 +771,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu    = "800"
+        cores    = "8"
         memory = "1000"
       }
 

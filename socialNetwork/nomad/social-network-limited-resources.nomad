@@ -46,7 +46,7 @@ job "social-network" {
     task "nginx-thrift" {
       driver = "docker"
       resources {
-        cpu    = 100 * 4
+        cores    = 4
         memory = 256 * 4
       }
 
@@ -705,7 +705,7 @@ job "social-network" {
     task "media-frontend" {
       driver = "docker"
       resources {
-        cpu    = 100 * 4
+        cores    = 4
         memory = 256 * 4
       }
 
