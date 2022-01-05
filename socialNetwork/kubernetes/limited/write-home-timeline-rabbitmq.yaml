@@ -45,6 +45,10 @@ spec:
       containers:
       - name: write-home-timeline-rabbitmq
         image: poanpan/rabbitmq:v1
+        resources:  
+          limits:
+            cpu: "1.0"
+            memory: 1GiB
         env:
         - name: RABBITMQ_ERLANG_COOKIE
           value: "WRITE-HOME-TIMELINE-RABBITMQ"

@@ -45,10 +45,6 @@ job "social-network" {
 
     task "nginx-thrift" {
       driver = "docker"
-      resources {
-        cpu    = 100 * 4
-        memory = 256 * 4
-      }
 
       service {
         name = "nginx-thrift"
@@ -101,12 +97,10 @@ job "social-network" {
 
     task "jaeger" {
       driver = "docker"
-
-    resources {
-      // requires more memory
-      cores  = 4
-      memory = 256 * 4
-    }
+      resources {
+        cores = 4
+        memory = 2000
+      }
 
       service {
         name = "jaeger"
@@ -707,10 +701,6 @@ job "social-network" {
 
     task "media-frontend" {
       driver = "docker"
-      resources {
-        cpu    = 100 * 4
-        memory = 256 * 4
-      }
 
       service {
         name = "media-frontend-service"

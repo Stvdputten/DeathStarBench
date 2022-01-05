@@ -42,8 +42,8 @@ spec:
         command: ["MediaService"]
         resources:  
           limits:
-            cpu: "4.0"
-            memory: 1G
+            cpu: "1.0"
+            memory: 1GiB
         # command: ["sleep"]
         # args: ["365d"]
         imagePullPolicy: Always

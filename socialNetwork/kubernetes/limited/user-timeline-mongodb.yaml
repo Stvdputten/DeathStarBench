@@ -40,7 +40,7 @@ spec:
         resources:
           limits:
             cpu: "1.0"
-            memory: 1G
+            memory: 1GiB
         image: mongo
         volumeMounts:
           - name: my-data

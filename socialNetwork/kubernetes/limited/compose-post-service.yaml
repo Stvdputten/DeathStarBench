@@ -41,8 +41,8 @@ spec:
       - name: compose-post-service
         resources:
           limits:
-            cpu: "4"
-            memory: 1G
+            cpu: "1"
+            memory: 1GiB
         # image: stvdputten/social-network-microservices:kubernetes
         image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         imagePullPolicy: Always

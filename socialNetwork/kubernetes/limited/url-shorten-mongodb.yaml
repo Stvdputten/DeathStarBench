@@ -40,8 +40,8 @@ spec:
         image: stvdputten/mongo
         resources:  
           limits:
-            cpu: "4.0"
-            memory: 1G
+            cpu: "1.0"
+            memory: 1GiB
         volumeMounts:
           - name: my-data
             mountPath: "/data/db"

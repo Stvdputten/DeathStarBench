@@ -47,7 +47,7 @@ job "social-network" {
       driver = "docker"
       resources {
         cores    = 4
-        memory = 256 * 4
+        memory = 4294
       }
 
       service {
@@ -103,7 +103,7 @@ job "social-network" {
 
     resources {
       // requires more memory
-      cores  = 4
+      cores  = 1
       memory = 256 * 4
     }
 
@@ -132,6 +132,11 @@ job "social-network" {
     task "social-graph-service" {
       driver = "docker"
 
+      resources {
+        cores    = 1
+        memory = 1073
+      }
+
       service {
         name = "social-graph-service"
       }
@@ -157,6 +162,10 @@ job "social-network" {
 
     task "social-graph-mongodb" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       config {
         image   = "stvdputten/mongo"
         command = "mongod"
@@ -169,6 +178,10 @@ job "social-network" {
 
     task "social-graph-redis" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       config {
         image   = "redis:alpine3.13"
         command = "redis-server"
@@ -194,6 +207,10 @@ job "social-network" {
 
     task "post-storage-service" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
 
       service {
         name = "post-storage-service"
@@ -218,6 +235,10 @@ job "social-network" {
 
     task "post-storage-memcached" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
 
       config {
         image   = "stvdputten/memcached"
@@ -231,6 +252,10 @@ job "social-network" {
 
     task "post-storage-mongodb" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
 
       config {
         image   = "stvdputten/mongo"
@@ -257,6 +282,10 @@ job "social-network" {
 
     task "home-timeline-service" {
       driver = "docker"
+      resources {
+        cores    = 1
+        memory = 1073
+      }
 
       service {
         name = "home-timeline-service"
@@ -281,6 +310,10 @@ job "social-network" {
     }
 
     task "home-timeline-redis" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "redis:alpine3.13"
@@ -307,6 +340,10 @@ job "social-network" {
     }
 
     task "user-timeline-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -332,6 +369,10 @@ job "social-network" {
     }
 
     task "user-timeline-mongodb" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       config {
@@ -345,6 +386,10 @@ job "social-network" {
     }
 
     task "user-timeline-redis" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "redis:alpine3.13"
@@ -370,6 +415,10 @@ job "social-network" {
     }
 
     task "url-shorten-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -395,6 +444,10 @@ job "social-network" {
     }
 
     task "url-shorten-mongodb" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/mongo"
@@ -407,6 +460,10 @@ job "social-network" {
     }
 
     task "url-shorten-memcached" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/memcached"
@@ -437,6 +494,10 @@ job "social-network" {
     }
 
     task "user-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -462,6 +523,10 @@ job "social-network" {
     }
 
     task "user-memcached" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/memcached"
@@ -474,6 +539,10 @@ job "social-network" {
     }
 
     task "user-mongodb" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/mongo"
@@ -499,6 +568,10 @@ job "social-network" {
     }
 
     task "media-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -523,6 +596,10 @@ job "social-network" {
     }
 
     task "media-memcached" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/memcached"
@@ -531,6 +608,10 @@ job "social-network" {
     }
 
     task "media-mongodb" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
       config {
         image   = "stvdputten/mongo"
@@ -556,6 +637,10 @@ job "social-network" {
     }
 
     task "compose-post-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -592,6 +677,10 @@ job "social-network" {
     }
 
     task "text-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -628,6 +717,10 @@ job "social-network" {
     }
 
     task "user-mention-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -665,6 +758,10 @@ job "social-network" {
     }
 
     task "unique-id-service" {
+      resources {
+        cores    = 1
+        memory = 1073
+      }
       driver = "docker"
 
       service {
@@ -703,11 +800,11 @@ job "social-network" {
     }
 
     task "media-frontend" {
-      driver = "docker"
       resources {
-        cores    = 4
-        memory = 256 * 4
+        cores    = 1
+        memory = 4294
       }
+      driver = "docker"
 
       service {
         name = "media-frontend-service"
