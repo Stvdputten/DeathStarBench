@@ -8,9 +8,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -30,9 +30,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -49,9 +49,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -68,9 +68,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -87,9 +87,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -108,9 +108,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -130,9 +130,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -145,9 +145,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -164,9 +164,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -186,9 +186,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -205,9 +205,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -224,9 +224,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -246,9 +246,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -261,9 +261,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -280,9 +280,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -302,9 +302,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -317,9 +317,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -336,9 +336,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -358,9 +358,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -373,9 +373,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -392,9 +392,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -413,9 +413,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -434,9 +434,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -455,9 +455,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -476,9 +476,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 4GiB
-      replicas: 2
+            cpus: '8.0'
+            memory: 8GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker
@@ -504,9 +504,9 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '1.0'
-            memory: 1GiB
-      replicas: 2
+            cpus: '2.0'
+            memory: 2GiB
+      replicas: 1
       placement:
         constraints:
           - node.role==worker

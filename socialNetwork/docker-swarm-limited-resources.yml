@@ -8,8 +8,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -31,7 +31,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -50,7 +50,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -69,7 +69,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -87,8 +87,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -108,8 +108,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -131,7 +131,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.1G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -146,7 +146,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -164,8 +164,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -187,7 +187,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -206,7 +206,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -224,8 +224,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -247,7 +247,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.1G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -262,7 +262,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -280,8 +280,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -303,7 +303,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.1G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -318,7 +318,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -336,8 +336,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -359,7 +359,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.1G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -374,7 +374,7 @@ services:
       resources:
           limits:
             cpus: '1.0'
-            memory: 0.2G
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -392,8 +392,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -413,8 +413,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -434,8 +434,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -455,8 +455,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
@@ -476,8 +476,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '16.0'
-            memory: 4G
+            cpus: '4.0'
+            memory: 4GiB
       replicas: 1
       placement:
         constraints:
@@ -504,8 +504,8 @@ services:
     deploy:
       resources:
           limits:
-            cpus: '4.0'
-            memory: 1G
+            cpus: '1.0'
+            memory: 1GiB
       replicas: 1
       placement:
         constraints:
