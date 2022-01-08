@@ -98,7 +98,7 @@ job "media-microservices" {
 
 
   group "unique-id-service" {
-    count = 2
+    count = 1
     network {
       mode = "bridge"
       port "http" {
