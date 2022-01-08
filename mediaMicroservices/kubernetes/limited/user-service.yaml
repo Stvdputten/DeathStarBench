@@ -41,8 +41,8 @@ spec:
       - name: user-service
         resources:
           limits:
-            cpu: "2.0"
-            memory: "1G"
+            cpu: "1.0"
+            memory: "1GiB"
         image: yg397/media-microservices
         command: ["UserService"]
       restartPolicy: Always

@@ -42,8 +42,8 @@ spec:
         image: mongo:4.4.6
         resources:
           limits:
-            cpu: "3.0"
-            memory: "0.3G"
+            cpu: "1.0"
+            memory: "1G"
         volumeMounts:
           - name: my-data
             mountPath: "/data/db"

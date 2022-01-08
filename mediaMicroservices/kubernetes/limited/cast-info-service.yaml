@@ -42,7 +42,7 @@ spec:
         image: yg397/media-microservices
         resources:
           limits:
-            cpu: "4.0"
-            memory: "1G"
+            cpu: "1.0"
+            memory: "1GiB"
         command: ["CastInfoService"]
       restartPolicy: Always

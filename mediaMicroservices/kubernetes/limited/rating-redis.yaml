@@ -41,7 +41,7 @@ spec:
       - name: rating-redis
         resources:
           limits:
-            cpu: "4"
-            memory: 1G
+            cpu: "1.0"
+            memory: "1GiB"
         image: redis:alpine3.13
       restartPolicy: Always

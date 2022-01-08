@@ -41,7 +41,7 @@ spec:
       - name: review-storage-memcached
         resources:
           limits:
-            cpu: "1"
-            memory: 0.1G
+            cpu: "1.0"
+            memory: "1GiB"
         image: memcached:1.6.9
       restartPolicy: Always

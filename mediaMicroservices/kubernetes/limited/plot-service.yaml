@@ -41,8 +41,8 @@ spec:
       - name: plot-service
         resources:
           limits:
-            cpu: "1"
-            memory: 0.1G
+            cpu: "1.0"
+            memory: "1GiB"
         image: yg397/media-microservices
         command: ["PlotService"]
       restartPolicy: Always

@@ -42,8 +42,8 @@ spec:
       - name: nginx-web-server
         resources:
           limits:
-            cpu: "4"
-            memory: 4G
+            cpu: "4.0"
+            memory: "4GiB"
         image: yg397/openresty-thrift:xenial
         command: ["/bin/sh", "-c"]
         args:

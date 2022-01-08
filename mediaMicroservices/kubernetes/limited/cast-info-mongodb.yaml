@@ -45,8 +45,8 @@ spec:
             mountPath: "/data/db"
         resources:
           limits:
-            cpu: "1"
-            memory: 100Mi
+            cpu: "1.0"
+            memory: "1GiB"
       restartPolicy: Always 
       volumes:
       - name: my-data

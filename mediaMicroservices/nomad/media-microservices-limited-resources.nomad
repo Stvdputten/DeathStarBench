@@ -17,6 +17,7 @@ job "media-microservices" {
   datacenters = ["dc1"]
 
   group "nginx-web-server" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -42,8 +43,8 @@ job "media-microservices" {
       driver = "docker"
 
       resources {
-        cores    = "4"
-        memory = "4000"
+        cores = "4.0"
+        memory_max = "4285"
       }
 
       config {
@@ -78,7 +79,7 @@ job "media-microservices" {
     task "jaeger" {
       resources {
         cores  = 4
-        memory = 2000
+        memory = 4000
       }
       lifecycle {
         hook    = "prestart"
@@ -97,6 +98,7 @@ job "media-microservices" {
 
 
   group "unique-id-service" {
+    count = 2
     network {
       mode = "bridge"
       port "http" {
@@ -110,8 +112,8 @@ job "media-microservices" {
 
     task "unique-id-service" {
       resources {
-        cores    = "4.0"
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       service {
         name = "unique-id-service"
@@ -127,6 +129,7 @@ job "media-microservices" {
   }
 
   group "movie-id-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -140,8 +143,8 @@ job "media-microservices" {
 
     task "movie-id-service" {
       resources {
-        cores    = "1.0"
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
       lifecycle {
         hook    = "poststart"
@@ -162,8 +165,8 @@ job "media-microservices" {
 
     task "movie-id-mongodb" {
       resources {
-        cores    = "1"
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
       driver = "docker"
       service {
@@ -177,8 +180,8 @@ job "media-microservices" {
 
     task "movie-id-memcached" {
       resources {
-        cores    = "1"
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
       driver = "docker"
       service {
@@ -192,6 +195,7 @@ job "media-microservices" {
   }
 
   group "text-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -205,8 +209,8 @@ job "media-microservices" {
 
     task "text-service" {
       resources {
-        cores    = "4.0"
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       driver = "docker"
       service {
@@ -222,6 +226,7 @@ job "media-microservices" {
   }
 
   group "rating-service" {
+    count = 1  
     network {
       mode = "bridge"
       port "http" {
@@ -235,8 +240,8 @@ job "media-microservices" {
 
     task "rating-service" {
       resources {
-        cores    = "2.0"
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       lifecycle {
         hook    = "poststart"
@@ -258,8 +263,8 @@ job "media-microservices" {
 
     task "rating-redis" {
       resources {
-        cores    = "2.0"
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       driver = "docker"
       service {
@@ -273,6 +278,7 @@ job "media-microservices" {
   }
 
   group "user-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -287,8 +293,8 @@ job "media-microservices" {
 
     task "user-service" {
       resources {
-        cores    = "4.0"
-        memory = "1000" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
 
       lifecycle {
@@ -312,8 +318,8 @@ job "media-microservices" {
 
     task "user-mongodb" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
 
       driver = "docker"
@@ -328,8 +334,8 @@ job "media-microservices" {
 
     task "user-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
 
       driver = "docker"
@@ -344,6 +350,7 @@ job "media-microservices" {
   }
 
   group "compose-review-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -357,8 +364,8 @@ job "media-microservices" {
 
     task "compose-review-service" {
       resources {
-        cores    = "8.0"
-        memory = "1000" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -380,8 +387,8 @@ job "media-microservices" {
 
     task "compose-review-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -395,6 +402,7 @@ job "media-microservices" {
   }
 
   group "review-storage-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -408,8 +416,8 @@ job "media-microservices" {
 
     task "review-storage-service" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -431,8 +439,8 @@ job "media-microservices" {
 
     task "review-storage-mongodb" {
       resources {
-        cores    = "1.0"
-        memory = "300" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -446,8 +454,8 @@ job "media-microservices" {
 
     task "review-storage-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -461,6 +469,7 @@ job "media-microservices" {
   }
 
   group "user-review-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -474,8 +483,8 @@ job "media-microservices" {
 
     task "user-review-service" {
       resources {
-        cores    = "2.0"
-        memory = "1000" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -497,8 +506,8 @@ job "media-microservices" {
 
     task "user-review-mongodb" {
       resources {
-        cores    = "2.0"
-        memory = "300" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -512,8 +521,8 @@ job "media-microservices" {
 
     task "user-review-redis" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -528,6 +537,7 @@ job "media-microservices" {
   }
 
   group "movie-review-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -541,8 +551,8 @@ job "media-microservices" {
 
     task "movie-review-service" {
       resources {
-        cores    = "4.0"
-        memory = "1000" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -563,8 +573,8 @@ job "media-microservices" {
 
     task "movie-review-mongodb" {
       resources {
-        cores    = "2.0"
-        memory = "300" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -578,8 +588,8 @@ job "media-microservices" {
 
     task "movie-review-redis" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -593,6 +603,7 @@ job "media-microservices" {
   }
 
   group "cast-info-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -606,8 +617,8 @@ job "media-microservices" {
 
     task "cast-info-service" {
       resources {
-        cores    = "4.0"
-        memory = "1000" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -628,8 +639,8 @@ job "media-microservices" {
 
     task "cast-info-mongodb" {
       resources {
-        cores    = "1.0"
-        memory = "200" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -643,8 +654,8 @@ job "media-microservices" {
 
     task "cast-info-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -658,6 +669,7 @@ job "media-microservices" {
   }
 
   group "plot-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -671,8 +683,8 @@ job "media-microservices" {
 
     task "plot-service" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -693,8 +705,8 @@ job "media-microservices" {
 
     task "plot-mongodb" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -708,8 +720,8 @@ job "media-microservices" {
 
     task "plot-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       driver = "docker"
       service {
@@ -723,6 +735,7 @@ job "media-microservices" {
   }
 
   group "movie-info-service" {
+    count = 1
     network {
       mode = "bridge"
       port "http" {
@@ -736,8 +749,8 @@ job "media-microservices" {
 
     task "movie-info-service" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
       lifecycle {
         hook    = "poststart"
@@ -759,8 +772,8 @@ job "media-microservices" {
 
     task "movie-info-mongodb" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
 
       driver = "docker"
@@ -775,8 +788,8 @@ job "media-microservices" {
 
     task "movie-info-memcached" {
       resources {
-        cores    = "1.0"
-        memory = "100" 
+        cores = "1.0"
+        memory_max = "1073" 
       }
 
       driver = "docker"

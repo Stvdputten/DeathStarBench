@@ -82,6 +82,7 @@ job "media-microservices" {
         cores = 4
         memory = 2000
       }
+      
       lifecycle {
         hook    = "prestart"
         sidecar = true
