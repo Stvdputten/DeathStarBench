@@ -30,8 +30,8 @@ spec:
             - containerPort: 8081
           resources: 
             limits:
-              cpu: "8"
-              memory: "1Gi"
+              cpu: "1.0"
+              memory: "1GiB"
           volumeMounts:
           - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
             subPath: config.json

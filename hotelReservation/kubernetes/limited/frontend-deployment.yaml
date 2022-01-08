@@ -32,8 +32,8 @@ spec:
             - containerPort: 5000
           resources:
             limits:
-              cpu: "12"
-              memory: "1Gi"
+              cpu: "4.0"
+              memory: "4GiB"
           volumeMounts:
           - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
             subPath: config.json

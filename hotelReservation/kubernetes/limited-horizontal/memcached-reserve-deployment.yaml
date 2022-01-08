@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: memcached-reserve
+  name: memcached-reserve
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: memcached-reserve
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: memcached-reserve
+    spec:
+      containers:
+        - env:
+            - name: MEMCACHED_CACHE_SIZE
+              value: "128"
+            - name: MEMCACHED_THREADS
+              value: "2"
+          image: stvdputten/memcached
+          name: memcached-reserve
+          ports:
+            - containerPort: 11211
+          resources:
+            limits:
+              cpu: "1.0"
+              memory: "1GiB"
+      restartPolicy: Always
+status: {}

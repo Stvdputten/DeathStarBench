@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: frontend
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: frontend
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: frontend
+    spec:
+      containers:
+        - command:
+            - frontend
+          image: stvdputten/hotel_reserv_frontend_single_node:kubernetes
+          name: frontend
+          ports:
+            - containerPort: 5000
+          resources:
+            limits:
+              cpu: "8.0"
+              memory: "8GiB"
+          volumeMounts:
+          - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
+            subPath: config.json
+            name: config-json
+      restartPolicy: Always
+      volumes :
+      - name: config-json
+        configMap:
+          name: configmap-config-json
+          items:
+          - key: config.json
+            path: config.json
+status: {}

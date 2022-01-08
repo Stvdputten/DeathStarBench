@@ -28,8 +28,8 @@ spec:
             - containerPort: 27017
           resources: 
             limits:
-              cpu: "1"
-              memory: "0.2Gi"
+              cpu: "1.0"
+              memory: "1GiB"
           volumeMounts:
           - mountPath: /data/db
             name: recommendation

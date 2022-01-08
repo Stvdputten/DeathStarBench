@@ -17,6 +17,7 @@ job "hotel-reservation" {
   datacenters = ["dc1"]
 
   group "frontend" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -36,8 +37,8 @@ job "hotel-reservation" {
       driver = "docker"
       
       resources {
-        cores    = 8
-        memory = "1000"
+        cores = "4.0"
+        memory_max = "4285"
       }
 
       config {
@@ -57,6 +58,7 @@ job "hotel-reservation" {
   }
 
   group "dns" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -82,8 +84,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 1
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       lifecycle {
@@ -126,8 +128,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores  = 4
-        memory = 2000
+        cores = 4
+        memory = 4000
       }
 
       config {
@@ -166,6 +168,7 @@ job "hotel-reservation" {
   }
 
   group "profile" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -202,8 +205,8 @@ job "hotel-reservation" {
 
 
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -233,8 +236,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 1
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       env {
@@ -264,8 +267,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 1
-        memory = "200"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -289,6 +292,7 @@ job "hotel-reservation" {
   }
 
   group "geo" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -314,8 +318,8 @@ job "hotel-reservation" {
     task "geo" {
       driver = "docker"
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       lifecycle {
         hook    = "poststart"
@@ -347,8 +351,8 @@ job "hotel-reservation" {
     task "mongodb-geo" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "200"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -376,6 +380,7 @@ job "hotel-reservation" {
   }
 
   group "rate" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -405,8 +410,8 @@ job "hotel-reservation" {
     task "rate" {
       driver = "docker"
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       lifecycle {
         hook    = "poststart"
@@ -441,8 +446,8 @@ job "hotel-reservation" {
     task "memcached-rate" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       env {
@@ -474,8 +479,8 @@ job "hotel-reservation" {
     task "mongodb-rate" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -502,6 +507,7 @@ job "hotel-reservation" {
   }
 
   group "recommendation" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -527,8 +533,8 @@ job "hotel-reservation" {
     task "recommendation" {
       driver = "docker"
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       lifecycle {
         hook    = "poststart"
@@ -565,8 +571,8 @@ job "hotel-reservation" {
     task "mongodb-recommendation" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "200"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -594,6 +600,7 @@ job "hotel-reservation" {
   }
 
   group "user" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -622,8 +629,8 @@ job "hotel-reservation" {
         sidecar = true
       }
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
       driver = "docker"
       config {
@@ -656,8 +663,8 @@ job "hotel-reservation" {
     task "mongodb-user" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "200"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -681,6 +688,7 @@ job "hotel-reservation" {
   }
 
   group "reservation" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -711,8 +719,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       lifecycle {
@@ -746,8 +754,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 2
-        memory = "100"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       env {
@@ -775,8 +783,8 @@ job "hotel-reservation" {
     task "mongodb-reserve" {
       driver = "docker"
       resources {
-        cores    = 1
-        memory = "200"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
@@ -802,6 +810,7 @@ job "hotel-reservation" {
   }
 
   group "search" {
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       operator = "!="
@@ -824,8 +833,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores    = 4
-        memory = "1000"
+        cores = "1.0"
+        memory_max = "1073"
       }
 
       config {
