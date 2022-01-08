@@ -40,6 +40,6 @@ spec:
         image: stvdputten/memcached
         resources:  
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
       restartPolicy: Always

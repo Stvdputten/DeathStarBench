@@ -47,7 +47,7 @@ spec:
             name: jaeger-conf-yaml
         resources:
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
       restartPolicy: Always
       volumes:

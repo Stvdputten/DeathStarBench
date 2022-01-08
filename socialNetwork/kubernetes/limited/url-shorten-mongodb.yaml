@@ -40,7 +40,7 @@ spec:
         image: stvdputten/mongo
         resources:  
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
         volumeMounts:
           - name: my-data

@@ -1,0 +1,58 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-service
+  labels:
+    death-star-project: social-network
+    app: media-service
+  namespace: social-network
+spec:
+  ports:
+  - port: 9090
+  selector:
+    death-star-project: social-network
+    app: media-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service
+  labels:
+    death-star-project: social-network
+    app: media-service
+  namespace: social-network
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      death-star-project: social-network
+      app: media-service
+  template:
+    metadata:
+      labels: 
+        death-star-project: social-network
+        app: media-service
+      name: media-service
+    spec:
+      containers:
+      - name: media-service
+        # image: stvdputten/social-network-microservices:kubernetes
+        image: poanpan/social-network-microservices-local-jaeger:v0.0.1
+        command: ["MediaService"]
+        resources:  
+          limits:
+            cpu: "1"
+            memory: 1GiB
+        # command: ["sleep"]
+        # args: ["365d"]
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /social-network-microservices/config/jaeger-config.yml
+            subPath: jaeger-config.yml
+            name: jaeger-conf-yaml
+      restartPolicy: Always
+      volumes:
+        - name: jaeger-conf-yaml
+          configMap:
+            name: jaeger-config-yaml

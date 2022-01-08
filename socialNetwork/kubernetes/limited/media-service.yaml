@@ -42,7 +42,7 @@ spec:
         command: ["MediaService"]
         resources:  
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
         # command: ["sleep"]
         # args: ["365d"]

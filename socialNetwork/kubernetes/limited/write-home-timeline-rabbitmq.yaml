@@ -47,7 +47,7 @@ spec:
         image: poanpan/rabbitmq:v1
         resources:  
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
         env:
         - name: RABBITMQ_ERLANG_COOKIE

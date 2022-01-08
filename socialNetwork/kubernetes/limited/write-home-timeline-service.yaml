@@ -41,7 +41,7 @@ spec:
       - name: write-home-timeline-service
         resources:  
           limits:
-            cpu: "1.0"
+            cpu: "1"
             memory: 1GiB
         # image: poanpan/rabbitmq:v1
         image: poanpan/social-network-microservices-local-jaeger:v0.0.1
