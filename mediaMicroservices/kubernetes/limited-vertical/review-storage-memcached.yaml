@@ -42,6 +42,6 @@ spec:
         resources:
           limits:
             cpu: "2.0"
-            memory: "2GiB"
+            memory: "2Gi"
         image: memcached:1.6.9
       restartPolicy: Always

@@ -42,7 +42,7 @@ spec:
         resources:
           limits:
             cpu: "2.0"
-            memory: "2GiB"
+            memory: "2Gi"
         image: yg397/media-microservices
         command: ["UniqueIdService"]
       restartPolicy: Always

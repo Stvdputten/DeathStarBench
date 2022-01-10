@@ -43,7 +43,7 @@ spec:
         resources:  
           limits:
             cpu: "8"
-            memory: 4GiB
+            memory: "8Gi"
         # image: stvdputten/openresty-thrift:xenial
         # imagePullPolicy: Always
         ports: 

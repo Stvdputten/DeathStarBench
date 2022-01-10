@@ -31,7 +31,7 @@ spec:
           resources:
             limits:
               cpu: "1.0"
-              memory: "1GiB"
+              memory: "1Gi"
           volumeMounts:
           - mountPath: /go/src/github.com/harlow/go-micro-services/config.json
             subPath: config.json

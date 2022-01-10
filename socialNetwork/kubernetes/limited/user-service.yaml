@@ -41,7 +41,7 @@ spec:
         resources:
           limits:
             cpu: "1"
-            memory: 1GiB
+            memory: "1Gi"
         image: poanpan/social-network-microservices-local-jaeger:v0.0.1
         command: ["UserService"]
         imagePullPolicy: Always

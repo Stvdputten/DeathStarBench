@@ -29,7 +29,7 @@ spec:
           resources: 
             limits:
               cpu: "1.0"
-              memory: "1GiB"
+              memory: "1Gi"
           volumeMounts:
           - mountPath: /data/db
             name: reservation

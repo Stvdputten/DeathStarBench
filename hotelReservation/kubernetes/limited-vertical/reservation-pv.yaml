@@ -7,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    storage: "10GiB"
+    storage: "10Gi"
   storageClassName: reservation-storage
   hostPath:
     path: /proj/sched-serv-PG0/exp/stvdp-111011/tmp/reservation   # Where all the hard drives are mounted

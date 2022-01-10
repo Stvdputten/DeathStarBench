@@ -43,6 +43,6 @@ spec:
         resources:
           limits:
             cpu: "2.0"
-            memory: "2GiB"
+            memory: "2Gi"
         command: ["MovieReviewService"]
       restartPolicy: Always

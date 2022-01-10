@@ -35,6 +35,6 @@ spec:
           resources:
             limits:
               cpu: "2.0"
-              memory: "2GiB"
+              memory: "2Gi"
       restartPolicy: Always
 status: {}

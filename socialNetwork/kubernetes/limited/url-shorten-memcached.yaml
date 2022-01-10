@@ -41,5 +41,5 @@ spec:
         resources:  
           limits:
             cpu: "1"
-            memory: 1GiB
+            memory: "1Gi"
       restartPolicy: Always

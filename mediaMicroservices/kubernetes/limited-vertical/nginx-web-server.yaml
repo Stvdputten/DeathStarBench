@@ -43,7 +43,7 @@ spec:
         resources:
           limits:
             cpu: "8.0"
-            memory: "8GiB"
+            memory: "8Gi"
         image: yg397/openresty-thrift:xenial
         command: ["/bin/sh", "-c"]
         args:
