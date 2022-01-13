@@ -18,516 +18,516 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/resolv.conf:/etc/resolv.conf
 
-    unique-id-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: unique-id-service
-      entrypoint: UniqueIdService
+  unique-id-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: unique-id-service
+    entrypoint: UniqueIdService
 
-    movie-id-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: movie-id-service
-      entrypoint: MovieIdService
+  movie-id-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-id-service
+    entrypoint: MovieIdService
 
-    movie-id-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: movie-id-mongodb
-      ports:
-        - 27018:27017
+  movie-id-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: movie-id-mongodb
+    ports:
+      - 27018:27017
 
-    movie-id-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: movie-id-memcached
+  movie-id-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: movie-id-memcached
 
-    text-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: text-service
-      entrypoint: TextService
+  text-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: text-service
+    entrypoint: TextService
 
-    rating-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: rating-service
-      entrypoint: RatingService
+  rating-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: rating-service
+    entrypoint: RatingService
 
-    rating-redis:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: redis:alpine3.13
-      hostname: rating-redis
+  rating-redis:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: rating-redis
 
-    user-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: user-service
-      entrypoint: UserService
+  user-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: user-service
+    entrypoint: UserService
 
-    user-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: user-mongodb
-      ports:
-        - 27019:27017
+  user-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: user-mongodb
+    ports:
+      - 27019:27017
 
-    user-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: user-memcached
+  user-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: user-memcached
 
-    compose-review-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: compose-review-service
-      entrypoint: ComposeReviewService
+  compose-review-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: compose-review-service
+    entrypoint: ComposeReviewService
 
-    compose-review-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: compose-review-memcached
+  compose-review-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: compose-review-memcached
 
-    review-storage-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: review-storage-service
+  review-storage-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: review-storage-service
     entrypoint: ReviewStorageService
 
-    review-storage-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: review-storage-mongodb
-      ports:
-        - 27020:27017
+  review-storage-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: review-storage-mongodb
+    ports:
+      - 27020:27017
 
-    review-storage-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: review-storage-memcached
+  review-storage-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: review-storage-memcached
 
-    user-review-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: user-review-service
-      entrypoint: UserReviewService
+  user-review-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: user-review-service
+    entrypoint: UserReviewService
 
-    user-review-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: user-review-mongodb
-      ports:
-        - 27021:27017
+  user-review-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: user-review-mongodb
+    ports:
+      - 27021:27017
 
-    user-review-redis:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: redis:alpine3.13
-      hostname: user-review-redis
+  user-review-redis:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: user-review-redis
 
-    movie-review-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: movie-review-service
-      entrypoint: MovieReviewService
+  movie-review-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-review-service
+    entrypoint: MovieReviewService
 
-    movie-review-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: movie-review-mongodb
-      ports:
-        - 27022:27017
+  movie-review-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: movie-review-mongodb
+    ports:
+      - 27022:27017
 
-    movie-review-redis:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: redis:alpine3.13
-      hostname: movie-review-redis
+  movie-review-redis:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: redis:alpine3.13
+    hostname: movie-review-redis
 
-    nginx-web-server:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "4.0"
-            memory: "4GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: yg397/openresty-thrift:xenial
-      hostname: nginx-thrift
-      ports:
-        - 8080:8080
-      volumes:
-        - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
-        - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
-        - ./nginx-web-server/jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
-        - ./gen-lua:/gen-lua
+  nginx-web-server:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: "4GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: yg397/openresty-thrift:xenial
+    hostname: nginx-thrift
+    ports:
+      - 8080:8080
+    volumes:
+      - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
+      - ./nginx-web-server/conf/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./nginx-web-server/jaeger-config.json:/usr/local/openresty/nginx/jaeger-config.json
+      - ./gen-lua:/gen-lua
 
-    cast-info-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "4.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: cast-info-service
-      entrypoint: CastInfoService
+  cast-info-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: cast-info-service
+    entrypoint: CastInfoService
 
-    cast-info-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: cast-info-mongodb
-      ports:
-        - 27024:27017
+  cast-info-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: cast-info-mongodb
+    ports:
+      - 27024:27017
 
-    cast-info-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: cast-info-memcached
+  cast-info-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: cast-info-memcached
 
-    plot-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: plot-service
-      entrypoint: PlotService
+  plot-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: plot-service
+    entrypoint: PlotService
 
-    plot-mongodb:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: plot-mongodb
-      ports:
-        - 27025:27017
+  plot-mongodb:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: plot-mongodb
+    ports:
+      - 27025:27017
 
-    plot-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: plot-memcached
+  plot-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: plot-memcached
 
-    movie-info-service:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/media-microservices:swarm
-      hostname: movie-info-service
-      entrypoint: MovieInfoService
+  movie-info-service:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/media-microservices:swarm
+    hostname: movie-info-service
+    entrypoint: MovieInfoService
 
-    movie-info-mongodb:
-      deploy:
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        replicas: 2
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/mongo
-      hostname: movie-info-mongodb
-      ports:
-        - 27026:27017
+  movie-info-mongodb:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      replicas: 2
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    hostname: movie-info-mongodb
+    ports:
+      - 27026:27017
 
-    movie-info-memcached:
-      deploy:
-        replicas: 2
-        resources:
-          limits:
-            cpus: "1.0"
-            memory: "1GiB"
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: stvdputten/memcached
-      hostname: movie-info-memcached
+  movie-info-memcached:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    hostname: movie-info-memcached
 
-    jaeger:
-      deploy:
-        placement:
-          constraints:
-            - node.role==worker
-        restart_policy:
-          condition: any
-      image: jaegertracing/all-in-one:1.23.0
-      hostname: jaeger
-      ports:
-        - 16686:16686
+  jaeger:
+    deploy:
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: jaegertracing/all-in-one:1.23.0
+    hostname: jaeger
+    ports:
+      - 16686:16686
     environment:
-        - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411

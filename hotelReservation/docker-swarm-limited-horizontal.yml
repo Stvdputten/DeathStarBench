@@ -222,11 +222,11 @@ services:
   memcached-rate:
     deploy:
       replicas: 2
-      placement:
       resources:
         limits:
           cpus: "1.0"
           memory: "1GiB"
+      placement:
         constraints:
           - node.role==worker
       restart_policy:
