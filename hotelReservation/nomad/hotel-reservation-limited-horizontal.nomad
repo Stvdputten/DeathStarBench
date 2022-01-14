@@ -129,7 +129,7 @@ job "hotel-reservation" {
 
       resources {
         cores = 4
-        memory = 16000
+        memory = 16000 * 4
       }
 
       config {
