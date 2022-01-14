@@ -101,11 +101,11 @@ job "social-network" {
     task "jaeger" {
       driver = "docker"
 
-    resources {
-      // requires more memory_max
-      cores  = 1
-      memory = 256 * 4
-    }
+      resources {
+        // requires more memory_max
+        cores  = 4
+        memory = 256 * 16
+      }
 
       service {
         name = "jaeger"
