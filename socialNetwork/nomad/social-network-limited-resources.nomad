@@ -104,7 +104,7 @@ job "social-network" {
       resources {
         // requires more memory_max
         cores  = 4
-        memory = 256 * 16
+        memory = 16000
       }
 
       service {
