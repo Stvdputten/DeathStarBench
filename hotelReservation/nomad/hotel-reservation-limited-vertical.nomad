@@ -84,7 +84,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -205,7 +205,7 @@ job "hotel-reservation" {
 
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -236,7 +236,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -267,7 +267,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -318,7 +318,7 @@ job "hotel-reservation" {
     task "geo" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
       lifecycle {
@@ -351,7 +351,7 @@ job "hotel-reservation" {
     task "mongodb-geo" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -410,7 +410,7 @@ job "hotel-reservation" {
     task "rate" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
       lifecycle {
@@ -446,7 +446,7 @@ job "hotel-reservation" {
     task "memcached-rate" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -479,7 +479,7 @@ job "hotel-reservation" {
     task "mongodb-rate" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -533,7 +533,7 @@ job "hotel-reservation" {
     task "recommendation" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
       lifecycle {
@@ -571,7 +571,7 @@ job "hotel-reservation" {
     task "mongodb-recommendation" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -629,7 +629,7 @@ job "hotel-reservation" {
         sidecar = true
       }
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
       driver = "docker"
@@ -663,7 +663,7 @@ job "hotel-reservation" {
     task "mongodb-user" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -719,7 +719,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -754,7 +754,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -783,7 +783,7 @@ job "hotel-reservation" {
     task "mongodb-reserve" {
       driver = "docker"
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
@@ -833,7 +833,7 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        count = "2.0"
+        cores = "2.0"
         memory_max = "2174"
       }
 
