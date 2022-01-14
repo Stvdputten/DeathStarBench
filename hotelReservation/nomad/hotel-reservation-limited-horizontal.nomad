@@ -23,6 +23,7 @@ job "hotel-reservation" {
       value     = "${var.hostname}"
     }
     network {
+      mode = "bridge"
       port "frontend" {
         to = 5000
         static = 5000
