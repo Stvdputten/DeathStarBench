@@ -109,7 +109,6 @@ job "media-microservices" {
     }
 
     task "unique-id-service" {
-      count = 1
       resources {
         cores = "2.0"
         memory_max = "2147"
