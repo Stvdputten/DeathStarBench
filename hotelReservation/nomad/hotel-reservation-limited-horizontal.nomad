@@ -103,7 +103,7 @@ job "hotel-reservation" {
   }
 
   group "dns" {
-    count = 2
+    count = 1
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
