@@ -19,6 +19,38 @@ job "social-network" {
   //   operator = "distinct_hosts"
   //   value = "true"
   // }
+  group "ingress" {
+    network {
+      mode = "bridge"
+      port "inbound" {
+        static = 8080
+        to = 8080
+      }
+    }
+
+    service {
+      name = "my-ingress"
+      port = 8080
+
+      connect {
+        gateway {
+
+          ingress {
+
+            listener {
+              port     = 8080
+              protocol = "tcp"
+              service {
+                name = "uuid-api"
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+  }
 
   group "nginx+jaeger" {
     count = 2
@@ -27,9 +59,19 @@ job "social-network" {
       value     = "${var.hostname}"
     }
 
+    service {      
+      name = "uuid-api"      
+      port = "api"
+      connect {        
+        native = true      
+      }    
+    }
+
+
+
     network {
       mode = "bridge"
-      port "http" {
+      port "api" {
         static = 8080
       }
       port "jaeger-ui" {
@@ -46,6 +88,7 @@ job "social-network" {
 
     task "nginx-thrift" {
       driver = "docker"
+
       resources {
         cores    = 4
         memory_max = 4294
