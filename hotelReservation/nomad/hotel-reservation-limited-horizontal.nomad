@@ -16,15 +16,59 @@ variable "dns" {
 job "hotel-reservation" {
   datacenters = ["dc1"]
 
-  group "frontend" {
-    count = 2
+  group "ingress" {
+    network {
+      mode = "bridge"
+      port "inbound" {
+        static = 5000
+        to = 5000
+      }
+    }
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
     }
+
+    service {
+      name = "my-ingress"
+      port = 5000
+
+      connect {
+        gateway {
+          proxy {}
+
+          ingress {
+
+            listener {
+              port     = 5000
+              protocol = "tcp"
+              service {
+                name = "uuid-api"
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+  }
+
+  group "frontend" {
+    count = 2
+
+
+    service {      
+      name = "uuid-api"      
+      port = "api"
+      connect {        
+        sidecar_service {}
+      }    
+    }
+    
     network {
       mode = "bridge"
-      port "frontend" {
+      port "api" {
         to = 5000
         static = 5000
       }

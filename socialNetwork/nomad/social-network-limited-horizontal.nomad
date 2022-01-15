@@ -1,16 +1,16 @@
 variable "hostname" {
   type    = string
-  default = "node3.stvdp-109953.sched-serv-pg0.utah.cloudlab.us"
+  default = "node3.stvdp-115158.sched-serv-pg0.utah.cloudlab.us"
 }
 
 variable "jaeger" {
   type    = string
-  default = "128.110.217.144"
+  default = "128.110.219.108"
 }
 
 variable "dns" {
   type    = string
-  default = "128.110.217.140"
+  default = "128.110.219.110"
 }
 
 job "social-network" {
@@ -19,6 +19,7 @@ job "social-network" {
   //   operator = "distinct_hosts"
   //   value = "true"
   // }
+
   group "ingress" {
     network {
       mode = "bridge"
@@ -27,6 +28,10 @@ job "social-network" {
         to = 8080
       }
     }
+    constraint {
+      attribute = "${attr.unique.hostname}"
+      value     = "${var.hostname}"
+    }
 
     service {
       name = "my-ingress"
@@ -34,6 +39,7 @@ job "social-network" {
 
       connect {
         gateway {
+          proxy {}
 
           ingress {
 
@@ -54,20 +60,14 @@ job "social-network" {
 
   group "nginx+jaeger" {
     count = 2
-    constraint {
-      attribute = "${attr.unique.hostname}"
-      value     = "${var.hostname}"
-    }
 
     service {      
       name = "uuid-api"      
       port = "api"
       connect {        
-        native = true      
+        sidecar_service {}
       }    
     }
-
-
 
     network {
       mode = "bridge"
@@ -147,7 +147,7 @@ job "social-network" {
 
       resources {
         // requires more memory_max
-        cores  = 4
+        cores  = 3
         memory = 16000
       }
 

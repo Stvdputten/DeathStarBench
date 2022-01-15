@@ -16,15 +16,57 @@ variable "dns" {
 job "media-microservices" {
   datacenters = ["dc1"]
 
-  group "nginx-web-server" {
-    count = 2
+  group "ingress" {
+    network {
+      mode = "bridge"
+      port "inbound" {
+        static = 8080
+        to = 8080
+      }
+    }
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
     }
+
+    service {
+      name = "my-ingress"
+      port = 8080
+
+      connect {
+        gateway {
+          proxy {}
+
+          ingress {
+
+            listener {
+              port     = 8080
+              protocol = "tcp"
+              service {
+                name = "uuid-api"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  group "nginx-web-server" {
+    count = 2
+
+    service {      
+      name = "uuid-api"      
+      port = "api"
+      connect {        
+        sidecar_service {}
+      }    
+    }
+
     network {
       mode = "bridge"
-      port "nginx" {
+      port "api" {
         static = 8080
       }
       port "jaeger-ui" {
@@ -78,7 +120,7 @@ job "media-microservices" {
 
     task "jaeger" {
       resources {
-        cores  = 4
+        cores  = 3
         memory = 16000 * 4
       }
       lifecycle {
