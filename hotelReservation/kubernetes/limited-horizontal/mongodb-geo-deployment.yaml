@@ -31,12 +31,5 @@ spec:
             limits:
               cpu: "1.0"
               memory: "1Gi"
-          volumeMounts:
-            - mountPath: /data/db
-              name: geo
       restartPolicy: Always
-      volumes:
-        - name: geo
-          persistentVolumeClaim:
-            claimName: geo
 status: {}
