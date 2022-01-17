@@ -33,9 +33,9 @@ spec:
 #           volumeMounts:
 #             - mountPath: /data/db
 #               name: profile
-#       restartPolicy: Always
+      restartPolicy: Always
 #       volumes:
 #       - name: profile
 #         persistentVolumeClaim:
 #           claimName: profile
-# status: {}
+status: {}

@@ -33,9 +33,9 @@ spec:
 #           volumeMounts:
 #           - mountPath: /data/db
 #             name: rate
-#       restartPolicy: Always
+      restartPolicy: Always
 #       volumes:
 #       - name: rate
 #         persistentVolumeClaim:
 #           claimName: rate
-# status: {}
+status: {}
