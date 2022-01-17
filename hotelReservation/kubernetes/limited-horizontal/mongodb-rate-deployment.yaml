@@ -30,5 +30,12 @@ spec:
             limits:
               cpu: "1.0"
               memory: "1Gi"
-      restartPolicy: Always
-status: {}
+#           volumeMounts:
+#           - mountPath: /data/db
+#             name: rate
+#       restartPolicy: Always
+#       volumes:
+#       - name: rate
+#         persistentVolumeClaim:
+#           claimName: rate
+# status: {}
