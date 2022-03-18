@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+    kompose.version: 1.26.0 (HEAD)
+  labels:
+    io.kompose.service: mongodb-rate
+  name: mongodb-rate
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodb-rate
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-swarm-local.yml
+        kompose.version: 1.26.0 (HEAD)
+      labels:
+        io.kompose.service: mongodb-rate
+    spec:
+      containers:
+        - image: stvdputten/mongo
+          name: mongodb-rate
+          ports:
+            - containerPort: 27017
+          resources:
+            limits:
+              cpu: "2.0"
+              memory: "2Gi"
+          volumeMounts:
+          - mountPath: /data/db
+            name: rate
+      restartPolicy: Always
+      volumes:
+      - name: rate
+        persistentVolumeClaim:
+          claimName: rate
+status: {}

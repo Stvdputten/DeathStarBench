@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-pv
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: "10Gi"
+  storageClassName: user-storage
+  hostPath:
+    path: /proj/sched-serv-PG0/exp/stvdp-111011/tmp/user   # Where all the hard drives are mounted
+    type: Directory

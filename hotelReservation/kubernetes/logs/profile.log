@@ -1,0 +1,4 @@
+2021/11/17 09:48:01 TLS disabled
+profile db ip addr = mongodb-profile.hotel-res.svc.cluster.local:27019
+profile memc addr port = memcached-profile.hotel-res.svc.cluster.local:11213
+profile ip = profile.hotel-res.svc.cluster.local, port = 8081

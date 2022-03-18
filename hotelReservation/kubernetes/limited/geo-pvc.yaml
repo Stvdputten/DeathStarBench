@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    io.kompose.service: geo
+  name: geo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: geo-storage
+  selector:
+    matchLabels:
+      io.kompose.service: geo
+  resources:
+    requests:
+      storage: "1Gi"
+status: {}

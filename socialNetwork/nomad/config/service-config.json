@@ -1,0 +1,181 @@
+{
+  "url-shorten-service": {
+    "addr": "url-shorten-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9100,
+    "timeout_ms": 10000
+  },
+  "unique-id-service": {
+    "addr": "unique-id-service",
+    "port": 9099,
+    "netif": "eth0",
+    "keepalive_ms": 10000,
+    "connections": 512,
+    "timeout_ms": 10000
+  },
+  "write-home-timeline-service": {
+    "addr": "write-home-timeline-service",
+    "workers": 32,
+    "keepalive_ms": 10000,
+    "connections": 512,
+    "port": 9101,
+    "timeout_ms": 10000
+  },
+  "home-timeline-redis": {
+    "addr": "home-timeline-redis",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 6379,
+    "timeout_ms": 10000
+  },
+  "text-service": {
+    "addr": "text-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9098,
+    "timeout_ms": 10000
+  },
+  "post-storage-service": {
+    "addr": "post-storage-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9097,
+    "timeout_ms": 10000
+  },
+  "social-graph-redis": {
+    "addr": "social-graph-redis",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 6382,
+    "timeout_ms": 10000
+  },
+  "user-mention-service": {
+    "addr": "user-mention-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9096,
+    "timeout_ms": 10000
+  },
+  "home-timeline-service": {
+    "addr": "home-timeline-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9095,
+    "timeout_ms": 10000
+  },
+  "user-memcached": {
+    "addr": "user-memcached",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 11212,
+    "timeout_ms": 10000
+  },
+  "url-shorten-memcached": {
+    "addr": "url-shorten-memcached",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 11213,
+    "timeout_ms": 10000
+  },
+  "compose-post-service": {
+    "addr": "compose-post-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9094,
+    "timeout_ms": 10000
+  },
+  "user-mongodb": {
+    "addr": "user-mongodb",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 27018,
+    "timeout_ms": 10000
+  },
+  "secret": "secret",
+  "ssl": {
+    "caPath": "/keys/CA.pem",
+    "ciphers": "ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH",
+    "enabled": false,
+    "serverCertPath": "/keys/server.crt",
+    "serverKeyPath": "/keys/server.key"
+  },
+  "user-timeline-mongodb": {
+    "addr": "user-timeline-mongodb",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 27019,
+    "timeout_ms": 10000
+  },
+  "social-graph-mongodb": {
+    "addr": "social-graph-mongodb",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 27020,
+    "timeout_ms": 10000
+  },
+  "user-timeline-redis": {
+    "addr": "user-timeline-redis",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 6381,
+    "timeout_ms": 10000
+  },
+  "user-timeline-service": {
+    "addr": "user-timeline-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9093,
+    "timeout_ms": 10000
+  },
+  "post-storage-mongodb": {
+    "addr": "post-storage-mongodb",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 27021,
+    "timeout_ms": 10000
+  },
+  "url-shorten-mongodb": {
+    "addr": "url-shorten-mongodb",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 27022,
+    "timeout_ms": 10000
+  },
+  "media-service": {
+    "addr": "media-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9092,
+    "timeout_ms": 10000
+  },
+  "social-graph-service": {
+    "addr": "social-graph-service",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 9091,
+    "timeout_ms": 10000
+  },
+  "post-storage-memcached": {
+    "addr": "post-storage-memcached",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 11214,
+    "timeout_ms": 10000
+  },
+  "compose-post-redis": {
+    "addr": "compose-post-redis",
+    "connections": 512,
+    "keepalive_ms": 10000,
+    "port": 6380,
+    "timeout_ms": 10000
+  },
+  "user-service": {
+    "addr": "user-service",
+    "port": 9090,
+    "netif": "eth0",
+    "keepalive_ms": 10000,
+    "connections": 512,
+    "timeout_ms": 10000
+  }
+}

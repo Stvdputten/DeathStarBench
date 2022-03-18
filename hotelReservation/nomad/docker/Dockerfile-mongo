@@ -1,0 +1,8 @@
+FROM mongo:4.4.6
+
+USER root
+RUN apt-get update && apt-get install -y curl
+
+# ENTRYPOINT [ "docker-entrypoint.sh" ]
+EXPOSE 27017
+CMD [ "mongod" ]

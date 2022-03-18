@@ -1,0 +1,403 @@
+version: "3"
+networks:
+  default:
+    driver: overlay
+
+services:
+  consul:
+    image: consul:1.9.6
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    ports:
+      - "8300:8300"
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:53/udp"
+
+  frontend:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: "4GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_frontend_single_node:swarm
+    entrypoint: frontend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - consul
+
+  profile:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_profile_single_node:swarm
+    entrypoint: profile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb-profile
+      - memcached-profile
+      - consul
+
+  search:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/hotel_reserv_search_single_node:swarm
+    entrypoint: search
+    ports:
+      - "8082:8082"
+    depends_on:
+      - consul
+    environment:
+      - TLS
+
+  geo:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_geo_single_node:swarm
+    entrypoint: geo
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongodb-geo
+      - consul
+
+  rate:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_rate_single_node:swarm
+    entrypoint: rate
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mongodb-rate
+      - memcached-rate
+      - consul
+
+  recommendation:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_recommendation_single_node:swarm
+    entrypoint: recommendation
+    ports:
+      - "8085:8085"
+    depends_on:
+      - mongodb-recommendation
+      - consul
+
+  user:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_user_single_node:swarm
+    entrypoint: user
+    ports:
+      - "8086:8086"
+    depends_on:
+      - mongodb-user
+      - consul
+
+  reservation:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    environment:
+      - TLS
+    image: stvdputten/hotel_reserv_reserve_single_node:swarm
+    entrypoint: reservation
+    ports:
+      - "8087:8087"
+    depends_on:
+      - mongodb-reservation
+      - memcached-reserve
+      - consul
+
+  jaeger:
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: jaegertracing/all-in-one:1.23.0
+    ports:
+      - "14269"
+      - "5778:5778"
+      - "14268:14268"
+      - "14267"
+      - "16686:16686"
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+
+  memcached-rate:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    ports:
+     - 11212:11211
+    environment:
+      - MEMCACHED_CACHE_SIZE=128
+      - MEMCACHED_THREADS=2
+    logging:
+      options:
+        max-size: 50m
+
+  memcached-profile:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    ports:
+     - 11213:11211
+    environment:
+      - MEMCACHED_CACHE_SIZE=128
+      - MEMCACHED_THREADS=2
+    logging:
+      options:
+        max-size: 50m
+
+  memcached-reserve:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/memcached
+    ports:
+     - 11214:11211
+    environment:
+      - MEMCACHED_CACHE_SIZE=128
+      - MEMCACHED_THREADS=2
+    logging:
+      options:
+        max-size: 50m
+
+  mongodb-geo:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - geo:/data/db  
+
+  mongodb-profile:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27019:27017"
+    volumes:
+      - profile:/data/db    
+
+  mongodb-rate:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27020:27017"
+    volumes:
+      - rate:/data/db   
+
+  mongodb-recommendation:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27021:27017"
+    volumes:
+      - recommendation:/data/db
+    
+  mongodb-reservation:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27022:27017"
+    volumes:
+      - reservation:/data/db 
+
+  mongodb-user:
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1GiB"
+      placement:
+        constraints:
+          - node.role==worker
+      restart_policy:
+        condition: any
+    image: stvdputten/mongo
+    ports:
+      - "27023:27017"
+    volumes:
+      - user:/data/db
+    
+volumes:
+  geo:
+  profile:
+  rate:
+  recommendation:
+  reservation:
+  user:
+
