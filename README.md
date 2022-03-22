@@ -1,3 +1,12 @@
+# Modications made by Stephan van der Putten
+A fork of the original (DeathStarBench Suite)[https://github.com/delimitrou/DeathStarBench] for my (thesis)[https://github.com/Stvdputten/Orchestration/tree/master].
+.
+
+Changes include:
+- Hashicorp Nomad and Consul implementations of the DeathStarBench
+- Addition of K8s and Swarm files if not present
+- Explicitly define resources, e.g. image versions and CPU and Memory size
+
 # DeathStarBench
 
 Open-source benchmark suite for cloud microservices. DeathStarBench includes five end-to-end services, four for cloud systems, and one for cloud-edge systems running on drone swarms. 
