@@ -138,7 +138,6 @@ job "social-network" {
       driver = "docker"
 
       resources {
-        // cores    = 1
         cpu    = 1000
         memory_max = 1000
       }
@@ -572,7 +571,7 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cpu    = 1009
+        cpu    = 1000
         memory_max = 1000
       }
 
@@ -673,7 +672,7 @@ job "social-network" {
       driver = "docker"
 
       resources {
-        cores    = 1
+        cpu = 1000
         memory_max = 1000
       }
 
