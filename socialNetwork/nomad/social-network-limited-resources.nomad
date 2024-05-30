@@ -47,7 +47,7 @@ job "social-network" {
       env {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
+        NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
         NOMAD_CPU_CORES = 0
       }
       driver = "docker"
