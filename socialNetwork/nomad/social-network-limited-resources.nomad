@@ -127,6 +127,10 @@ job "social-network" {
 
       config {
         image = "jaegertracing/all-in-one:1.23.0"
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -178,6 +182,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -201,6 +209,10 @@ job "social-network" {
           "--port",
           "27020"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -224,6 +236,10 @@ job "social-network" {
           "--port",
           "6382"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -269,6 +285,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -293,6 +313,10 @@ job "social-network" {
           "-p",
           "11214"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -317,6 +341,10 @@ job "social-network" {
           "--port",
           "27021"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -366,6 +394,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -389,6 +421,10 @@ job "social-network" {
           "--port",
           "6379"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -439,6 +475,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -463,6 +503,10 @@ job "social-network" {
           "--port",
           "27019"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -486,6 +530,10 @@ job "social-network" {
           "--port",
           "6381"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -535,6 +583,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -558,6 +610,10 @@ job "social-network" {
           "--port",
           "27022"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -582,6 +638,10 @@ job "social-network" {
           "11213"
         ]
       }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
     }
   }
 
@@ -635,6 +695,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -658,6 +722,10 @@ job "social-network" {
           "-p",
           "11212"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -681,6 +749,10 @@ job "social-network" {
           "--port",
           "27018"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -719,6 +791,12 @@ job "social-network" {
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 media-mongodb' >> /etc/hosts && echo '127.0.0.1 media-memcached' >> /etc/hosts && MediaService"]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
+        // cpu_shares = 100
+        // memory = "1000MB"
         mount {
           type   = "bind"
           target = "/keys"
@@ -748,6 +826,10 @@ job "social-network" {
       config {
         image   = "stvdputten/memcached"
         command = "memcached"
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
 
@@ -768,6 +850,10 @@ job "social-network" {
           "--port",
           "27017"
         ]
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -815,6 +901,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -862,6 +952,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -909,6 +1003,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -958,6 +1056,10 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
@@ -1006,6 +1108,10 @@ job "social-network" {
           target = "/usr/local/openresty/nginx/conf/nginx.conf"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
         }
+
+        # Docker specific limits
+        memory=1GiB 
+        cpus=1
       }
     }
   }
