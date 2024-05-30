@@ -21,6 +21,11 @@ job "social-network" {
   // }
 
   group "nginx+jaeger" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -120,6 +125,11 @@ job "social-network" {
   }
 
   group "social-graph" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -199,6 +209,11 @@ job "social-network" {
   }
 
   group "post-storage" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -277,6 +292,11 @@ job "social-network" {
   }
 
   group "home-timeline" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -286,6 +306,10 @@ job "social-network" {
         servers  = ["${var.dns}", "8.8.8.8"]
         searches = ["service.consul"]
       }
+    }
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
     }
 
     task "home-timeline-service" {
@@ -338,6 +362,11 @@ job "social-network" {
 
 
   group "user-timeline" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -416,6 +445,11 @@ job "social-network" {
   }
 
   group "url-shorten" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -493,6 +527,11 @@ job "social-network" {
   }
 
   group "user" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     // constraint {
     //   attribute = "${attr.unique.hostname}"
     //   value     = "node4.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
@@ -575,6 +614,11 @@ job "social-network" {
   }
 
   group "media" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -647,6 +691,11 @@ job "social-network" {
   }
 
   group "compose-post" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -688,6 +737,11 @@ job "social-network" {
   }
 
   group "text-service" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -729,6 +783,11 @@ job "social-network" {
   }
 
   group "user-mention" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -771,6 +830,11 @@ job "social-network" {
 
 
   group "unique-id-service" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "http" {
@@ -813,6 +877,11 @@ job "social-network" {
   }
 
   group "media-frontend" {
+
+    env {
+        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
+    }
+
     network {
       mode = "bridge"
       port "media" {
