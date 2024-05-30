@@ -126,11 +126,9 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "jaegertracing/all-in-one:1.23.0"
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -167,6 +165,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         // command = "SocialGraphService"
         command = "sh"
@@ -182,10 +182,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -203,16 +199,14 @@ job "social-network" {
         memory_max = 1073
       }
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27020"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -230,16 +224,14 @@ job "social-network" {
         memory_max = 1073
       }
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
           "--port",
           "6382"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -272,6 +264,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 post-storage-mongodb' >> /etc/hosts && echo '127.0.0.1 post-storage-memcached' >> /etc/hosts && PostStorageService"]
@@ -285,10 +279,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -307,16 +297,14 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
           "-p",
           "11214"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -335,16 +323,14 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27021"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -380,6 +366,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         // command = "HomeTimelineService"
         command = "sh"
@@ -394,10 +382,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -415,16 +399,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
           "--port",
           "6379"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -461,6 +443,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
@@ -475,10 +459,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -497,16 +477,14 @@ job "social-network" {
       driver = "docker"
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27019"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -524,16 +502,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
           "--port",
           "6381"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -569,6 +545,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UrlShortenService"
         command = "sh"
@@ -583,10 +561,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -604,16 +578,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27022"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -631,6 +603,8 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
@@ -638,10 +612,6 @@ job "social-network" {
           "11213"
         ]
       }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
     }
   }
 
@@ -681,6 +651,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserService"
         command = "sh"
@@ -695,10 +667,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -716,16 +684,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
           "-p",
           "11212"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -743,16 +709,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27018"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -788,15 +752,12 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 media-mongodb' >> /etc/hosts && echo '127.0.0.1 media-memcached' >> /etc/hosts && MediaService"]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
-        // cpu_shares = 100
-        // memory = "1000MB"
+        cpu_shares = 100
         mount {
           type   = "bind"
           target = "/keys"
@@ -824,12 +785,10 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/memcached"
         command = "memcached"
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
 
@@ -844,16 +803,14 @@ job "social-network" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
           "--port",
           "27017"
         ]
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -889,6 +846,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/social-network-microservices:nomad"
         command = "ComposePostService"
         mount {
@@ -901,10 +860,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -940,6 +895,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/social-network-microservices:nomad"
         command = "TextService"
         mount {
@@ -952,10 +909,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -991,6 +944,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image   = "stvdputten/social-network-microservices:nomad"
         command = "UserMentionService"
         mount {
@@ -1003,10 +958,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -1043,6 +994,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         command = "UniqueIdService"
         ports   = ["http"]
@@ -1056,10 +1009,6 @@ job "social-network" {
           target = "/social-network-microservices/config"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/config"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
@@ -1096,6 +1045,8 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1073
+        cpu_hard_limit = true
         image = "yg397/media-frontend:xenial"
         ports = ["media"]
         mount {
@@ -1108,10 +1059,6 @@ job "social-network" {
           target = "/usr/local/openresty/nginx/conf/nginx.conf"
           source = "/users/stvdp/DeathStarBench/socialNetwork/nomad/media-frontend/conf/nginx.conf"
         }
-
-        # Docker specific limits
-        memory=1GiB 
-        cpus=1
       }
     }
   }
