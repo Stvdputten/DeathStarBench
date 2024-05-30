@@ -44,17 +44,10 @@ job "social-network" {
     }
 
     task "nginx-thrift" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   // NOMAD_MEMORY_LIMIT = "8584"
-      //   NOMAD_MEMORY_MAX_LIMIT = "8584"
-      //   // NOMAD_CPU_CORES = 0
-      // }
       driver = "docker"
       resources {
-        // cores    = 4
-        cpu    = 400
-        memory_max = 4294
+        cpu  = 4000
+        memory_max = 4000
       }
 
       service {
@@ -62,6 +55,9 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 4000
+        cpu_hard_limit = true
+
         image   = "stvdputten/openresty-thrift:latest"
         ports   = ["http"]
         command = "sh"
@@ -106,19 +102,11 @@ job "social-network" {
     }
 
     task "jaeger" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
-      //   // NOMAD_CPU_CORES = 0
-      // }
       driver = "docker"
 
       resources {
-        // requires more memory_max
-        // cores  = 1
-        cpu    = 400
-        // memory = 16000
+        cpu    = 4000
+        memory = 16000
       }
 
       service {
@@ -126,8 +114,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 16000
         cpu_hard_limit = true
+
         image = "jaegertracing/all-in-one:1.23.0"
       }
     }
@@ -146,18 +135,12 @@ job "social-network" {
     }
 
     task "social-graph-service" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
-      //   // NOMAD_CPU_CORES = 0
-      // }
       driver = "docker"
 
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        // cores    = 1
+        cpu    = 1000
+        memory_max = 1000
       }
 
       service {
@@ -165,7 +148,7 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
 
         image = "stvdputten/social-network-microservices:nomad"
@@ -187,20 +170,16 @@ job "social-network" {
     }
 
     task "social-graph-mongodb" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
-      //   // NOMAD_CPU_CORES = 0
-      // }
       driver = "docker"
+
       resources {
-        cores = 1
-        memory_max = 1073
+        cpu = 1000
+        memory_max = 1000
       }
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
@@ -211,21 +190,15 @@ job "social-network" {
     }
 
     task "social-graph-redis" {
-      // env {
-      //   // NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
-      //   // NOMAD_CPU_CORES = 0
-      // }
       driver = "docker"
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
@@ -254,9 +227,8 @@ job "social-network" {
       // }
       driver = "docker"
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
 
       service {
@@ -264,8 +236,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 post-storage-mongodb' >> /etc/hosts && echo '127.0.0.1 post-storage-memcached' >> /etc/hosts && PostStorageService"]
@@ -289,16 +262,17 @@ job "social-network" {
       //   NOMAD_MEMORY_MAX_LIMIT = "1073"
       //   // NOMAD_CPU_CORES = 0
       // }
+
       driver = "docker"
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
@@ -317,14 +291,14 @@ job "social-network" {
       // }
       driver = "docker"
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
@@ -356,9 +330,8 @@ job "social-network" {
       // }
       driver = "docker"
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
 
       service {
@@ -366,8 +339,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         // command = "HomeTimelineService"
         command = "sh"
@@ -393,14 +367,14 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+        
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
@@ -432,9 +406,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -443,8 +416,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserTimelineService"
         command = "sh"
@@ -470,15 +444,15 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
@@ -496,14 +470,14 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores  = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "redis:alpine3.13"
         command = "redis-server"
         args = [
@@ -534,9 +508,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -545,8 +518,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UrlShortenService"
         command = "sh"
@@ -572,14 +546,15 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
+
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
@@ -597,14 +572,16 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1009
+        memory_max = 1000
       }
+
       driver = "docker"
+
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
@@ -640,9 +617,9 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        // cores    = 1
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -651,8 +628,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         // command = "UserService"
         command = "sh"
@@ -671,21 +649,17 @@ job "social-network" {
     }
 
     task "user-memcached" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
-      //   // NOMAD_CPU_CORES = 0
-      // }
-      resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
-      }
       driver = "docker"
+
+      resources {
+        cpu = 1000
+        memory_max = 1000
+      }
+
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/memcached"
         command = "memcached"
         args = [
@@ -696,21 +670,17 @@ job "social-network" {
     }
 
     task "user-mongodb" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      //   NOMAD_MEMORY_LIMIT = "1000"
-      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
-      //   // NOMAD_CPU_CORES = 0
-      // }
+      driver = "docker"
+
       resources {
         cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        memory_max = 1000
       }
-      driver = "docker"
+
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/mongo"
         command = "mongod"
         args = [
@@ -740,9 +710,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -751,8 +720,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 media-mongodb' >> /etc/hosts && echo '127.0.0.1 media-memcached' >> /etc/hosts && MediaService"]
@@ -777,31 +747,27 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/memcached"
         command = "memcached"
       }
     }
 
     task "media-mongodb" {
-      // env {
-      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      // }
       resources {
-        // cores    = 1
-        cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
         image   = "stvdputten/mongo"
         command = "mongod"
@@ -833,9 +799,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        cores    = 1
-        // cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -844,8 +809,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/social-network-microservices:nomad"
         command = "ComposePostService"
         mount {
@@ -882,9 +848,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        // cores    = 1
-        cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -893,8 +858,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/social-network-microservices:nomad"
         command = "TextService"
         mount {
@@ -931,9 +897,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        // cores    = 1
-        cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -942,8 +907,9 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
+
         image   = "stvdputten/social-network-microservices:nomad"
         command = "UserMentionService"
         mount {
@@ -981,9 +947,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        // cores    = 1
-        cpu    = 100
-        memory_max = 1073
+        cpu    = 1000
+        memory_max = 1000
       }
       driver = "docker"
 
@@ -992,6 +957,9 @@ job "social-network" {
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         command = "UniqueIdService"
         ports   = ["http"]
@@ -1030,9 +998,8 @@ job "social-network" {
       //   // NOMAD_CPU_CORES = 0
       // }
       resources {
-        // cores    = 1
-        cpu    = 100
-        memory = 1073
+        cpu    = 1000
+        memory = 1000
       }
       driver = "docker"
 
@@ -1041,7 +1008,7 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
+        memory_hard_limit = 1000
         cpu_hard_limit = true
         image = "yg397/media-frontend:xenial"
         ports = ["media"]
