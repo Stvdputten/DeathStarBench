@@ -136,12 +136,12 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cpu = 1000
-        memory = 16000 * 4
+        cpu = 4000
+        memory = 16000
       }
 
       config {
-        memory_hard_limit = 1000
+        memory_hard_limit = 16000
         cpu_hard_limit = true
 
         image = "jaegertracing/all-in-one:1.23.0"
