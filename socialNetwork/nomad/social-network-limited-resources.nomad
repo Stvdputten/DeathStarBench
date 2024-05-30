@@ -46,7 +46,8 @@ job "social-network" {
     task "nginx-thrift" {
       driver = "docker"
       resources {
-        cores    = 4
+        // cores    = 4
+        cpu    = 400
         memory_max = 4294
       }
 
@@ -103,7 +104,8 @@ job "social-network" {
 
       resources {
         // requires more memory_max
-        cores  = 4
+        // cores  = 4
+        cpu    = 400
         memory = 16000
       }
 
@@ -133,7 +135,8 @@ job "social-network" {
       driver = "docker"
 
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
 
@@ -163,7 +166,8 @@ job "social-network" {
     task "social-graph-mongodb" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       config {
@@ -179,7 +183,8 @@ job "social-network" {
     task "social-graph-redis" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       config {
@@ -208,7 +213,8 @@ job "social-network" {
     task "post-storage-service" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
 
@@ -236,7 +242,8 @@ job "social-network" {
     task "post-storage-memcached" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
 
@@ -253,7 +260,8 @@ job "social-network" {
     task "post-storage-mongodb" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
 
@@ -283,7 +291,8 @@ job "social-network" {
     task "home-timeline-service" {
       driver = "docker"
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
 
@@ -311,7 +320,8 @@ job "social-network" {
 
     task "home-timeline-redis" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -341,7 +351,8 @@ job "social-network" {
 
     task "user-timeline-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -370,7 +381,8 @@ job "social-network" {
 
     task "user-timeline-mongodb" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -387,7 +399,8 @@ job "social-network" {
 
     task "user-timeline-redis" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -416,7 +429,8 @@ job "social-network" {
 
     task "url-shorten-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -445,7 +459,8 @@ job "social-network" {
 
     task "url-shorten-mongodb" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -461,7 +476,8 @@ job "social-network" {
 
     task "url-shorten-memcached" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -495,7 +511,8 @@ job "social-network" {
 
     task "user-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -524,7 +541,8 @@ job "social-network" {
 
     task "user-memcached" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -540,7 +558,8 @@ job "social-network" {
 
     task "user-mongodb" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -569,7 +588,8 @@ job "social-network" {
 
     task "media-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -597,7 +617,8 @@ job "social-network" {
 
     task "media-memcached" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -609,7 +630,8 @@ job "social-network" {
 
     task "media-mongodb" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -638,7 +660,8 @@ job "social-network" {
 
     task "compose-post-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -678,7 +701,8 @@ job "social-network" {
 
     task "text-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -718,7 +742,8 @@ job "social-network" {
 
     task "user-mention-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -759,7 +784,8 @@ job "social-network" {
 
     task "unique-id-service" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -801,7 +827,8 @@ job "social-network" {
 
     task "media-frontend" {
       resources {
-        cores    = 1
+        // cores    = 1
+        cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
