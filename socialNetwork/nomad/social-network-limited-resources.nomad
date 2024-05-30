@@ -21,11 +21,6 @@ job "social-network" {
   // }
 
   group "nginx+jaeger" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -49,6 +44,9 @@ job "social-network" {
     }
 
     task "nginx-thrift" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 4
@@ -105,6 +103,9 @@ job "social-network" {
     }
 
     task "jaeger" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
 
       resources {
@@ -125,11 +126,6 @@ job "social-network" {
   }
 
   group "social-graph" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -142,6 +138,9 @@ job "social-network" {
     }
 
     task "social-graph-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
 
       resources {
@@ -174,6 +173,9 @@ job "social-network" {
     }
 
     task "social-graph-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -191,6 +193,9 @@ job "social-network" {
     }
 
     task "social-graph-redis" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -209,11 +214,6 @@ job "social-network" {
   }
 
   group "post-storage" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -226,6 +226,9 @@ job "social-network" {
     }
 
     task "post-storage-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -255,6 +258,9 @@ job "social-network" {
     }
 
     task "post-storage-memcached" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -273,6 +279,9 @@ job "social-network" {
     }
 
     task "post-storage-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -292,11 +301,6 @@ job "social-network" {
   }
 
   group "home-timeline" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -308,11 +312,10 @@ job "social-network" {
       }
     }
 
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     task "home-timeline-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       driver = "docker"
       resources {
         // cores    = 1
@@ -343,6 +346,9 @@ job "social-network" {
     }
 
     task "home-timeline-redis" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -362,11 +368,6 @@ job "social-network" {
 
 
   group "user-timeline" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -379,6 +380,9 @@ job "social-network" {
     }
 
     task "user-timeline-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -409,6 +413,9 @@ job "social-network" {
     }
 
     task "user-timeline-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -427,6 +434,9 @@ job "social-network" {
     }
 
     task "user-timeline-redis" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -445,11 +455,6 @@ job "social-network" {
   }
 
   group "url-shorten" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -462,6 +467,9 @@ job "social-network" {
     }
 
     task "url-shorten-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -492,6 +500,9 @@ job "social-network" {
     }
 
     task "url-shorten-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -509,6 +520,9 @@ job "social-network" {
     }
 
     task "url-shorten-memcached" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -527,11 +541,6 @@ job "social-network" {
   }
 
   group "user" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     // constraint {
     //   attribute = "${attr.unique.hostname}"
     //   value     = "node4.stvdp-109588.sched-serv-pg0.utah.cloudlab.us"
@@ -549,6 +558,9 @@ job "social-network" {
     }
 
     task "user-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -579,6 +591,9 @@ job "social-network" {
     }
 
     task "user-memcached" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -596,6 +611,9 @@ job "social-network" {
     }
 
     task "user-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -614,11 +632,6 @@ job "social-network" {
   }
 
   group "media" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -631,6 +644,9 @@ job "social-network" {
     }
 
     task "media-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -660,6 +676,9 @@ job "social-network" {
     }
 
     task "media-memcached" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -673,6 +692,9 @@ job "social-network" {
     }
 
     task "media-mongodb" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -691,11 +713,6 @@ job "social-network" {
   }
 
   group "compose-post" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -708,6 +725,9 @@ job "social-network" {
     }
 
     task "compose-post-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -737,11 +757,6 @@ job "social-network" {
   }
 
   group "text-service" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -754,6 +769,9 @@ job "social-network" {
     }
 
     task "text-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -783,11 +801,6 @@ job "social-network" {
   }
 
   group "user-mention" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -800,6 +813,9 @@ job "social-network" {
     }
 
     task "user-mention-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -830,11 +846,6 @@ job "social-network" {
 
 
   group "unique-id-service" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "http" {
@@ -847,6 +858,9 @@ job "social-network" {
     }
 
     task "unique-id-service" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
@@ -877,11 +891,6 @@ job "social-network" {
   }
 
   group "media-frontend" {
-
-    env {
-        NOMAD_CPU_LIMIT = "500"  # Set the CPU limit to 500 MHz
-    }
-
     network {
       mode = "bridge"
       port "media" {
@@ -895,6 +904,9 @@ job "social-network" {
     }
 
     task "media-frontend" {
+      env {
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      }
       resources {
         // cores    = 1
         cpu    = 100
