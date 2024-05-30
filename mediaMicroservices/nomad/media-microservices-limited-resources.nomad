@@ -43,12 +43,12 @@ job "media-microservices" {
       driver = "docker"
 
       resources {
-        cpu = 8000
-        memory_max = 8000
+        cpu = 4000
+        memory_max = 4000
       }
 
       config {
-        memory_hard_limit = 8000
+        memory_hard_limit = 4000
         cpu_hard_limit = true
 
         image   = "yg397/openresty-thrift:xenial"
