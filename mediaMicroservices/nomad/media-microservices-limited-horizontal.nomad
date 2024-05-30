@@ -85,11 +85,14 @@ job "media-microservices" {
       driver = "docker"
 
       resources {
-        cores = "4.0"
-        memory_max = "4285"
+        cpu = 4000
+        memory_max = 4000
       }
 
       config {
+        memory_hard_limit = 4000
+        cpu_hard_limit = true
+
         image   = "yg397/openresty-thrift:xenial"
         ports   = ["nginx"]
         command = "sh"
@@ -120,8 +123,8 @@ job "media-microservices" {
 
     task "jaeger" {
       resources {
-        cores  = 3
-        memory = 16000 * 4
+        cpu = 4000
+        memory = 16000 
       }
       lifecycle {
         hook    = "prestart"
@@ -132,6 +135,9 @@ job "media-microservices" {
       }
       driver = "docker"
       config {
+        // memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "jaegertracing/all-in-one:latest"
         ports = ["jaeger", "jaeger-ui"]
       }
@@ -154,8 +160,8 @@ job "media-microservices" {
 
     task "unique-id-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       service {
         name = "unique-id-service"
@@ -163,6 +169,9 @@ job "media-microservices" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/media-microservices:nomad"
         command = "UniqueIdService"
         ports   = ["http"]
@@ -185,8 +194,8 @@ job "media-microservices" {
 
     task "movie-id-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -198,6 +207,9 @@ job "media-microservices" {
       }
       driver = "docker"
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args  = ["-c", "echo '127.0.0.1  movie-id-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-id-memcached' >> /etc/hosts && MovieIdService"]
@@ -207,8 +219,8 @@ job "media-microservices" {
 
     task "movie-id-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -216,14 +228,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "movie-id-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -231,6 +246,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -251,8 +269,8 @@ job "media-microservices" {
 
     task "text-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -260,6 +278,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/media-microservices:nomad"
         command = "TextService"
         ports   = ["http"]
@@ -282,8 +303,8 @@ job "media-microservices" {
 
     task "rating-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -295,6 +316,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -305,8 +329,8 @@ job "media-microservices" {
 
     task "rating-redis" {
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -314,6 +338,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "redis:alpine3.13"
       }
     }
@@ -335,8 +362,8 @@ job "media-microservices" {
 
     task "user-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
 
       lifecycle {
@@ -349,6 +376,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -360,8 +390,8 @@ job "media-microservices" {
 
     task "user-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
 
       driver = "docker"
@@ -370,14 +400,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "user-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
 
       driver = "docker"
@@ -386,6 +419,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -406,8 +442,8 @@ job "media-microservices" {
 
     task "compose-review-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -419,6 +455,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -429,8 +468,8 @@ job "media-microservices" {
 
     task "compose-review-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -438,6 +477,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -458,8 +500,8 @@ job "media-microservices" {
 
     task "review-storage-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -471,6 +513,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -481,8 +526,8 @@ job "media-microservices" {
 
     task "review-storage-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -490,14 +535,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "review-storage-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -505,6 +553,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -525,8 +576,8 @@ job "media-microservices" {
 
     task "user-review-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -538,6 +589,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -548,8 +602,8 @@ job "media-microservices" {
 
     task "user-review-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -557,14 +611,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "user-review-redis" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -573,6 +630,9 @@ job "media-microservices" {
         address_mode = "driver"
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "redis:alpine3.13"
       }
     }
@@ -593,8 +653,8 @@ job "media-microservices" {
 
     task "movie-review-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -606,6 +666,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  movie-review-mongodb' >> /etc/hosts && echo '127.0.0.1  movie-review-redis' >> /etc/hosts && MovieReviewService"]
@@ -615,8 +678,8 @@ job "media-microservices" {
 
     task "movie-review-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -624,14 +687,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "movie-review-redis" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -639,6 +705,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "redis:alpine3.13"
       }
     }
@@ -659,8 +728,8 @@ job "media-microservices" {
 
     task "cast-info-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -672,6 +741,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  cast-info-mongodb' >> /etc/hosts && echo '127.0.0.1  cast-info-memcached' >> /etc/hosts && CastInfoService"]
@@ -681,8 +753,8 @@ job "media-microservices" {
 
     task "cast-info-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -690,14 +762,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "cast-info-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -705,6 +780,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -725,8 +803,8 @@ job "media-microservices" {
 
     task "plot-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -738,6 +816,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1  plot-mongodb' >> /etc/hosts && echo '127.0.0.1  plot-memcached' >> /etc/hosts && PlotService"]
@@ -747,8 +828,8 @@ job "media-microservices" {
 
     task "plot-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -756,14 +837,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "plot-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       driver = "docker"
       service {
@@ -771,6 +855,9 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }
@@ -791,8 +878,8 @@ job "media-microservices" {
 
     task "movie-info-service" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -804,6 +891,9 @@ job "media-microservices" {
         port = "http"
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/media-microservices:nomad"
         command = "sh"
 
@@ -814,8 +904,8 @@ job "media-microservices" {
 
     task "movie-info-mongodb" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
 
       driver = "docker"
@@ -824,14 +914,17 @@ job "media-microservices" {
 
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/mongo"
       }
     }
 
     task "movie-info-memcached" {
       resources {
-        cores = "1.0"
-        memory_max = "1073" 
+        cpu = 1000
+        memory_max = 1000
       }
 
       driver = "docker"
@@ -840,6 +933,9 @@ job "media-microservices" {
       }
       
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "stvdputten/memcached"
       }
     }

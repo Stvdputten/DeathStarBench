@@ -18,6 +18,7 @@ job "hotel-reservation" {
 
   group "frontend" {
     count = 1
+
     constraint {
       attribute = "${attr.unique.hostname}"
       value     = "${var.hostname}"
@@ -38,11 +39,14 @@ job "hotel-reservation" {
       driver = "docker"
       
       resources {
-        cores = "4.0"
-        memory_max = "4285"
+        cpu = 4000
+        memory_max = 4000
       }
 
       config {
+        memory_hard_limit = 4000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_frontend_single_node:nomad"
         command = "sh"
         args = ["-c",
@@ -85,8 +89,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       lifecycle {
@@ -95,6 +99,9 @@ job "hotel-reservation" {
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "consul:1.9.6"
         ports   = ["dns-ui"]
         command = "consul"
@@ -129,11 +136,14 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = 4
+        cpu = 1000
         memory = 16000 * 4
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image = "jaegertracing/all-in-one:1.23.0"
         ports = ["jaeger"]
       }
@@ -206,11 +216,14 @@ job "hotel-reservation" {
 
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_profile_single_node:nomad"
         command = "profile"
         ports   = ["profile"]
@@ -237,8 +250,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       env {
@@ -246,6 +259,9 @@ job "hotel-reservation" {
         MEMCACHED_THREADS    = "2"
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "memcached"
         args    = ["-p", "11213"]
         image = "stvdputten/memcached"
@@ -268,11 +284,14 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "mongod"
         args    = ["--port", "27019"]
         image   = "stvdputten/mongo"
@@ -319,8 +338,8 @@ job "hotel-reservation" {
     task "geo" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -328,6 +347,9 @@ job "hotel-reservation" {
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_geo_single_node:nomad"
         command = "geo"
         mount {
@@ -352,11 +374,14 @@ job "hotel-reservation" {
     task "mongodb-geo" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         // command = "sh"
         // args = ["-c",
         //   "curl -X PUT -d '{\"name\":\"mongodb-geo-hotel\",  \"address\":\"${attr.unique.network.ip-address}\", \"Port\":27018}' localhost:8500/v1/agent/service/register && mongod --port 27018"
@@ -411,14 +436,17 @@ job "hotel-reservation" {
     task "rate" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
         sidecar = true
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_rate_single_node:nomad"
         command = "rate"
         // args = ["-c",
@@ -447,8 +475,8 @@ job "hotel-reservation" {
     task "memcached-rate" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       env {
@@ -456,6 +484,9 @@ job "hotel-reservation" {
         MEMCACHED_THREADS    = "2"
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "memcached"
         args    = ["-p", "11212"]
         // args = ["-c",
@@ -480,11 +511,14 @@ job "hotel-reservation" {
     task "mongodb-rate" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "mongod"
         args    = ["--port", "27020"]
         // args = ["-c",
@@ -534,8 +568,8 @@ job "hotel-reservation" {
     task "recommendation" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
       lifecycle {
         hook    = "poststart"
@@ -543,6 +577,9 @@ job "hotel-reservation" {
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_recommendation_single_node:nomad"
         command = "recommendation"
         // command = "sh"
@@ -572,11 +609,14 @@ job "hotel-reservation" {
     task "mongodb-recommendation" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "mongod"
         args    = ["--port", "27021"]
         // command = "sh"
@@ -630,11 +670,15 @@ job "hotel-reservation" {
         sidecar = true
       }
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
+
       driver = "docker"
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_user_single_node:nomad"
         command = "user"
         // command = "sh"
@@ -664,11 +708,14 @@ job "hotel-reservation" {
     task "mongodb-user" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "mongod"
         args    = ["--port", "27023"]
         image   = "stvdputten/mongo"
@@ -720,8 +767,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       lifecycle {
@@ -729,6 +776,9 @@ job "hotel-reservation" {
         sidecar = true
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_reserve_single_node:nomad"
         command = "reservation"
         ports = ["reservation"]
@@ -755,8 +805,8 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       env {
@@ -764,6 +814,9 @@ job "hotel-reservation" {
         MEMCACHED_THREADS    = "2"
       }
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "memcached"
         args = ["-p", "11214"]
         image = "stvdputten/memcached"
@@ -784,11 +837,14 @@ job "hotel-reservation" {
     task "mongodb-reserve" {
       driver = "docker"
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         command = "mongod"
         args    = ["--port", "27022"]
         // args = ["-c",
@@ -834,11 +890,14 @@ job "hotel-reservation" {
       driver = "docker"
 
       resources {
-        cores = "1.0"
-        memory_max = "1073"
+        cpu = 1000
+        memory_max = 1000
       }
 
       config {
+        memory_hard_limit = 1000
+        cpu_hard_limit = true
+
         image   = "stvdputten/hotel_reserv_search_single_node:nomad"
         command = "search"
         ports = ["search"]
