@@ -44,12 +44,12 @@ job "social-network" {
     }
 
     task "nginx-thrift" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        // NOMAD_MEMORY_LIMIT = "8584"
-        NOMAD_MEMORY_MAX_LIMIT = "8584"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   // NOMAD_MEMORY_LIMIT = "8584"
+      //   NOMAD_MEMORY_MAX_LIMIT = "8584"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
         // cores    = 4
@@ -106,12 +106,12 @@ job "social-network" {
     }
 
     task "jaeger" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
 
       resources {
@@ -146,17 +146,17 @@ job "social-network" {
     }
 
     task "social-graph-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
 
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
 
@@ -167,6 +167,7 @@ job "social-network" {
       config {
         memory_hard_limit = 1073
         cpu_hard_limit = true
+
         image = "stvdputten/social-network-microservices:nomad"
         // command = "SocialGraphService"
         command = "sh"
@@ -186,16 +187,15 @@ job "social-network" {
     }
 
     task "social-graph-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores = 1
         memory_max = 1073
       }
       config {
@@ -211,16 +211,16 @@ job "social-network" {
     }
 
     task "social-graph-redis" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   // NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       config {
@@ -249,13 +249,13 @@ job "social-network" {
     }
 
     task "post-storage-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
 
@@ -283,16 +283,16 @@ job "social-network" {
     }
 
     task "post-storage-memcached" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
 
@@ -309,16 +309,16 @@ job "social-network" {
     }
 
     task "post-storage-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
 
@@ -348,16 +348,16 @@ job "social-network" {
     }
 
     task "home-timeline-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       driver = "docker"
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
 
@@ -386,15 +386,15 @@ job "social-network" {
     }
 
     task "home-timeline-redis" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -425,15 +425,15 @@ job "social-network" {
     }
 
     task "user-timeline-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -463,15 +463,15 @@ job "social-network" {
     }
 
     task "user-timeline-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -489,15 +489,15 @@ job "social-network" {
     }
 
     task "user-timeline-redis" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores  = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -527,15 +527,15 @@ job "social-network" {
     }
 
     task "url-shorten-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -565,15 +565,15 @@ job "social-network" {
     }
 
     task "url-shorten-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -590,15 +590,15 @@ job "social-network" {
     }
 
     task "url-shorten-memcached" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -633,15 +633,15 @@ job "social-network" {
     }
 
     task "user-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -671,15 +671,15 @@ job "social-network" {
     }
 
     task "user-memcached" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -696,15 +696,15 @@ job "social-network" {
     }
 
     task "user-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -734,15 +734,14 @@ job "social-network" {
     }
 
     task "media-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env { NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -771,15 +770,15 @@ job "social-network" {
     }
 
     task "media-memcached" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -792,9 +791,9 @@ job "social-network" {
     }
 
     task "media-mongodb" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      // }
       resources {
         // cores    = 1
         cpu    = 100
@@ -827,15 +826,15 @@ job "social-network" {
     }
 
     task "compose-post-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
-        // cores    = 1
-        cpu    = 100
+        cores    = 1
+        // cpu    = 100
         memory_max = 1073
       }
       driver = "docker"
@@ -876,12 +875,12 @@ job "social-network" {
     }
 
     task "text-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
         // cores    = 1
         cpu    = 100
@@ -925,12 +924,12 @@ job "social-network" {
     }
 
     task "user-mention-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
         // cores    = 1
         cpu    = 100
@@ -975,12 +974,12 @@ job "social-network" {
     }
 
     task "unique-id-service" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
         // cores    = 1
         cpu    = 100
@@ -1024,12 +1023,12 @@ job "social-network" {
     }
 
     task "media-frontend" {
-      env {
-        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
-        NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_CPU_CORES = 0
-      }
+      // env {
+      //   NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
+      //   NOMAD_MEMORY_LIMIT = "1000"
+      //   NOMAD_MEMORY_MAX_LIMIT = "1073"
+      //   // NOMAD_CPU_CORES = 0
+      // }
       resources {
         // cores    = 1
         cpu    = 100
