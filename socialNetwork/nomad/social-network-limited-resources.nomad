@@ -52,7 +52,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 4
+        cores    = 4
         cpu    = 400
         memory_max = 4294
       }
@@ -116,7 +116,7 @@ job "social-network" {
 
       resources {
         // requires more memory_max
-        // cores  = 4
+        cores  = 4
         cpu    = 400
         memory = 16000
       }
@@ -153,7 +153,7 @@ job "social-network" {
       driver = "docker"
 
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -190,7 +190,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -213,7 +213,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -246,7 +246,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -281,7 +281,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -305,7 +305,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -342,7 +342,7 @@ job "social-network" {
       }
       driver = "docker"
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -377,7 +377,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -414,7 +414,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -450,7 +450,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -474,7 +474,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -510,7 +510,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -546,7 +546,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -569,7 +569,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -610,7 +610,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -646,7 +646,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -669,7 +669,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -705,7 +705,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -740,7 +740,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -756,7 +756,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -792,7 +792,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -839,7 +839,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -886,7 +886,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -934,7 +934,7 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
         memory_max = 1073
       }
@@ -983,9 +983,8 @@ job "social-network" {
         NOMAD_CPU_CORES = 0
       }
       resources {
-        // cores    = 1
+        cores    = 1
         cpu    = 100
-        // memory_max = 1073
         memory = 1073
       }
       driver = "docker"
