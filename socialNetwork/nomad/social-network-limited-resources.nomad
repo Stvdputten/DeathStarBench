@@ -45,10 +45,10 @@ job "social-network" {
 
     task "nginx-thrift" {
       env {
-        NOMAD_CPU_LIMIT = "1000"  # Set the CPU limit to 500 MHz
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
-        NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_MEMORY_MAX_LIMIT = "1073"
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -107,11 +107,10 @@ job "social-network" {
 
     task "jaeger" {
       env {
-        NOMAD_CPU_LIMIT = "1000"  # Set the CPU limit to 500 MHz
+        NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
-        // NOMAD_MEMORY_MAX_LIMIT = "1073"
-        NOMAD_MEMORY_MAX_LIMIT = "1073 * 8"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_MEMORY_MAX_LIMIT = "1073"
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
 
@@ -151,7 +150,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
 
@@ -191,7 +190,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -216,7 +215,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -288,7 +287,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -314,7 +313,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -353,7 +352,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       driver = "docker"
       resources {
@@ -391,7 +390,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -430,7 +429,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -468,7 +467,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -494,7 +493,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -532,7 +531,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -570,7 +569,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -595,7 +594,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -638,7 +637,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -676,7 +675,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -701,7 +700,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -739,7 +738,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -758,7 +757,6 @@ job "social-network" {
         image = "stvdputten/social-network-microservices:nomad"
         command = "sh"
         args    = ["-c", "echo '127.0.0.1 media-mongodb' >> /etc/hosts && echo '127.0.0.1 media-memcached' >> /etc/hosts && MediaService"]
-        cpu_shares = 100
         mount {
           type   = "bind"
           target = "/keys"
@@ -777,7 +775,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -833,7 +831,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -882,7 +880,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -931,7 +929,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -981,7 +979,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
@@ -995,8 +993,6 @@ job "social-network" {
       }
 
       config {
-        memory_hard_limit = 1073
-        cpu_hard_limit = true
         image = "stvdputten/social-network-microservices:nomad"
         command = "UniqueIdService"
         ports   = ["http"]
@@ -1032,7 +1028,7 @@ job "social-network" {
         NOMAD_CPU_LIMIT = "100"  # Set the CPU limit to 500 MHz
         NOMAD_MEMORY_LIMIT = "1000"
         NOMAD_MEMORY_MAX_LIMIT = "1073"
-        // NOMAD_CPU_CORES = 0
+        NOMAD_CPU_CORES = 0
       }
       resources {
         // cores    = 1
