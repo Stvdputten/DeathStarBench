@@ -43,12 +43,12 @@ job "media-microservices" {
       driver = "docker"
 
       resources {
-        cpu = 4000
-        memory_max = 4000
+        cpu = 8000
+        memory_max = 8000
       }
 
       config {
-        memory_hard_limit = 4000
+        memory_hard_limit = 8000
         cpu_hard_limit = true
 
         image   = "yg397/openresty-thrift:xenial"
@@ -118,8 +118,8 @@ job "media-microservices" {
 
     task "unique-id-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       service {
         name = "unique-id-service"
@@ -152,8 +152,8 @@ job "media-microservices" {
 
     task "movie-id-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -177,8 +177,8 @@ job "media-microservices" {
 
     task "movie-id-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -195,8 +195,8 @@ job "media-microservices" {
 
     task "movie-id-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -227,8 +227,8 @@ job "media-microservices" {
 
     task "text-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -261,8 +261,8 @@ job "media-microservices" {
 
     task "rating-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -287,8 +287,8 @@ job "media-microservices" {
 
     task "rating-redis" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -320,8 +320,8 @@ job "media-microservices" {
 
     task "user-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
 
       lifecycle {
@@ -348,8 +348,8 @@ job "media-microservices" {
 
     task "user-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
 
       driver = "docker"
@@ -367,8 +367,8 @@ job "media-microservices" {
 
     task "user-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
 
       driver = "docker"
@@ -400,8 +400,8 @@ job "media-microservices" {
 
     task "compose-review-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -426,8 +426,8 @@ job "media-microservices" {
 
     task "compose-review-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -458,8 +458,8 @@ job "media-microservices" {
 
     task "review-storage-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -484,8 +484,8 @@ job "media-microservices" {
 
     task "review-storage-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -502,8 +502,8 @@ job "media-microservices" {
 
     task "review-storage-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -534,8 +534,8 @@ job "media-microservices" {
 
     task "user-review-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -560,8 +560,8 @@ job "media-microservices" {
 
     task "user-review-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -578,8 +578,8 @@ job "media-microservices" {
 
     task "user-review-redis" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -611,8 +611,8 @@ job "media-microservices" {
 
     task "movie-review-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -636,8 +636,8 @@ job "media-microservices" {
 
     task "movie-review-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -654,8 +654,8 @@ job "media-microservices" {
 
     task "movie-review-redis" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -686,8 +686,8 @@ job "media-microservices" {
 
     task "cast-info-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -711,8 +711,8 @@ job "media-microservices" {
 
     task "cast-info-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -729,8 +729,8 @@ job "media-microservices" {
 
     task "cast-info-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -761,8 +761,8 @@ job "media-microservices" {
 
     task "plot-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -786,8 +786,8 @@ job "media-microservices" {
 
     task "plot-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -804,8 +804,8 @@ job "media-microservices" {
 
     task "plot-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       driver = "docker"
       service {
@@ -836,8 +836,8 @@ job "media-microservices" {
 
     task "movie-info-service" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
       lifecycle {
         hook    = "poststart"
@@ -862,8 +862,8 @@ job "media-microservices" {
 
     task "movie-info-mongodb" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
 
       driver = "docker"
@@ -881,8 +881,8 @@ job "media-microservices" {
 
     task "movie-info-memcached" {
       resources {
-        cpu = 1000
-        memory_max = 1000
+        cpu = 2000
+        memory_max = 2000
       }
 
       driver = "docker"
